@@ -21,15 +21,15 @@ public class RecordsDbHelper {
     
     public final static String ID = "_id";
     public final static String NAME = "name";
-    public final static String STARTTIME = "name";
-    public final static String STOPTIME = "name";
+    public final static String STARTTIME = "start";
+    public final static String STOPTIME = "stop";
 
     final String CREATE_TABLE_TIMERS = "CREATE TABLE "+TABLE_TIMERS +
                                 "( "+ ID +" INTEGER PRIMARY KEY autoincrement, " +
                                 NAME + " TEXT)";
     final String CREATE_TABLE_TIMES = "CREATE TABLE "+ TABLE_TIMES +
             "( "+ ID +" INTEGER PRIMARY KEY, " +
-            STARTTIME + " INTEGER, " + STOPTIME  + "INTEGER )";
+            STARTTIME + " INTEGER, " + STOPTIME  + " INTEGER )";
     
     
     final String DROP_TABLE_TIMERS = "DROP TABLE IF EXISTS " + TABLE_TIMERS;
