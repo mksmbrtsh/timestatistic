@@ -9,11 +9,11 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
-public final class TestFragment extends Fragment {
+public final class TimersFragment extends Fragment {
     private static final String KEY_CONTENT = "TestFragment:Content";
 
-    public static TestFragment newInstance(String content) {
-        TestFragment fragment = new TestFragment();
+    public static TimersFragment newInstance(String content) {
+    	TimersFragment fragment = new TimersFragment();
 
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < 20; i++) {
