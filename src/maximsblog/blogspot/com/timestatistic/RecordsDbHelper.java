@@ -14,7 +14,10 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.database.sqlite.SQLiteStatement;
 import android.net.Uri;
 import android.util.Log;
+
+import java.net.IDN;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -35,8 +38,9 @@ public class RecordsDbHelper extends ContentProvider {
     private static HashMap<String, String> timesProjectionMap;
     public final static String ID = "_id";
     public final static String NAME = "name";
+    public final static String TIMERSID = "timerid";
     public final static String STARTTIME = "start";
-    public final static String STOPTIME = "stop";
+    public final static String LENGHT = "lenght";
 
     static {
 		sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -50,8 +54,10 @@ public class RecordsDbHelper extends ContentProvider {
 		
 		timesProjectionMap = new HashMap<String, String>();
 		timesProjectionMap.put(ID, ID);
+		timesProjectionMap.put(TIMERSID, TIMERSID);
+		
 		timesProjectionMap.put(STARTTIME, STARTTIME);
-		timesProjectionMap.put(STOPTIME, STOPTIME);
+		timesProjectionMap.put(LENGHT, LENGHT);
 	}
     
     public static final Uri CONTENT_URI_TIMERS = Uri.parse("content://" + AUTHORITY + "/timers");
@@ -62,7 +68,7 @@ public class RecordsDbHelper extends ContentProvider {
     	NAME+ " ) values (?)";
     public static final String INSERT_TIMES = "insert into "
         	+ TABLE_TIMES + "( " +
-        	STARTTIME +", " + STOPTIME + " ) values (?, ?)";
+        	STARTTIME +", " + LENGHT + " ) values (?, ?)";
     
     SQLiteDatabase mDB;
     
@@ -202,9 +208,7 @@ public class RecordsDbHelper extends ContentProvider {
 		getContext().getContentResolver().notifyChange(uri, null);
 		return count;
 	}
-    
-	
-    
+
     
 
     
@@ -214,9 +218,10 @@ public class RecordsDbHelper extends ContentProvider {
 		final String CREATE_TABLE_TIMERS = "CREATE TABLE "+TABLE_TIMERS +
                 "( "+ ID +" INTEGER PRIMARY KEY autoincrement, " +
                 NAME + " TEXT)";
+		
 		final String CREATE_TABLE_TIMES = "CREATE TABLE "+ TABLE_TIMES +
-				"( "+ ID +" INTEGER PRIMARY KEY, " +
-				STARTTIME + " INTEGER, " + STOPTIME  + " INTEGER )";
+				"( "+ ID +" INTEGER PRIMARY KEY autoincrement, " + TIMERSID + " INTEGER, " +
+				STARTTIME + " INTEGER, " + LENGHT  + " INTEGER )";
 		
 		final String DROP_TABLE_TIMERS = "DROP TABLE IF EXISTS " + TABLE_TIMERS;
 	    final String DROP_TABLE_TIMES = "DROP TABLE IF EXISTS " + TABLE_TIMES;
@@ -229,6 +234,14 @@ public class RecordsDbHelper extends ContentProvider {
         public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE_TIMERS);
         db.execSQL(CREATE_TABLE_TIMES);
+        ContentValues cv = new ContentValues();
+        cv.put(NAME, "Idle");
+        long l = db.insert(TABLE_TIMERS, null, cv);
+        Date now = new Date();
+        cv = new ContentValues();
+        cv.put(TIMERSID, l);
+        cv.put(STARTTIME, now.getTime());
+        db.insert(TABLE_TIMES, null, cv);
     }
     
         @Override
