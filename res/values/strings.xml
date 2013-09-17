@@ -4,5 +4,7 @@
     <string name="app_name">timestatistic</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <string name="last_value">Последнее значение</string>
+    
 
 </resources>
