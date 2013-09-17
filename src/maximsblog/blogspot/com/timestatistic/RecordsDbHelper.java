@@ -1,40 +1,62 @@
 package maximsblog.blogspot.com.timestatistic;
 
+import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.UriMatcher;
 
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.database.sqlite.SQLiteStatement;
+import android.net.Uri;
 import android.util.Log;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-public class RecordsDbHelper {
+public class RecordsDbHelper extends ContentProvider {
 
+	public static final String AUTHORITY = "maximsblogspot.com.timestatistic.providers.db";
+	private static final UriMatcher sUriMatcher;
+	public static final int TIMERS = 1;
+	public static final int TIMERS_ID = 2;
+	public static final int TIMES = 3;
+	public static final int TIMES_ID = 4;
+	
+	final static String DB_NAME = "timestat.db";
 	final static int DB_VER = 1;
-    final static String DB_NAME = "timestat.db";
     final static String TABLE_TIMERS = "timers";
     final static String TABLE_TIMES = "times";
-    
+    private static HashMap<String, String> timersProjectionMap;
+    private static HashMap<String, String> timesProjectionMap;
     public final static String ID = "_id";
     public final static String NAME = "name";
     public final static String STARTTIME = "start";
     public final static String STOPTIME = "stop";
 
-    final String CREATE_TABLE_TIMERS = "CREATE TABLE "+TABLE_TIMERS +
-                                "( "+ ID +" INTEGER PRIMARY KEY autoincrement, " +
-                                NAME + " TEXT)";
-    final String CREATE_TABLE_TIMES = "CREATE TABLE "+ TABLE_TIMES +
-            "( "+ ID +" INTEGER PRIMARY KEY, " +
-            STARTTIME + " INTEGER, " + STOPTIME  + " INTEGER )";
+    static {
+		sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+		sUriMatcher.addURI(AUTHORITY, TABLE_TIMERS, TIMERS);
+		sUriMatcher.addURI(AUTHORITY, TABLE_TIMERS + "/#", TIMERS_ID);
+		sUriMatcher.addURI(AUTHORITY, TABLE_TIMES, TIMES);
+		sUriMatcher.addURI(AUTHORITY, TABLE_TIMES + "/#", TIMES_ID);
+		timersProjectionMap = new HashMap<String, String>();
+		timersProjectionMap.put(ID, ID);
+		timersProjectionMap.put(NAME, NAME);
+		
+		timesProjectionMap = new HashMap<String, String>();
+		timesProjectionMap.put(ID, ID);
+		timesProjectionMap.put(STARTTIME, STARTTIME);
+		timesProjectionMap.put(STOPTIME, STOPTIME);
+	}
     
-    
-    final String DROP_TABLE_TIMERS = "DROP TABLE IF EXISTS " + TABLE_TIMERS;
-    final String DROP_TABLE_TIMES = "DROP TABLE IF EXISTS " + TABLE_TIMES;
-    
+    public static final Uri CONTENT_URI_TIMERS = Uri.parse("content://" + AUTHORITY + "/timers");
+    public static final Uri CONTENT_URI_TIMES = Uri.parse("content://" + AUTHORITY + "/times");
+	public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.jwei512.notes";
     public static final String INSERT_TIMER = "insert into "
     	+ TABLE_TIMERS + "( " +
     	NAME+ " ) values (?)";
@@ -42,87 +64,172 @@ public class RecordsDbHelper {
         	+ TABLE_TIMES + "( " +
         	STARTTIME +", " + STOPTIME + " ) values (?, ?)";
     
-    Context mContext;
-    private DatabaseHelper mDbHelper;
-	private boolean isReady;
-	
-	private SQLiteDatabase mDb;
+    SQLiteDatabase mDB;
+    
+    @Override
+    public boolean onCreate() {
+            Context context = getContext();
+            OpenHelper openHelper = new OpenHelper(context);
+            mDB = openHelper.getWritableDatabase();
+            return (mDB == null) ? false : true;
+    }
 
-	public RecordsDbHelper(Context ctx) {
-		this.mContext = ctx;
+    @Override
+	public String getType(Uri uri) {
+		switch (sUriMatcher.match(uri)) {
+		case TIMERS:
+			return "vnd.android.cursor.dir/vnd.jwei512.timers";
+		case TIMERS_ID:
+			return "vnd.android.cursor.dir/vnd.jwei512.timers";
+		case TIMES:
+			return "vnd.android.cursor.dir/vnd.jwei512.times";
+		case TIMES_ID:
+			return "vnd.android.cursor.dir/vnd.jwei512.times";
+		default:
+			throw new IllegalArgumentException("Unknown URI " + uri);
+		}
 	}
-
-	public RecordsDbHelper open() throws SQLException {
-		mDbHelper = new DatabaseHelper(mContext);
-		mDb = mDbHelper.getWritableDatabase();
-		isReady = true;
-		return this;
+    
+    @Override
+	public Uri insert(Uri uri, ContentValues initialValues) {
+    	String table;
+    	Uri content;
+		switch (sUriMatcher.match(uri)) {
+		case TIMERS:
+			table = TABLE_TIMERS;
+			content = CONTENT_URI_TIMERS;
+			break;
+		case TIMES:
+			table = TABLE_TIMES;
+			content = CONTENT_URI_TIMES;
+			break;
+		default:
+			throw new IllegalArgumentException("Unknown URI " + uri);
+		}
+		ContentValues values;
+		if (initialValues != null) {
+			values = new ContentValues(initialValues);
+		} else {
+			values = new ContentValues();
+		}
+		long rowId = mDB.insert(table, ID, values);
+		if (rowId > 0) {
+			Uri noteUri = ContentUris.withAppendedId(content, rowId);
+			getContext().getContentResolver().notifyChange(noteUri, null);
+			return noteUri;
+		}
+		throw new SQLException("Failed to insert row into " + uri);
 	}
-
-	public void close() {
-		isReady = false;
-		mDbHelper.close();
+    
+    @Override
+	public int update(Uri uri, ContentValues values, String where,
+			String[] whereArgs) {
+		int count;
+		String table;
+		switch (sUriMatcher.match(uri)) {
+		case TIMERS:
+			table = TABLE_TIMERS;
+			break;
+		case TIMES:
+			table = TABLE_TIMES;
+			break;
+		default:
+			throw new IllegalArgumentException("Unknown URI " + uri);
+		}
+		count = mDB.update(table, values, where, whereArgs);
+		getContext().getContentResolver().notifyChange(uri, null);
+		return count;
 	}
-	public boolean IsReady(){
-		return isReady;
+    
+    @Override
+	public Cursor query(Uri uri, String[] projection, String selection,
+			String[] selectionArgs, String sortOrder) {
+		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+		        
+		        
+		        switch (sUriMatcher.match(uri)) {   
+		            case TIMERS:
+		            	qb.setTables(TABLE_TIMERS);
+		            	qb.setProjectionMap(timersProjectionMap);
+		                break;
+		            case TIMERS_ID:
+		            	qb.setTables(TABLE_TIMERS);
+		            	qb.setProjectionMap(timersProjectionMap);
+		                selection = selection + ID + "=" + uri.getLastPathSegment();
+		                break;
+		            case TIMES:
+		            	qb.setTables(TABLE_TIMES);
+		            	qb.setProjectionMap(timesProjectionMap);
+		                break;
+		            case TIMES_ID:
+		            	qb.setTables(TABLE_TIMES);
+		            	qb.setProjectionMap(timesProjectionMap);
+		                selection = selection + ID + "=" + uri.getLastPathSegment();
+		                break;
+		            default:
+		                throw new IllegalArgumentException("Unknown URI " + uri);
+		        }
+		        Cursor c = qb.query(mDB, projection, selection, selectionArgs, null, null, sortOrder);
+		        c.setNotificationUri(getContext().getContentResolver(), uri);
+		        return c;
 	}
-	public void delete(){
-		mDb.delete(TABLE_TIMERS, null, null);
-		mDb.delete(TABLE_TIMES, null, null);
-	}
+    
+   
+   
 	
-	public long createTimerRecord(String name) {
-		ContentValues initialValues = new ContentValues();
-		initialValues.put(NAME, name);
-		return mDb.insert(TABLE_TIMERS, null, initialValues);
+    @Override
+	public int delete(Uri uri, String where, String[] whereArgs) {
+		String table;
+		switch (sUriMatcher.match(uri)) {
+		case TIMERS:
+			table = TABLE_TIMERS;
+			break;
+		case TIMERS_ID:
+			table = TABLE_TIMERS;
+			where = where + ID + "=" + uri.getLastPathSegment();
+			break;
+		case TIMES:
+			table = TABLE_TIMES;
+			break;
+		case TIMES_ID:
+			table = TABLE_TIMES;
+			where = where + ID + "=" + uri.getLastPathSegment();
+			break;
+		default:
+			throw new IllegalArgumentException("Unknown URI " + uri);
+		}
+		int count = mDB.delete(table, where, whereArgs);
+		getContext().getContentResolver().notifyChange(uri, null);
+		return count;
 	}
+    
 	
-	public long createTimeRecord(int id, int start) {
-		ContentValues initialValues = new ContentValues();
-		initialValues.put(ID, id);
-		initialValues.put(STARTTIME, start);
-		return mDb.insert(TABLE_TIMES, null, initialValues);
-	}
-	public long addEndTimeRecord(int id, int end) {
-		ContentValues initialValues = new ContentValues();
-		initialValues.put(STOPTIME, end);
-		return mDb.update(TABLE_TIMES, initialValues, ID + "=?",new String[]{ String.valueOf(id) });
-	}
-	
-	synchronized public Cursor getTimersCursor() {
-		Cursor ccc = mDb.query(TABLE_TIMERS, new String[]{ID, NAME}, null, null, null, null, NAME);
-		return ccc;
-	}
-	
-
-	public long insert(String name, long startdate) {
-		ContentValues values = new ContentValues();
-		values.put(RecordsDbHelper.NAME, name);
-		return mDb.insert(RecordsDbHelper.TABLE_TIMERS, null, values);
-		
-	}
-	//---deletes a particular title---
-	public boolean deleteTimer(int rowId)
-	{
-		mDb.delete(TABLE_TIMES, ID +
-				"=?", new String[]{String.valueOf(rowId)});
-		
-	return mDb.delete(TABLE_TIMERS, ID +
-	"=?", new String[]{String.valueOf(rowId)}) > 0;
-	}
-	
+    
+    
 
     
-private class DatabaseHelper extends SQLiteOpenHelper {
+	private class OpenHelper extends SQLiteOpenHelper {
 
-    public DatabaseHelper(Context context) {
+		
+		final String CREATE_TABLE_TIMERS = "CREATE TABLE "+TABLE_TIMERS +
+                "( "+ ID +" INTEGER PRIMARY KEY autoincrement, " +
+                NAME + " TEXT)";
+		final String CREATE_TABLE_TIMES = "CREATE TABLE "+ TABLE_TIMES +
+				"( "+ ID +" INTEGER PRIMARY KEY, " +
+				STARTTIME + " INTEGER, " + STOPTIME  + " INTEGER )";
+		
+		final String DROP_TABLE_TIMERS = "DROP TABLE IF EXISTS " + TABLE_TIMERS;
+	    final String DROP_TABLE_TIMES = "DROP TABLE IF EXISTS " + TABLE_TIMES;
+	    
+    public OpenHelper(Context context) {
         super(context, DB_NAME, null, DB_VER);
     }
+    
     @Override
         public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE_TIMERS);
         db.execSQL(CREATE_TABLE_TIMES);
-        }
+    }
     
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -131,6 +238,5 @@ private class DatabaseHelper extends SQLiteOpenHelper {
     	       onCreate(db);
         }
 
-}
-
+	}
 }

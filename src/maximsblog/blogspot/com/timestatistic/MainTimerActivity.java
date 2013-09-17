@@ -25,10 +25,6 @@ public class MainTimerActivity extends SherlockFragmentActivity   {
 
         ViewPager pager = (ViewPager)findViewById(R.id.pager);
         pager.setAdapter(adapter);
-
-        RecordsDbHelper db = new RecordsDbHelper(this);
-        db.open();
-        db.close();
         TitlePageIndicator indicator = (TitlePageIndicator)findViewById(R.id.indicator);
         indicator.setViewPager(pager);
 	}
