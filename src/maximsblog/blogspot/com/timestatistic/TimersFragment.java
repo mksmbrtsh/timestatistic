@@ -139,7 +139,6 @@ public final class TimersFragment extends Fragment implements LoaderCallbacks<Cu
 		Cursor c = mAdapter.getCursor();
 		c.moveToPosition(position);
 		id = c.getInt(0);
-		c.close();
 		cv.put(RecordsDbHelper.TIMERSID, id);
 		cv.put(RecordsDbHelper.STARTTIME, now);
 		getActivity().getContentResolver().insert(RecordsDbHelper.CONTENT_URI_TIMES, cv);
