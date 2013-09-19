@@ -129,6 +129,8 @@ public final class TimersFragment extends Fragment implements
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 			long arg3) {
+		if(position == 0)
+			return;
 
 		long current_id = mAdapter.getCurrentTimerId();
 		Cursor timeCursor = getActivity().getContentResolver().query(
@@ -160,8 +162,8 @@ public final class TimersFragment extends Fragment implements
 		c.moveToPosition(position);
 		id = c.getInt(0);
 		if (id == current_id && timerIsWorking) {
-			mAdapter.setCurrentTimerId(-1);
-			return;
+			id = 1;
+			mAdapter.setCurrentTimerId(1);
 		}
 		cv.put(RecordsDbHelper.TIMERSID, id);
 		cv.put(RecordsDbHelper.STARTTIME, now);
