@@ -91,7 +91,6 @@ public final class TimersFragment extends Fragment implements
 		mList.addFooterView(add);
 		mList.setAdapter(mAdapter);
 		mList.setOnItemClickListener(this);
-		timerAlert();
 		return layout;
 	}
 
@@ -216,10 +215,16 @@ public final class TimersFragment extends Fragment implements
 	}
 
 	@Override
-	public void onStop() {
+	public void onResume() {
+		timerAlert();
+		super.onResume();
+	};
+	
+	@Override
+	public void onPause() {
 		timer.cancel();
 		timer.purge();
-		super.onStop();
+		super.onPause();
 	}
 
 	@Override
