@@ -4,9 +4,12 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import maximsblog.blogspot.com.timestatistic.AddCounterDialogFragment.AddCounterDialog;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -27,12 +30,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public final class TimersFragment extends Fragment implements
-		LoaderCallbacks<Cursor>, OnItemClickListener, OnClickListener {
+		LoaderCallbacks<Cursor>, OnItemClickListener, OnClickListener, AddCounterDialog {
 	private static final String KEY_CONTENT = "TestFragment:Content";
 
 	private Timer timer;
 	private boolean flag_scroll;
 	private long mCurrentTimerId;
+	private AddCounterDialogFragment mAddCounterDialogFragment;
 
 	public static TimersFragment newInstance(String content) {
 		TimersFragment fragment = new TimersFragment();
@@ -67,7 +71,9 @@ public final class TimersFragment extends Fragment implements
 
 		String[] uiBindFrom = { RecordsDbHelper.NAME };
 		int[] uiBindTo = { R.id.name };
-
+		mAddCounterDialogFragment = new AddCounterDialogFragment();
+		mAddCounterDialogFragment.setCounterDialogListener(this);
+		
 		mAdapter = new TimerCursorAdapter(this.getActivity(),
 				R.layout.timer_row, null, uiBindFrom, uiBindTo, 0);
 		loadermanager.initLoader(1, null, this);
@@ -175,11 +181,10 @@ public final class TimersFragment extends Fragment implements
 
 	@Override
 	public void onClick(View v) {
-		ContentValues cv = new ContentValues();
-		cv.put(RecordsDbHelper.NAME, "aa");
-		getActivity().getContentResolver().insert(
-				RecordsDbHelper.CONTENT_URI_TIMERS, cv);
-		mAdapter.notifyDataSetChanged();
+		
+		mAddCounterDialogFragment.show(getFragmentManager(), "dlg1");
+		
+		/**/
 	}
 
 	public final void timerAlert() {
@@ -215,5 +220,14 @@ public final class TimersFragment extends Fragment implements
 		timer.cancel();
 		timer.purge();
 		super.onStop();
+	}
+
+	@Override
+	public void onFinishAddDialog(String inputText) {
+		ContentValues cv = new ContentValues();
+		cv.put(RecordsDbHelper.NAME, inputText);
+		getActivity().getContentResolver().insert(
+				RecordsDbHelper.CONTENT_URI_TIMERS, cv);
+		mAdapter.notifyDataSetChanged();
 	}
 }
