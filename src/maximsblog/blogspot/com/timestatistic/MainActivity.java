@@ -39,9 +39,15 @@ public class MainActivity extends SherlockFragmentActivity   {
 
         @Override
         public Fragment getItem(int position) {
-            CountersFragment timers = CountersFragment.newInstance(CONTENT[position % CONTENT.length]);
-            mAddCounterDialogFragment.setCounterDialogListener(timers);
-            return timers;
+        	Fragment f;
+        	if(position ==0) {      
+        		f = CountersFragment.newInstance(CONTENT[position % CONTENT.length]);
+        		mAddCounterDialogFragment.setCounterDialogListener((AddCounterDialogFragment.AddCounterDialog)f);
+        	}
+        	else
+        		f = new DiagramFragment();
+            
+            return f;
         }
 
         @Override
