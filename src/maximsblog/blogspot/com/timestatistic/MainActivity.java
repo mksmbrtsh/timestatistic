@@ -14,7 +14,7 @@ import android.support.v4.view.ViewPager;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
-public class MainTimerActivity extends SherlockFragmentActivity   {
+public class MainActivity extends SherlockFragmentActivity   {
 
 	private static final String[] CONTENT = new String[] { "Recent", "Artists", "Albums", "Songs", "Playlists", "Genres" };
 	private AddCounterDialogFragment mAddCounterDialogFragment;
@@ -22,7 +22,7 @@ public class MainTimerActivity extends SherlockFragmentActivity   {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main_timer);
+		setContentView(R.layout.activity_main);
 		FragmentPagerAdapter adapter = new GoogleMusicAdapter(getSupportFragmentManager());
 
         ViewPager pager = (ViewPager)findViewById(R.id.pager);
@@ -39,7 +39,7 @@ public class MainTimerActivity extends SherlockFragmentActivity   {
 
         @Override
         public Fragment getItem(int position) {
-            TimersFragment timers = TimersFragment.newInstance(CONTENT[position % CONTENT.length]);
+            CountersFragment timers = CountersFragment.newInstance(CONTENT[position % CONTENT.length]);
             mAddCounterDialogFragment.setCounterDialogListener(timers);
             return timers;
         }
@@ -57,7 +57,7 @@ public class MainTimerActivity extends SherlockFragmentActivity   {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.main_timer, menu);
+		getSupportMenuInflater().inflate(R.menu.main_activity, menu);
 		return true;
 	}
 	@Override

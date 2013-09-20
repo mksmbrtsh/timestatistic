@@ -29,7 +29,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public final class TimersFragment extends Fragment implements
+public final class CountersFragment extends Fragment implements
 		LoaderCallbacks<Cursor>, OnItemClickListener, OnClickListener, AddCounterDialog {
 	private static final String KEY_CONTENT = "TestFragment:Content";
 
@@ -38,8 +38,8 @@ public final class TimersFragment extends Fragment implements
 	private long mCurrentTimerId;
 	private AddCounterDialogFragment mAddCounterDialogFragment;
 
-	public static TimersFragment newInstance(String content) {
-		TimersFragment fragment = new TimersFragment();
+	public static CountersFragment newInstance(String content) {
+		CountersFragment fragment = new CountersFragment();
 
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < 20; i++) {
@@ -51,7 +51,7 @@ public final class TimersFragment extends Fragment implements
 		return fragment;
 	}
 
-	TimerCursorAdapter mAdapter;
+	CountersCursorAdapter mAdapter;
 	LoaderManager loadermanager;
 	CursorLoader cursorLoader;
 
@@ -74,8 +74,8 @@ public final class TimersFragment extends Fragment implements
 		mAddCounterDialogFragment = new AddCounterDialogFragment();
 		mAddCounterDialogFragment.setCounterDialogListener(this);
 		
-		mAdapter = new TimerCursorAdapter(this.getActivity(),
-				R.layout.timer_row, null, uiBindFrom, uiBindTo, 0);
+		mAdapter = new CountersCursorAdapter(this.getActivity(),
+				R.layout.count_row, null, uiBindFrom, uiBindTo, 0);
 		loadermanager.initLoader(1, null, this);
 	}
 
@@ -83,7 +83,7 @@ public final class TimersFragment extends Fragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		LinearLayout layout = (LinearLayout) inflater.inflate(
-				R.layout.fragment_timers, container, false);
+				R.layout.fragment_counters, container, false);
 		mList = (ListView) layout.findViewById(R.id.listView1);
 		mList.setAdapter(mAdapter);
 		mList.setOnItemClickListener(this);
