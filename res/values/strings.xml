@@ -10,4 +10,8 @@
     <string name="add">Добавить</string>
     <string name="reset_all">Сбросить все счетчики</string>
 	<string name="are_you_sure">Вы уверены?</string>
+	<string-array name="TitlePages">
+		<item >Счётчики</item>
+		<item >Диаграмма</item>
+	</string-array>
 </resources>

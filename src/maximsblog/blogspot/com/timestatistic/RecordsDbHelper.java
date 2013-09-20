@@ -63,13 +63,7 @@ public class RecordsDbHelper extends ContentProvider {
     public static final Uri CONTENT_URI_TIMERS = Uri.parse("content://" + AUTHORITY + "/timers");
     public static final Uri CONTENT_URI_TIMES = Uri.parse("content://" + AUTHORITY + "/times");
 	public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.jwei512.notes";
-    public static final String INSERT_TIMER = "insert into "
-    	+ TABLE_TIMERS + "( " +
-    	NAME+ " ) values (?)";
-    public static final String INSERT_TIMES = "insert into "
-        	+ TABLE_TIMES + "( " +
-        	STARTTIME +", " + LENGHT + " ) values (?, ?)";
-    
+  
     SQLiteDatabase mDB;
     
     @Override
