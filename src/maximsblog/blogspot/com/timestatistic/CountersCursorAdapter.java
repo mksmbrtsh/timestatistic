@@ -9,11 +9,11 @@ import android.text.InputFilter.LengthFilter;
 import android.view.View;
 import android.widget.TextView;
 
-public class TimerCursorAdapter extends SimpleCursorAdapter {
+public class CountersCursorAdapter extends SimpleCursorAdapter {
 
 	private long mID;
 
-	public TimerCursorAdapter(Context context, int layout, Cursor c,
+	public CountersCursorAdapter(Context context, int layout, Cursor c,
 			String[] from, int[] to, int flags) {
 		super(context, layout, c, from, to, flags);
 		mID = -1;
