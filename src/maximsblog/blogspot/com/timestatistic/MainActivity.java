@@ -22,24 +22,26 @@ import com.actionbarsherlock.view.MenuItem;
 
 public class MainActivity extends SherlockFragmentActivity   {
 
-	private static final String[] CONTENT = new String[] { "Recent", "Artists", "Albums", "Songs", "Playlists", "Genres" };
 	private AddCounterDialogFragment mAddCounterDialogFragment;
+	private String[] mTitles;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		FragmentPagerAdapter adapter = new GoogleMusicAdapter(getSupportFragmentManager());
-
+		mTitles = getResources().getStringArray(R.array.TitlePages);
+		// prepare ViewPagerIndicator
+		FragmentPagerAdapter adapter = new PagesAdapter(getSupportFragmentManager());
         ViewPager pager = (ViewPager)findViewById(R.id.pager);
         pager.setAdapter(adapter);
         TitlePageIndicator indicator = (TitlePageIndicator)findViewById(R.id.indicator);
         indicator.setViewPager(pager);
+        // add dialogs
         mAddCounterDialogFragment = new AddCounterDialogFragment();
 	}
 
-    class GoogleMusicAdapter extends FragmentPagerAdapter {
-        public GoogleMusicAdapter(FragmentManager fm) {
+    class PagesAdapter extends FragmentPagerAdapter {
+        public PagesAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -47,7 +49,7 @@ public class MainActivity extends SherlockFragmentActivity   {
         public Fragment getItem(int position) {
         	Fragment f;
         	if(position ==0) {      
-        		f = CountersFragment.newInstance(CONTENT[position % CONTENT.length]);
+        		f = CountersFragment.newInstance();
         		mAddCounterDialogFragment.setCounterDialogListener((AddCounterDialogFragment.AddCounterDialog)f);
         	}
         	else
@@ -58,12 +60,12 @@ public class MainActivity extends SherlockFragmentActivity   {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return CONTENT[position % CONTENT.length].toUpperCase();
+            return mTitles[position % mTitles.length];
         }
 
         @Override
         public int getCount() {
-          return CONTENT.length;
+          return mTitles.length;
         }
     }
 
@@ -80,7 +82,6 @@ public class MainActivity extends SherlockFragmentActivity   {
 			break;
 		case R.id.item_reset_all:
 			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            // Create and show the dialog.
 			AreYouSureResetAllDialog newFragment = new AreYouSureResetAllDialog ();
             newFragment.show(ft, "dialog");
 			break;

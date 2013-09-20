@@ -12,47 +12,46 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class AddCounterDialogFragment extends DialogFragment implements OnClickListener {
-
-	public interface AddCounterDialog {
-        void onFinishAddDialog(String inputText);
-    }
-
+public class AddCounterDialogFragment extends DialogFragment implements
+		OnClickListener {
 	private EditText mNameEditor;
 	private AddCounterDialog mListener;
-
-  public void setCounterDialogListener(AddCounterDialog listener) {
-	  
-	  mListener = listener;
+	
+	public interface AddCounterDialog {
+		void onFinishAddDialog(String inputText);
 	}
 
-public View onCreateView(LayoutInflater inflater, ViewGroup container,
-      Bundle savedInstanceState) {
-    getDialog().setTitle(R.string.add_counter_dialog);
-    View v = inflater.inflate(R.layout.add_counter_dialog_fragment, null);
-    v.findViewById(R.id.ok).setOnClickListener(this);
-    v.findViewById(R.id.cancel).setOnClickListener(this);
-    mNameEditor = (EditText)v.findViewById(R.id.name_editor);
-    mNameEditor.requestFocus();
-    getDialog().getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-    return v;
-  }
+	public void setCounterDialogListener(AddCounterDialog listener) {
+		mListener = listener;
+	}
 
-  public void onClick(View v) {
-	  if(v.getId() == R.id.ok)
-	  {
-		  mListener.onFinishAddDialog(mNameEditor.getText().toString());
-	  } else
-		  mListener.onFinishAddDialog(null);
-		  
-    dismiss();
-  }
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		getDialog().setTitle(R.string.add_counter_dialog);
+		View v = inflater.inflate(R.layout.add_counter_dialog_fragment, null);
+		v.findViewById(R.id.ok).setOnClickListener(this);
+		v.findViewById(R.id.cancel).setOnClickListener(this);
+		mNameEditor = (EditText) v.findViewById(R.id.name_editor);
+		mNameEditor.requestFocus();
+		getDialog().getWindow().setSoftInputMode(
+				LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+		return v;
+	}
 
-  public void onDismiss(DialogInterface dialog) {
-    super.onDismiss(dialog);
-  }
+	public void onClick(View v) {
+		if (v.getId() == R.id.ok) {
+			mListener.onFinishAddDialog(mNameEditor.getText().toString());
+		} else
+			mListener.onFinishAddDialog(null);
 
-  public void onCancel(DialogInterface dialog) {
-    super.onCancel(dialog);
-  }
+		dismiss();
+	}
+
+	public void onDismiss(DialogInterface dialog) {
+		super.onDismiss(dialog);
+	}
+
+	public void onCancel(DialogInterface dialog) {
+		super.onCancel(dialog);
+	}
 }

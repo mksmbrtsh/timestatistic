@@ -31,44 +31,19 @@ import android.widget.TextView;
 
 public final class CountersFragment extends Fragment implements
 		LoaderCallbacks<Cursor>, OnItemClickListener, OnClickListener, AddCounterDialog {
-	private static final String KEY_CONTENT = "TestFragment:Content";
-
-	private Timer timer;
-	private boolean flag_scroll;
+	
+	private Timer mTimer;
 	private long mCurrentTimerId;
 	private AddCounterDialogFragment mAddCounterDialogFragment;
-
-	public static CountersFragment newInstance(String content) {
-		CountersFragment fragment = new CountersFragment();
-
-		StringBuilder builder = new StringBuilder();
-		for (int i = 0; i < 20; i++) {
-			builder.append(content).append(" ");
-		}
-		builder.deleteCharAt(builder.length() - 1);
-		fragment.mContent = builder.toString();
-
-		return fragment;
-	}
-
-	CountersCursorAdapter mAdapter;
-	LoaderManager loadermanager;
-	CursorLoader cursorLoader;
-
-	private String mContent = "???";
+	private CountersCursorAdapter mAdapter;
+	private LoaderManager loadermanager;
 	private ListView mList;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		if ((savedInstanceState != null)
-				&& savedInstanceState.containsKey(KEY_CONTENT)) {
-			mContent = savedInstanceState.getString(KEY_CONTENT);
-		}
-
 		loadermanager = getLoaderManager();
-
+		
 		String[] uiBindFrom = { RecordsDbHelper.NAME };
 		int[] uiBindTo = { R.id.name };
 		mAddCounterDialogFragment = new AddCounterDialogFragment();
@@ -93,7 +68,7 @@ public final class CountersFragment extends Fragment implements
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putString(KEY_CONTENT, mContent);
+		
 	}
 
 	@Override
@@ -113,6 +88,7 @@ public final class CountersFragment extends Fragment implements
 							RecordsDbHelper.LENGHT },
 					RecordsDbHelper.LENGHT + " IS NULL", null, null);
 			if (currentTimer.getCount() == 1) {
+				// launch timer
 				currentTimer.moveToFirst();
 				mCurrentTimerId = currentTimer.getLong(0);
 				mAdapter.setCurrentTimerId(mCurrentTimerId);
@@ -123,8 +99,7 @@ public final class CountersFragment extends Fragment implements
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> arg0) {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
@@ -176,15 +151,12 @@ public final class CountersFragment extends Fragment implements
 
 	@Override
 	public void onClick(View v) {
-		
 		mAddCounterDialogFragment.show(getFragmentManager(), "dlg1");
-		
-		/**/
 	}
 
 	public final void timerAlert() {
 
-		timer = new Timer();
+		mTimer = new Timer();
 		TimerTask tt = new TimerTask() {
 
 			@Override
@@ -199,14 +171,11 @@ public final class CountersFragment extends Fragment implements
 						mList.scrollBy(0, y);
 					}
 				};
-				if (!flag_scroll) {
 					getActivity().runOnUiThread(update);
-				}
-
 			}
 
 		};
-		timer.scheduleAtFixedRate(tt, 1000, 1000);
+		mTimer.scheduleAtFixedRate(tt, 1000, 1000);
 
 	}
 
@@ -218,8 +187,8 @@ public final class CountersFragment extends Fragment implements
 	
 	@Override
 	public void onPause() {
-		timer.cancel();
-		timer.purge();
+		mTimer.cancel();
+		mTimer.purge();
 		super.onPause();
 	}
 
@@ -230,5 +199,10 @@ public final class CountersFragment extends Fragment implements
 		getActivity().getContentResolver().insert(
 				RecordsDbHelper.CONTENT_URI_TIMERS, cv);
 		mAdapter.notifyDataSetChanged();
+	}
+	
+	public static CountersFragment newInstance() {
+		CountersFragment fragment = new CountersFragment();
+		return fragment;
 	}
 }
