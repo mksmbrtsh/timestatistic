@@ -7,5 +7,6 @@
     <string name="last_value">Последнее значение</string>
     <string name="name">Название</string>
     <string name="add_counter_dialog">Добавление нового счетчика</string>
+    <string name="add">Добавить</string>
 
 </resources>

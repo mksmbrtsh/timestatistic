@@ -85,10 +85,6 @@ public final class TimersFragment extends Fragment implements
 		LinearLayout layout = (LinearLayout) inflater.inflate(
 				R.layout.fragment_timers, container, false);
 		mList = (ListView) layout.findViewById(R.id.listView1);
-		Button add = new Button(getActivity());
-		add.setText("+");
-		add.setOnClickListener(this);
-		mList.addFooterView(add);
 		mList.setAdapter(mAdapter);
 		mList.setOnItemClickListener(this);
 		return layout;
