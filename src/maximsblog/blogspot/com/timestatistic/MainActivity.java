@@ -6,10 +6,16 @@ import com.viewpagerindicator.TitlePageIndicator;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -68,11 +74,22 @@ public class MainActivity extends SherlockFragmentActivity   {
 	}
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if(item.getItemId() == R.id.add_item)
-		{
+		switch (item.getItemId()) {
+		case R.id.item_add:
 			mAddCounterDialogFragment.show(this.getSupportFragmentManager(), "dlg1");
+			break;
+		case R.id.item_reset_all:
+			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            // Create and show the dialog.
+			AreYouSureResetAllDialog newFragment = new AreYouSureResetAllDialog ();
+            newFragment.show(ft, "dialog");
+			break;
+		default:
+			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+	
 
 }
