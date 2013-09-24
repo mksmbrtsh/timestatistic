@@ -29,6 +29,8 @@ public class RecordsDbHelper extends ContentProvider {
 	public static final int TIMERS_ID = 2;
 	public static final int TIMES = 3;
 	public static final int TIMES_ID = 4;
+	public static final int SUMTIMES = 5;
+	
 	
 	final static String DB_NAME = "timestat.db";
 	final static int DB_VER = 1;
@@ -48,6 +50,7 @@ public class RecordsDbHelper extends ContentProvider {
 		sUriMatcher.addURI(AUTHORITY, TABLE_TIMERS + "/#", TIMERS_ID);
 		sUriMatcher.addURI(AUTHORITY, TABLE_TIMES, TIMES);
 		sUriMatcher.addURI(AUTHORITY, TABLE_TIMES + "/#", TIMES_ID);
+		sUriMatcher.addURI(AUTHORITY, "sumtimes", SUMTIMES);
 		timersProjectionMap = new HashMap<String, String>();
 		timersProjectionMap.put(ID, ID);
 		timersProjectionMap.put(NAME, NAME);
@@ -62,6 +65,7 @@ public class RecordsDbHelper extends ContentProvider {
     
     public static final Uri CONTENT_URI_TIMERS = Uri.parse("content://" + AUTHORITY + "/timers");
     public static final Uri CONTENT_URI_TIMES = Uri.parse("content://" + AUTHORITY + "/times");
+    public static final Uri CONTENT_URI_SUMTIMES = Uri.parse("content://" + AUTHORITY + "/sumtimes");
 	public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.jwei512.notes";
   
     SQLiteDatabase mDB;
@@ -84,6 +88,8 @@ public class RecordsDbHelper extends ContentProvider {
 		case TIMES:
 			return "vnd.android.cursor.dir/vnd.jwei512.times";
 		case TIMES_ID:
+			return "vnd.android.cursor.dir/vnd.jwei512.times";
+		case SUMTIMES:
 			return "vnd.android.cursor.dir/vnd.jwei512.times";
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
@@ -145,7 +151,7 @@ public class RecordsDbHelper extends ContentProvider {
 	public Cursor query(Uri uri, String[] projection, String selection,
 			String[] selectionArgs, String sortOrder) {
 		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-		        
+		Cursor c;
 		        
 		        switch (sUriMatcher.match(uri)) {   
 		            case TIMERS:
@@ -166,10 +172,22 @@ public class RecordsDbHelper extends ContentProvider {
 		            	qb.setProjectionMap(timesProjectionMap);
 		                selection = selection + ID + "=" + uri.getLastPathSegment();
 		                break;
+		            case SUMTIMES:
+		            	String s = qb.buildQueryString(false,
+		            			TABLE_TIMES,
+		            			new String[] { RecordsDbHelper.TIMERSID, "SUM("+ RecordsDbHelper.LENGHT + ") AS " + RecordsDbHelper.LENGHT  },
+		            			selection,
+		            			RecordsDbHelper.TIMERSID,
+		            			null,
+		            			null,
+		            			null);
+		            	c = mDB.rawQuery(s, selectionArgs);
+		            	c.setNotificationUri(getContext().getContentResolver(), uri);
+		            	return c;
 		            default:
 		                throw new IllegalArgumentException("Unknown URI " + uri);
 		        }
-		        Cursor c = qb.query(mDB, projection, selection, selectionArgs, null, null, sortOrder);
+		        c = qb.query(mDB, projection, selection, selectionArgs, null, null, sortOrder);
 		        c.setNotificationUri(getContext().getContentResolver(), uri);
 		        return c;
 	}
