@@ -44,13 +44,14 @@ public final class CountersFragment extends Fragment implements
 		super.onCreate(savedInstanceState);
 		loadermanager = getLoaderManager();
 		
-		String[] uiBindFrom = { RecordsDbHelper.NAME };
-		int[] uiBindTo = { R.id.name };
+		String[] uiBindFrom = {  RecordsDbHelper.LENGHT, RecordsDbHelper.NAME };
+		int[] uiBindTo = {  R.id.current, R.id.name};
 		mAddCounterDialogFragment = new AddCounterDialogFragment();
 		mAddCounterDialogFragment.setCounterDialogListener(this);
 		
 		mAdapter = new CountersCursorAdapter(this.getActivity(),
 				R.layout.count_row, null, uiBindFrom, uiBindTo, 0);
+		
 		loadermanager.initLoader(1, null, this);
 	}
 
@@ -74,7 +75,7 @@ public final class CountersFragment extends Fragment implements
 	@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
 		CursorLoader loader = new CursorLoader(this.getActivity(),
-				RecordsDbHelper.CONTENT_URI_TIMERS, null, null, null, null);
+				RecordsDbHelper.CONTENT_URI_TIMES, null, null, null, null);
 		return loader;
 	}
 
@@ -129,7 +130,7 @@ public final class CountersFragment extends Fragment implements
 			cv.put(RecordsDbHelper.LENGHT, lenght);
 			getActivity().getContentResolver().update(
 					RecordsDbHelper.CONTENT_URI_TIMES, cv,
-					RecordsDbHelper.ID + "=?",
+					RecordsDbHelper.ID+ "=?",
 					new String[] { String.valueOf(id) });
 		}
 		timeCursor.close();
