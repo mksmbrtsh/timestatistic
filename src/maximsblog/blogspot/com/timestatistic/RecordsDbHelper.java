@@ -39,6 +39,7 @@ public class RecordsDbHelper extends ContentProvider {
     private static HashMap<String, String> timersProjectionMap;
     private static HashMap<String, String> timesProjectionMap;
     public final static String ID = "_id";
+    public final static String ID2 = "_idt";
     public final static String NAME = "name";
     public final static String TIMERSID = "timerid";
     public final static String STARTTIME = "start";
@@ -56,7 +57,7 @@ public class RecordsDbHelper extends ContentProvider {
 		timersProjectionMap.put(NAME, NAME);
 		
 		timesProjectionMap = new HashMap<String, String>();
-		timesProjectionMap.put(ID, ID);
+		timesProjectionMap.put(ID2, ID2);
 		timesProjectionMap.put(TIMERSID, TIMERSID);
 		
 		timesProjectionMap.put(STARTTIME, STARTTIME);
@@ -164,18 +165,26 @@ public class RecordsDbHelper extends ContentProvider {
 		                selection = selection + ID + "=" + uri.getLastPathSegment();
 		                break;
 		            case TIMES:
-		            	qb.setTables(TABLE_TIMES);
-		            	qb.setProjectionMap(timesProjectionMap);
-		                break;
+		            	String e = qb.buildQueryString(false,
+		            			TABLE_TIMERS + " LEFT OUTER JOIN " + TABLE_TIMES + " ON " + ID +  " = " +TIMERSID ,
+		            			new String[] { RecordsDbHelper.ID2 + " AS " + RecordsDbHelper.ID, RecordsDbHelper.TIMERSID, "SUM("+ RecordsDbHelper.LENGHT + ") AS " + RecordsDbHelper.LENGHT, RecordsDbHelper.NAME  },
+		            			selection,
+		            			RecordsDbHelper.TIMERSID,
+		            			null,
+		            			null,
+		            			null);
+		            	c = mDB.rawQuery(e, selectionArgs);
+		            	c.setNotificationUri(getContext().getContentResolver(), uri);
+		            	return c;
 		            case TIMES_ID:
 		            	qb.setTables(TABLE_TIMES);
 		            	qb.setProjectionMap(timesProjectionMap);
-		                selection = selection + ID + "=" + uri.getLastPathSegment();
+		                selection = selection + ID2 + "=" + uri.getLastPathSegment();
 		                break;
 		            case SUMTIMES:
 		            	String s = qb.buildQueryString(false,
-		            			TABLE_TIMES,
-		            			new String[] { RecordsDbHelper.TIMERSID, "SUM("+ RecordsDbHelper.LENGHT + ") AS " + RecordsDbHelper.LENGHT  },
+		            			TABLE_TIMERS + " LEFT OUTER JOIN " + TABLE_TIMES + " ON " + ID +  " = " +TIMERSID ,
+		            			new String[] { RecordsDbHelper.TIMERSID, "SUM("+ RecordsDbHelper.LENGHT + ") AS " + RecordsDbHelper.LENGHT, RecordsDbHelper.NAME  },
 		            			selection,
 		            			RecordsDbHelper.TIMERSID,
 		            			null,
@@ -211,7 +220,7 @@ public class RecordsDbHelper extends ContentProvider {
 			break;
 		case TIMES_ID:
 			table = TABLE_TIMES;
-			where = where + ID + "=" + uri.getLastPathSegment();
+			where = where + ID2 + "=" + uri.getLastPathSegment();
 			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
@@ -232,7 +241,7 @@ public class RecordsDbHelper extends ContentProvider {
                 NAME + " TEXT)";
 		
 		final String CREATE_TABLE_TIMES = "CREATE TABLE "+ TABLE_TIMES +
-				"( "+ ID +" INTEGER PRIMARY KEY autoincrement, " + TIMERSID + " INTEGER, " +
+				"( "+ ID2 +" INTEGER PRIMARY KEY autoincrement, " + TIMERSID + " INTEGER, " +
 				STARTTIME + " INTEGER, " + LENGHT  + " INTEGER )";
 		
 		final String DROP_TABLE_TIMERS = "DROP TABLE IF EXISTS " + TABLE_TIMERS;

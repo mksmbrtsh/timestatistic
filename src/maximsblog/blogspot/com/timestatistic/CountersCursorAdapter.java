@@ -30,7 +30,7 @@ public class CountersCursorAdapter extends SimpleCursorAdapter {
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
 		super.bindView(view, context, cursor);
-		int id = cursor.getInt(0);
+		/*int id = cursor.getInt(0);
 		Cursor timeCursor = context.getContentResolver().query(
 				RecordsDbHelper.CONTENT_URI_TIMES,
 				new String[] { " SUM("+ RecordsDbHelper.LENGHT + ") AS " +RecordsDbHelper.LENGHT  },
@@ -40,9 +40,10 @@ public class CountersCursorAdapter extends SimpleCursorAdapter {
 		if (timeCursor.moveToLast())
 			lenght = timeCursor.getLong(0);
 		timeCursor.close();
-		
+		*/
+		int id = cursor.getInt(0);
 		if (mID == id) {
-			timeCursor = context.getContentResolver()
+			Cursor timeCursor = context.getContentResolver()
 					.query(RecordsDbHelper.CONTENT_URI_TIMES,
 							new String[] { RecordsDbHelper.TIMERSID,
 									RecordsDbHelper.STARTTIME,
@@ -52,13 +53,14 @@ public class CountersCursorAdapter extends SimpleCursorAdapter {
 				timeCursor.moveToFirst();
 				long start = timeCursor.getLong(1);
 				long now = new Date().getTime();
-				lenght += now - start;
+				long lenght = now - start;
+				TextView t = (TextView) view.findViewById(R.id.current);
+				setTime(t, lenght);
 			}
 			timeCursor.close();
 		}
 		
-		TextView t = (TextView) view.findViewById(R.id.current);
-		setTime(t, lenght);
+		
 
 	}
 	
