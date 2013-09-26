@@ -8,6 +8,7 @@ import maximsblog.blogspot.com.timestatistic.AddCounterDialogFragment.AddCounter
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -83,7 +84,7 @@ public final class CountersFragment extends Fragment implements
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 		if (mAdapter != null && cursor != null) {
 			mAdapter.swapCursor(cursor); // swap the new cursor in.
-			Cursor currentTimer = getActivity().getContentResolver().query(
+			/*Cursor currentTimer = getActivity().getContentResolver().query(
 					RecordsDbHelper.CONTENT_URI_TIMES,
 					new String[] { RecordsDbHelper.TIMERSID,
 							RecordsDbHelper.LENGHT },
@@ -94,7 +95,7 @@ public final class CountersFragment extends Fragment implements
 				mCurrentTimerId = currentTimer.getLong(0);
 				mAdapter.setCurrentTimerId(mCurrentTimerId);
 				currentTimer.close();
-			}
+			}*/
 		}
 	}
 
@@ -108,46 +109,33 @@ public final class CountersFragment extends Fragment implements
 			long arg3) {
 		if(position == 0)
 			return;
-
-		long current_id = mAdapter.getCurrentTimerId();
-		Cursor timeCursor = getActivity().getContentResolver().query(
-				RecordsDbHelper.CONTENT_URI_TIMES,
-				new String[] { RecordsDbHelper.ID, RecordsDbHelper.STARTTIME,
-						RecordsDbHelper.LENGHT },
-				RecordsDbHelper.TIMERSID + "=? AND " + RecordsDbHelper.LENGHT
-						+ " IS NULL",
-				new String[] { String.valueOf(current_id) }, null);
-		ContentValues cv;
+		Cursor cursor = mAdapter.getCursor();
+		boolean isRunning = cursor.getInt(5) == 1;
 		int id;
+		ContentValues cv;
 		long now = new Date().getTime();
-		boolean timerIsWorking = timeCursor.getCount() == 1;
-		if(timerIsWorking) {
-			timeCursor.moveToFirst();
-			long start = timeCursor.getLong(1);
+		if(isRunning) {
+			long start = cursor.getLong(3);
+			
 			long lenght = now - start;
-			id = timeCursor.getInt(0);
+			id = cursor.getInt(0);
 			cv = new ContentValues();
 			cv.put(RecordsDbHelper.LENGHT, lenght);
 			getActivity().getContentResolver().update(
 					RecordsDbHelper.CONTENT_URI_TIMES, cv,
-					RecordsDbHelper.ID+ "=?",
+					RecordsDbHelper.ID2+ "=?",
 					new String[] { String.valueOf(id) });
 		}
-		timeCursor.close();
 		cv = new ContentValues();
-		Cursor c = mAdapter.getCursor();
-		c.moveToPosition(position);
-		id = c.getInt(0);
-		if (id == current_id && timerIsWorking) {
-			id = 1;
-			mAdapter.setCurrentTimerId(1);
-		}
+		id = cursor.getInt(1);
 		cv.put(RecordsDbHelper.TIMERSID, id);
 		cv.put(RecordsDbHelper.STARTTIME, now);
 		getActivity().getContentResolver().insert(
 				RecordsDbHelper.CONTENT_URI_TIMES, cv);
-
-		mAdapter.setCurrentTimerId(id);
+		cv.clear();
+		cv.put(RecordsDbHelper.ISRUNNING, 1);
+		getActivity().getContentResolver().update(
+				RecordsDbHelper.CONTENT_URI_TIMERS, cv, RecordsDbHelper.ID + " = ?", new String[] { String.valueOf(id) });
 	}
 
 	@Override
@@ -197,9 +185,14 @@ public final class CountersFragment extends Fragment implements
 	public void onFinishAddDialog(String inputText) {
 		ContentValues cv = new ContentValues();
 		cv.put(RecordsDbHelper.NAME, inputText);
-		getActivity().getContentResolver().insert(
+		Uri row  = getActivity().getContentResolver().insert(
 				RecordsDbHelper.CONTENT_URI_TIMERS, cv);
-		mAdapter.notifyDataSetChanged();
+		int id = Integer.valueOf(row.getLastPathSegment());
+		cv.clear();
+		cv.put(RecordsDbHelper.TIMERSID, id);
+		getActivity().getContentResolver().insert(
+				RecordsDbHelper.CONTENT_URI_TIMES, cv);
+		loadermanager.restartLoader(1, null, this);
 	}
 	
 	public static CountersFragment newInstance() {

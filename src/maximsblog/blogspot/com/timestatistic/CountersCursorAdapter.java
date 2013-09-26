@@ -11,57 +11,27 @@ import android.widget.TextView;
 
 public class CountersCursorAdapter extends SimpleCursorAdapter {
 
-	private long mID;
-
 	public CountersCursorAdapter(Context context, int layout, Cursor c,
 			String[] from, int[] to, int flags) {
 		super(context, layout, c, from, to, flags);
-		mID = -1;
 	}
 
-	public void setCurrentTimerId(long mCurrentTimerId) {
-		mID = mCurrentTimerId;
-	}
-
-	public long getCurrentTimerId() {
-		return mID;
-	}
-	
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
 		super.bindView(view, context, cursor);
-		/*int id = cursor.getInt(0);
-		Cursor timeCursor = context.getContentResolver().query(
-				RecordsDbHelper.CONTENT_URI_TIMES,
-				new String[] { " SUM("+ RecordsDbHelper.LENGHT + ") AS " +RecordsDbHelper.LENGHT  },
-				RecordsDbHelper.TIMERSID + "=?",
-				new String[] { String.valueOf(id) }, null);
-		long lenght = 0;
-		if (timeCursor.moveToLast())
-			lenght = timeCursor.getLong(0);
-		timeCursor.close();
-		*/
-		int id = cursor.getInt(0);
-		if (mID == id) {
-			Cursor timeCursor = context.getContentResolver()
-					.query(RecordsDbHelper.CONTENT_URI_TIMES,
-							new String[] { RecordsDbHelper.TIMERSID,
-									RecordsDbHelper.STARTTIME,
-									RecordsDbHelper.LENGHT },
-							RecordsDbHelper.LENGHT + " IS NULL", null, null);
-			if (timeCursor.getCount() == 1) {
-				timeCursor.moveToFirst();
-				long start = timeCursor.getLong(1);
+		boolean isRunning = cursor.getInt(5) == 1;
+		if (isRunning) {
+			
+				long start = cursor.getLong(3);
 				long now = new Date().getTime();
 				long lenght = now - start;
 				TextView t = (TextView) view.findViewById(R.id.current);
 				setTime(t, lenght);
-			}
-			timeCursor.close();
+		} else {
+			long lenght = cursor.getLong(2);
+			TextView t = (TextView) view.findViewById(R.id.current);
+			setTime(t, lenght);
 		}
-		
-		
-
 	}
 	
 	private void setTime(TextView t, long time)

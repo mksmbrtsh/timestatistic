@@ -49,7 +49,7 @@ public class DiagramFragment extends Fragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		loadermanager = getLoaderManager();
-		loadermanager.initLoader(1, null, this);
+		//loadermanager.initLoader(1, null, this);
 		super.onCreate(savedInstanceState);
 	}
 
