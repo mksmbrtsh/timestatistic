@@ -41,6 +41,7 @@ public class RecordsDbHelper extends ContentProvider {
     public final static String ID = "_id";
     public final static String ID2 = "_idt";
     public final static String NAME = "name";
+    public final static String ISRUNNING="isrunning";
     public final static String TIMERSID = "timerid";
     public final static String STARTTIME = "start";
     public final static String LENGHT = "lenght";
@@ -55,6 +56,7 @@ public class RecordsDbHelper extends ContentProvider {
 		timersProjectionMap = new HashMap<String, String>();
 		timersProjectionMap.put(ID, ID);
 		timersProjectionMap.put(NAME, NAME);
+		timersProjectionMap.put(ISRUNNING, ISRUNNING);
 		
 		timesProjectionMap = new HashMap<String, String>();
 		timesProjectionMap.put(ID2, ID2);
@@ -136,6 +138,11 @@ public class RecordsDbHelper extends ContentProvider {
 		switch (sUriMatcher.match(uri)) {
 		case TIMERS:
 			table = TABLE_TIMERS;
+			Cursor c = mDB.query(table, new String[] { RecordsDbHelper.ID }, RecordsDbHelper.ISRUNNING + "='1'" , null, null, null, null);
+			int id = c.getInt(0);
+			ContentValues cv = new ContentValues();
+			cv.put(RecordsDbHelper.ISRUNNING, 0);
+			mDB.update(table, cv, Rd, whereArgs);
 			break;
 		case TIMES:
 			table = TABLE_TIMES;
@@ -166,8 +173,12 @@ public class RecordsDbHelper extends ContentProvider {
 		                break;
 		            case TIMES:
 		            	String e = qb.buildQueryString(false,
-		            			TABLE_TIMERS + " LEFT OUTER JOIN " + TABLE_TIMES + " ON " + ID +  " = " +TIMERSID ,
-		            			new String[] { RecordsDbHelper.ID2 + " AS " + RecordsDbHelper.ID, RecordsDbHelper.TIMERSID, "SUM("+ RecordsDbHelper.LENGHT + ") AS " + RecordsDbHelper.LENGHT, RecordsDbHelper.NAME  },
+		            			TABLE_TIMERS + " LEFT OUTER JOIN " + TABLE_TIMES + " ON " + ID +  " = " + TIMERSID,
+		            			new String[] { RecordsDbHelper.ID2 + " AS " + RecordsDbHelper.ID,
+		            			RecordsDbHelper.TIMERSID, "SUM("+ RecordsDbHelper.LENGHT + ") AS " + RecordsDbHelper.LENGHT,
+		            			RecordsDbHelper.ID,
+		            			RecordsDbHelper.NAME,
+		            			RecordsDbHelper.ISRUNNING  },
 		            			selection,
 		            			RecordsDbHelper.TIMERSID,
 		            			null,
@@ -238,11 +249,11 @@ public class RecordsDbHelper extends ContentProvider {
 		
 		final String CREATE_TABLE_TIMERS = "CREATE TABLE "+TABLE_TIMERS +
                 "( "+ ID +" INTEGER PRIMARY KEY autoincrement, " +
-                NAME + " TEXT)";
+                NAME + " TEXT, " + ISRUNNING + " INTEGER DEFAULT 0 )";
 		
 		final String CREATE_TABLE_TIMES = "CREATE TABLE "+ TABLE_TIMES +
 				"( "+ ID2 +" INTEGER PRIMARY KEY autoincrement, " + TIMERSID + " INTEGER, " +
-				STARTTIME + " INTEGER, " + LENGHT  + " INTEGER )";
+				STARTTIME + " INTEGER, " + LENGHT  + " INTEGER DEFAULT 0 )";
 		
 		final String DROP_TABLE_TIMERS = "DROP TABLE IF EXISTS " + TABLE_TIMERS;
 	    final String DROP_TABLE_TIMES = "DROP TABLE IF EXISTS " + TABLE_TIMES;
@@ -257,6 +268,7 @@ public class RecordsDbHelper extends ContentProvider {
         db.execSQL(CREATE_TABLE_TIMES);
         ContentValues cv = new ContentValues();
         cv.put(NAME, "Idle");
+        cv.put(ISRUNNING, 1);
         long l = db.insert(TABLE_TIMERS, null, cv);
         Date now = new Date();
         cv = new ContentValues();
