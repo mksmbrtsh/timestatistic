@@ -19,12 +19,12 @@ public class CountersCursorAdapter extends SimpleCursorAdapter {
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
 		super.bindView(view, context, cursor);
-		boolean isRunning = cursor.getInt(5) == 1;
+		boolean isRunning = cursor.getInt(6) == 1;
 		if (isRunning) {
 			
 				long start = cursor.getLong(3);
 				long now = new Date().getTime();
-				long lenght = now - start;
+				long lenght = now - start +  cursor.getLong(2);
 				TextView t = (TextView) view.findViewById(R.id.current);
 				setTime(t, lenght);
 		} else {

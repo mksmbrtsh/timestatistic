@@ -7,9 +7,11 @@ import java.util.TimerTask;
 import maximsblog.blogspot.com.timestatistic.AddCounterDialogFragment.AddCounterDialog;
 
 import android.content.ContentValues;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -107,35 +109,42 @@ public final class CountersFragment extends Fragment implements
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 			long arg3) {
-		if(position == 0)
-			return;
+        ContentValues cv = new ContentValues();
+        long now = new Date().getTime();
+        Cursor c = getActivity().getContentResolver().query(RecordsDbHelper.CONTENT_URI_TIMES,
+        		new String[] {RecordsDbHelper.ID,
+    			RecordsDbHelper.NAME,
+    			RecordsDbHelper.ISRUNNING,
+    			RecordsDbHelper.STARTTIME, RecordsDbHelper.TIMERSID}, RecordsDbHelper.ISRUNNING + "='1'", null, null);
+        c.moveToFirst();
+        int timeId = c.getInt(0);
+        long start = c.getLong(3);
+        c.close();
+        long lenght = now - start;
+        cv = new ContentValues();
+		cv.put(RecordsDbHelper.LENGHT, lenght);
+		getActivity().getContentResolver().update(
+				RecordsDbHelper.CONTENT_URI_TIMES, cv,
+				RecordsDbHelper.ID2+ "=?",
+				new String[] { String.valueOf(timeId) });
+		cv.clear();
 		Cursor cursor = mAdapter.getCursor();
-		boolean isRunning = cursor.getInt(5) == 1;
-		int id;
-		ContentValues cv;
-		long now = new Date().getTime();
+		boolean isRunning = cursor.getInt(6) == 1;
+		int counterId;
 		if(isRunning) {
-			long start = cursor.getLong(3);
-			
-			long lenght = now - start;
-			id = cursor.getInt(0);
-			cv = new ContentValues();
-			cv.put(RecordsDbHelper.LENGHT, lenght);
-			getActivity().getContentResolver().update(
-					RecordsDbHelper.CONTENT_URI_TIMES, cv,
-					RecordsDbHelper.ID2+ "=?",
-					new String[] { String.valueOf(id) });
+			counterId = 1;
+		} else {
+			counterId = cursor.getInt(4);
 		}
-		cv = new ContentValues();
-		id = cursor.getInt(1);
-		cv.put(RecordsDbHelper.TIMERSID, id);
+		cv.put(RecordsDbHelper.TIMERSID, counterId);
 		cv.put(RecordsDbHelper.STARTTIME, now);
 		getActivity().getContentResolver().insert(
 				RecordsDbHelper.CONTENT_URI_TIMES, cv);
 		cv.clear();
 		cv.put(RecordsDbHelper.ISRUNNING, 1);
 		getActivity().getContentResolver().update(
-				RecordsDbHelper.CONTENT_URI_TIMERS, cv, RecordsDbHelper.ID + " = ?", new String[] { String.valueOf(id) });
+				RecordsDbHelper.CONTENT_URI_TIMERS, cv, RecordsDbHelper.ID + " = ?", new String[] { String.valueOf(counterId) });
+		loadermanager.restartLoader(1, null, this);
 	}
 
 	@Override
