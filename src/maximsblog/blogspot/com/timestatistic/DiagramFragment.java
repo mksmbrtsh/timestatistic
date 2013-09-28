@@ -1,6 +1,7 @@
 package maximsblog.blogspot.com.timestatistic;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
@@ -37,10 +38,7 @@ public class DiagramFragment extends Fragment implements
 	private CategorySeries mSeries = new CategorySeries("");
 	/** The main renderer for the main dataset. */
 	private DefaultRenderer mRenderer = new DefaultRenderer();
-	/** Button for adding entered data to the current series. */
-	private Button mAdd;
-	/** Edit text field for entering the slice value. */
-	private EditText mValue;
+
 	/** The chart view that displays the data. */
 	private GraphicalView mChartView;
 	private View mLayout;
@@ -49,7 +47,7 @@ public class DiagramFragment extends Fragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		loadermanager = getLoaderManager();
-		//loadermanager.initLoader(1, null, this);
+		loadermanager.initLoader(1, null, this);
 		super.onCreate(savedInstanceState);
 	}
 
@@ -57,34 +55,9 @@ public class DiagramFragment extends Fragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		mLayout = inflater.inflate(R.layout.fragment_diagram, container, false);
-		mValue = (EditText) mLayout.findViewById(R.id.xValue);
-		mRenderer.setZoomButtonsVisible(true);
+		mRenderer.setZoomButtonsVisible(false);
 		mRenderer.setStartAngle(180);
 		mRenderer.setDisplayValues(true);
-
-		mAdd = (Button) mLayout.findViewById(R.id.add);
-		mAdd.setEnabled(true);
-		mValue.setEnabled(true);
-
-		mAdd.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				double value = 0;
-				try {
-					value = Double.parseDouble(mValue.getText().toString());
-				} catch (NumberFormatException e) {
-					mValue.requestFocus();
-					return;
-				}
-				mValue.setText("");
-				mValue.requestFocus();
-				mSeries.add("Series " + (mSeries.getItemCount() + 1), value);
-				SimpleSeriesRenderer renderer = new SimpleSeriesRenderer();
-				renderer.setColor(COLORS[(mSeries.getItemCount() - 1)
-						% COLORS.length]);
-				mRenderer.addSeriesRenderer(renderer);
-				mChartView.repaint();
-			}
-		});
 		return mLayout;
 	}
 
@@ -103,22 +76,14 @@ public class DiagramFragment extends Fragment implements
 					SeriesSelection seriesSelection = mChartView
 							.getCurrentSeriesAndPoint();
 					if (seriesSelection == null) {
-						Toast.makeText(DiagramFragment.this.getActivity(),
-								"No chart element selected", Toast.LENGTH_SHORT)
-								.show();
+						
 					} else {
 						for (int i = 0; i < mSeries.getItemCount(); i++) {
 							mRenderer.getSeriesRendererAt(i).setHighlighted(
 									i == seriesSelection.getPointIndex());
 						}
 						mChartView.repaint();
-						Toast.makeText(
-								DiagramFragment.this.getActivity(),
-								"Chart data point index "
-										+ seriesSelection.getPointIndex()
-										+ " selected" + " point value="
-										+ seriesSelection.getValue(),
-								Toast.LENGTH_SHORT).show();
+						
 					}
 				}
 			});
@@ -138,7 +103,6 @@ public class DiagramFragment extends Fragment implements
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-		// CategorySeries s = new CategorySeries("");
 		mRenderer.removeAllRenderers();
 		int i = 0;
 		if (cursor != null) {
@@ -147,8 +111,10 @@ public class DiagramFragment extends Fragment implements
 			while (cursor.moveToNext()) {
 				long id = cursor.getLong(0);
 				long t = cursor.getLong(1);
-				String s = cursor.getString(2);
-				mSeries.add(s==null?"":s, t);
+				long start = cursor.getLong(2);
+				String s = cursor.getString(3);
+				boolean isRunning = cursor.getInt(4) == 1;
+				mSeries.add(s==null?"":s, isRunning ? new Date().getTime() - start : t);
 				SimpleSeriesRenderer renderer = new SimpleSeriesRenderer();
 				i = i < COLORS.length ? i:0;
 				renderer.setColor(COLORS[i]);
