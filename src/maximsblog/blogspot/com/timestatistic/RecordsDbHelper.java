@@ -4,6 +4,7 @@ import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.UriMatcher;
 
 import android.database.Cursor;
@@ -13,6 +14,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.database.sqlite.SQLiteStatement;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.net.IDN;
@@ -138,11 +140,9 @@ public class RecordsDbHelper extends ContentProvider {
 		switch (sUriMatcher.match(uri)) {
 		case TIMERS:
 			table = TABLE_TIMERS;
-			Cursor c = mDB.query(table, new String[] { RecordsDbHelper.ID }, RecordsDbHelper.ISRUNNING + "='1'" , null, null, null, null);
-			int id = c.getInt(0);
 			ContentValues cv = new ContentValues();
 			cv.put(RecordsDbHelper.ISRUNNING, 0);
-			mDB.update(table, cv, Rd, whereArgs);
+			mDB.update(table, cv, RecordsDbHelper.ISRUNNING +"=?", new String[] { String.valueOf(1) } );
 			break;
 		case TIMES:
 			table = TABLE_TIMES;
@@ -175,7 +175,9 @@ public class RecordsDbHelper extends ContentProvider {
 		            	String e = qb.buildQueryString(false,
 		            			TABLE_TIMERS + " LEFT OUTER JOIN " + TABLE_TIMES + " ON " + ID +  " = " + TIMERSID,
 		            			new String[] { RecordsDbHelper.ID2 + " AS " + RecordsDbHelper.ID,
-		            			RecordsDbHelper.TIMERSID, "SUM("+ RecordsDbHelper.LENGHT + ") AS " + RecordsDbHelper.LENGHT,
+		            			RecordsDbHelper.TIMERSID, 
+		            			"SUM("+ RecordsDbHelper.LENGHT + ") AS " + RecordsDbHelper.LENGHT,
+		            			"MAX(" + RecordsDbHelper.STARTTIME +") AS" + RecordsDbHelper.STARTTIME,
 		            			RecordsDbHelper.ID,
 		            			RecordsDbHelper.NAME,
 		            			RecordsDbHelper.ISRUNNING  },
