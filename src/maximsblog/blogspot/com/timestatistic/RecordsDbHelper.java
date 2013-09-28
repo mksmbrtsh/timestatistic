@@ -197,7 +197,11 @@ public class RecordsDbHelper extends ContentProvider {
 		            case SUMTIMES:
 		            	String s = qb.buildQueryString(false,
 		            			TABLE_TIMERS + " LEFT OUTER JOIN " + TABLE_TIMES + " ON " + ID +  " = " +TIMERSID ,
-		            			new String[] { RecordsDbHelper.TIMERSID, "SUM("+ RecordsDbHelper.LENGHT + ") AS " + RecordsDbHelper.LENGHT, RecordsDbHelper.NAME  },
+		            			new String[] { RecordsDbHelper.TIMERSID,
+		            			"SUM("+ RecordsDbHelper.LENGHT + ") AS " + RecordsDbHelper.LENGHT,
+		            			"MAX(" + RecordsDbHelper.STARTTIME +") AS" + RecordsDbHelper.STARTTIME,
+		            			RecordsDbHelper.NAME,
+		            			RecordsDbHelper.ISRUNNING },
 		            			selection,
 		            			RecordsDbHelper.TIMERSID,
 		            			null,
