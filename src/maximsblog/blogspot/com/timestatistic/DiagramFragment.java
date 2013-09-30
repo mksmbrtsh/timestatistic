@@ -3,6 +3,8 @@ package maximsblog.blogspot.com.timestatistic;
 import java.util.ArrayList;
 import java.util.Date;
 
+import maximsblog.blogspot.com.timestatistic.MainActivity.MainFragments;
+
 import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
 import org.achartengine.model.CategorySeries;
@@ -29,7 +31,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 public class DiagramFragment extends Fragment implements
-		LoaderCallbacks<Cursor> {
+		LoaderCallbacks<Cursor>, MainFragments {
 
 	/** Colors to be used for the pie slices. */
 	private int[] COLORS = new int[] { Color.GREEN, Color.BLUE, Color.MAGENTA,
@@ -129,5 +131,15 @@ public class DiagramFragment extends Fragment implements
 	public void onLoaderReset(Loader<Cursor> arg0) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void onReload() {
+		loadermanager.restartLoader(1, null, this);
+	}
+	
+	public static DiagramFragment newInstance() {
+		DiagramFragment fragment = new DiagramFragment();
+		return fragment;
 	}
 }
