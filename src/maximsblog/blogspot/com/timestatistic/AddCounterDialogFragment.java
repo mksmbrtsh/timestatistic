@@ -15,14 +15,27 @@ import android.widget.EditText;
 public class AddCounterDialogFragment extends DialogFragment implements
 		OnClickListener {
 	private EditText mNameEditor;
+	private String mName;
 	private AddCounterDialog mListener;
+	private int mId;
 	
 	public interface AddCounterDialog {
-		void onFinishAddDialog(String inputText);
+		void onFinishAddDialog(String inputText, int id);
+		void onFinishDelDialog(int id);
+		
 	}
 
 	public void setCounterDialogListener(AddCounterDialog listener) {
 		mListener = listener;
+	}
+	
+	public void setName(String name)
+	{
+		mName = name;
+	}
+	public void setIdCounter(int id)
+	{
+		mId = id;
 	}
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,6 +46,7 @@ public class AddCounterDialogFragment extends DialogFragment implements
 		v.findViewById(R.id.cancel).setOnClickListener(this);
 		mNameEditor = (EditText) v.findViewById(R.id.name_editor);
 		mNameEditor.requestFocus();
+		mNameEditor.setText(mName);
 		getDialog().getWindow().setSoftInputMode(
 				LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		return v;
@@ -40,9 +54,9 @@ public class AddCounterDialogFragment extends DialogFragment implements
 
 	public void onClick(View v) {
 		if (v.getId() == R.id.ok) {
-			mListener.onFinishAddDialog(mNameEditor.getText().toString());
+			mListener.onFinishAddDialog(mNameEditor.getText().toString(), mId);
 		} else
-			mListener.onFinishAddDialog(null);
+			mListener.onFinishAddDialog(null, -1);
 
 		dismiss();
 	}

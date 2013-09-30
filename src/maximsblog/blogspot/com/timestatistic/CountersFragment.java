@@ -24,9 +24,11 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
@@ -34,7 +36,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public final class CountersFragment extends Fragment implements
-		LoaderCallbacks<Cursor>, OnItemClickListener, MainFragments {
+		LoaderCallbacks<Cursor>, OnItemClickListener, MainFragments, OnItemLongClickListener {
 	
 	private Timer mTimer;
 	private CountersCursorAdapter mAdapter;
@@ -63,6 +65,7 @@ public final class CountersFragment extends Fragment implements
 		mList = (ListView) layout.findViewById(R.id.listView1);
 		mList.setAdapter(mAdapter);
 		mList.setOnItemClickListener(this);
+		mList.setOnItemLongClickListener(this);
 		return layout;
 	}
 
@@ -192,5 +195,17 @@ public final class CountersFragment extends Fragment implements
 	@Override
 	public void onReload() {
 		loadermanager.restartLoader(1, null, this);
+	}
+
+	@Override
+	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2,
+			long arg3) {
+		int id = mAdapter.getCursor().getInt(1);
+		String name = mAdapter.getCursor().getString(5);
+		((MainActivity)getActivity()).mAddCounterDialogFragment.setIdCounter(id);
+		((MainActivity)getActivity()).mAddCounterDialogFragment.setName(name);
+		((MainActivity)getActivity()).mAddCounterDialogFragment.show(this.getActivity().getSupportFragmentManager(),
+		"dlg1");
+		return false;
 	}
 }

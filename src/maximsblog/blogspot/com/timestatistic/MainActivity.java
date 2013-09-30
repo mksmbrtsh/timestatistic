@@ -29,113 +29,133 @@ import android.support.v4.view.ViewPager;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
-public class MainActivity extends SherlockFragmentActivity implements ResetAllDialog, AddCounterDialog   {
+public class MainActivity extends SherlockFragmentActivity implements
+		ResetAllDialog, AddCounterDialog {
 
-	private AddCounterDialogFragment mAddCounterDialogFragment;
+	public AddCounterDialogFragment mAddCounterDialogFragment;
 	private String[] mTitles;
 	private ArrayList<MainFragments> mFragments;
-	
+
 	public interface MainFragments {
 		void onReload();
 	}
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		mTitles = getResources().getStringArray(R.array.TitlePages);
 		// prepare ViewPagerIndicator
-		FragmentPagerAdapter adapter = new PagesAdapter(getSupportFragmentManager());
-        ViewPager pager = (ViewPager)findViewById(R.id.pager);
-        pager.setAdapter(adapter);
-        TitlePageIndicator indicator = (TitlePageIndicator)findViewById(R.id.indicator);
-        indicator.setViewPager(pager);
-        mFragments = new ArrayList<MainFragments>();
-        // add dialogs
-        mAddCounterDialogFragment = new AddCounterDialogFragment();
-        mAddCounterDialogFragment.setCounterDialogListener(this);
+		FragmentPagerAdapter adapter = new PagesAdapter(
+				getSupportFragmentManager());
+		ViewPager pager = (ViewPager) findViewById(R.id.pager);
+		pager.setAdapter(adapter);
+		TitlePageIndicator indicator = (TitlePageIndicator) findViewById(R.id.indicator);
+		indicator.setViewPager(pager);
+		mFragments = new ArrayList<MainFragments>();
+		// add dialogs
+		mAddCounterDialogFragment = new AddCounterDialogFragment();
+		mAddCounterDialogFragment.setCounterDialogListener(this);
 	}
 
-    class PagesAdapter extends FragmentPagerAdapter {
-        public PagesAdapter(FragmentManager fm) {
-            super(fm);
-        }
+	class PagesAdapter extends FragmentPagerAdapter {
+		public PagesAdapter(FragmentManager fm) {
+			super(fm);
+		}
 
-        @Override
-        public Fragment getItem(int position) {
-        	Fragment f;
-        	if(position ==0) {      
-        		CountersFragment fg = CountersFragment.newInstance();
-        		mFragments.add(fg);
-        		f = fg;
-        	}
-        	else {
-        		DiagramFragment fg = DiagramFragment.newInstance();
-        		mFragments.add(fg);
-        		f = fg;
-        	}
-            
-            return f;
-        }
+		@Override
+		public Fragment getItem(int position) {
+			Fragment f;
+			if (position == 0) {
+				CountersFragment fg = CountersFragment.newInstance();
+				mFragments.add(fg);
+				f = fg;
+			} else {
+				DiagramFragment fg = DiagramFragment.newInstance();
+				mFragments.add(fg);
+				f = fg;
+			}
 
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mTitles[position % mTitles.length];
-        }
+			return f;
+		}
 
-        @Override
-        public int getCount() {
-          return mTitles.length;
-        }
-    }
+		@Override
+		public CharSequence getPageTitle(int position) {
+			return mTitles[position % mTitles.length];
+		}
+
+		@Override
+		public int getCount() {
+			return mTitles.length;
+		}
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getSupportMenuInflater().inflate(R.menu.main_activity, menu);
 		return true;
 	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.item_add:
-			mAddCounterDialogFragment.show(this.getSupportFragmentManager(), "dlg1");
+			mAddCounterDialogFragment.setIdCounter(-1);
+			mAddCounterDialogFragment.show(this.getSupportFragmentManager(),
+					"dlg1");
 			break;
 		case R.id.item_reset_all:
-			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-			AreYouSureResetAllDialog newFragment = new AreYouSureResetAllDialog ();
+			FragmentTransaction ft = getSupportFragmentManager()
+					.beginTransaction();
+			AreYouSureResetAllDialog newFragment = new AreYouSureResetAllDialog();
 			newFragment.setResetAllDialogListener(this);
-            newFragment.show(ft, "dialog");
+			newFragment.show(ft, "dialog");
 			break;
 		default:
 			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
 	@Override
 	public void onResetAllDialog() {
-		getContentResolver().delete(RecordsDbHelper.CONTENT_URI_RESETCOUNTERS, null, null);
+		getContentResolver().delete(RecordsDbHelper.CONTENT_URI_RESETCOUNTERS,
+				null, null);
 		reloadFragments();
 	}
+
 	@Override
-	public void onFinishAddDialog(String inputText) {
-		ContentValues cv = new ContentValues();
-		cv.put(RecordsDbHelper.NAME, inputText);
-		Uri row  = getContentResolver().insert(
-				RecordsDbHelper.CONTENT_URI_TIMERS, cv);
-		int id = Integer.valueOf(row.getLastPathSegment());
-		cv.clear();
-		cv.put(RecordsDbHelper.TIMERSID, id);
-		getContentResolver().insert(
-				RecordsDbHelper.CONTENT_URI_TIMES, cv);
-		reloadFragments();
+	public void onFinishAddDialog(String inputText, int id) {
+		if (id == -1) {
+			ContentValues cv = new ContentValues();
+			cv.put(RecordsDbHelper.NAME, inputText);
+			Uri row = getContentResolver().insert(
+					RecordsDbHelper.CONTENT_URI_TIMERS, cv);
+			int iDcounters = Integer.valueOf(row.getLastPathSegment());
+			cv.clear();
+			cv.put(RecordsDbHelper.TIMERSID, iDcounters);
+			getContentResolver().insert(RecordsDbHelper.CONTENT_URI_TIMES, cv);
+			reloadFragments();
+		} else {
+			ContentValues cv = new ContentValues();
+			cv.put(RecordsDbHelper.NAME, inputText);
+			getContentResolver().update(
+					RecordsDbHelper.CONTENT_URI_TIMERS, cv, RecordsDbHelper.ID + "=?", new String[] {String.valueOf(id)});
+		}
 	}
 	
-	private void reloadFragments()
-	{
+	@Override
+	public void onFinishDelDialog(int id) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	private void reloadFragments() {
 		for (MainFragments fragments : mFragments) {
 			fragments.onReload();
 		}
 	}
+
 	
 
 }
