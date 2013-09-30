@@ -1,5 +1,6 @@
 package maximsblog.blogspot.com.timestatistic;
 
+import maximsblog.blogspot.com.timestatistic.AddCounterDialogFragment.AddCounterDialog;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -8,7 +9,15 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
 public class AreYouSureResetAllDialog extends DialogFragment {
-
+	
+	private ResetAllDialog mListener;
+	public interface ResetAllDialog {
+		void onResetAllDialog();
+	}
+	
+	public void setResetAllDialogListener(ResetAllDialog listener) {
+		mListener = listener;
+	}
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         return new AlertDialog.Builder(getActivity())
@@ -25,6 +34,7 @@ public class AreYouSureResetAllDialog extends DialogFragment {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                 	AreYouSureResetAllDialog.this.dismiss();
+                	mListener.onResetAllDialog();
                 }
             })
             .create();
