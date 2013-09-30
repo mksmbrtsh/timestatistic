@@ -32,7 +32,7 @@ public class RecordsDbHelper extends ContentProvider {
 	public static final int TIMES = 3;
 	public static final int TIMES_ID = 4;
 	public static final int SUMTIMES = 5;
-	
+	public static final int RESETCOUNTERS = 6;
 	
 	final static String DB_NAME = "timestat.db";
 	final static int DB_VER = 1;
@@ -55,6 +55,7 @@ public class RecordsDbHelper extends ContentProvider {
 		sUriMatcher.addURI(AUTHORITY, TABLE_TIMES, TIMES);
 		sUriMatcher.addURI(AUTHORITY, TABLE_TIMES + "/#", TIMES_ID);
 		sUriMatcher.addURI(AUTHORITY, "sumtimes", SUMTIMES);
+		sUriMatcher.addURI(AUTHORITY, "resetcounters", RESETCOUNTERS);
 		timersProjectionMap = new HashMap<String, String>();
 		timersProjectionMap.put(ID, ID);
 		timersProjectionMap.put(NAME, NAME);
@@ -71,6 +72,7 @@ public class RecordsDbHelper extends ContentProvider {
     public static final Uri CONTENT_URI_TIMERS = Uri.parse("content://" + AUTHORITY + "/timers");
     public static final Uri CONTENT_URI_TIMES = Uri.parse("content://" + AUTHORITY + "/times");
     public static final Uri CONTENT_URI_SUMTIMES = Uri.parse("content://" + AUTHORITY + "/sumtimes");
+    public static final Uri CONTENT_URI_RESETCOUNTERS = Uri.parse("content://" + AUTHORITY + "/resetcounters");
 	public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.jwei512.notes";
   
     SQLiteDatabase mDB;
@@ -239,6 +241,28 @@ public class RecordsDbHelper extends ContentProvider {
 			table = TABLE_TIMES;
 			where = where + ID2 + "=" + uri.getLastPathSegment();
 			break;
+		case RESETCOUNTERS:
+			table = TABLE_TIMES;
+			int count = mDB.delete(table, where, whereArgs);
+			Cursor c = mDB.query(TABLE_TIMERS, new String[] { RecordsDbHelper.ID }, null, null, null, null, null);
+			ContentValues cv = new ContentValues();
+			while(c.moveToNext())
+			{
+				int id = c.getInt(0);
+				cv.clear();
+				cv.put(RecordsDbHelper.TIMERSID, id);
+				if(id == 1)
+					cv.put(STARTTIME, (new Date()).getTime());
+				mDB.insert(TABLE_TIMES, null, cv);
+			}
+			cv.clear();
+			cv.put(RecordsDbHelper.ISRUNNING, 0);
+			mDB.update(TABLE_TIMERS, cv, RecordsDbHelper.ISRUNNING +"=?", new String[] { String.valueOf(1) } );
+			cv.clear();
+			cv.put(RecordsDbHelper.ISRUNNING, 1);
+			mDB.update(TABLE_TIMERS, cv, RecordsDbHelper.ID +"=?", new String[] { String.valueOf(1) } );
+			getContext().getContentResolver().notifyChange(uri, null);
+			return count;
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
 		}

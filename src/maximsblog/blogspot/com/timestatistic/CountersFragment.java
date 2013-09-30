@@ -5,6 +5,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import maximsblog.blogspot.com.timestatistic.AddCounterDialogFragment.AddCounterDialog;
+import maximsblog.blogspot.com.timestatistic.MainActivity.MainFragments;
 
 import android.content.ContentValues;
 import android.content.SharedPreferences;
@@ -33,11 +34,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public final class CountersFragment extends Fragment implements
-		LoaderCallbacks<Cursor>, OnItemClickListener, OnClickListener, AddCounterDialog {
+		LoaderCallbacks<Cursor>, OnItemClickListener, MainFragments {
 	
 	private Timer mTimer;
-	private long mCurrentTimerId;
-	private AddCounterDialogFragment mAddCounterDialogFragment;
 	private CountersCursorAdapter mAdapter;
 	private LoaderManager loadermanager;
 	private ListView mList;
@@ -49,8 +48,6 @@ public final class CountersFragment extends Fragment implements
 		
 		String[] uiBindFrom = {  RecordsDbHelper.LENGHT, RecordsDbHelper.NAME };
 		int[] uiBindTo = {  R.id.current, R.id.name};
-		mAddCounterDialogFragment = new AddCounterDialogFragment();
-		mAddCounterDialogFragment.setCounterDialogListener(this);
 		
 		mAdapter = new CountersCursorAdapter(this.getActivity(),
 				R.layout.count_row, null, uiBindFrom, uiBindTo, 0);
@@ -147,10 +144,7 @@ public final class CountersFragment extends Fragment implements
 		loadermanager.restartLoader(1, null, this);
 	}
 
-	@Override
-	public void onClick(View v) {
-		mAddCounterDialogFragment.show(getFragmentManager(), "dlg1");
-	}
+	
 
 	public final void timerAlert() {
 
@@ -190,22 +184,13 @@ public final class CountersFragment extends Fragment implements
 		super.onPause();
 	}
 
-	@Override
-	public void onFinishAddDialog(String inputText) {
-		ContentValues cv = new ContentValues();
-		cv.put(RecordsDbHelper.NAME, inputText);
-		Uri row  = getActivity().getContentResolver().insert(
-				RecordsDbHelper.CONTENT_URI_TIMERS, cv);
-		int id = Integer.valueOf(row.getLastPathSegment());
-		cv.clear();
-		cv.put(RecordsDbHelper.TIMERSID, id);
-		getActivity().getContentResolver().insert(
-				RecordsDbHelper.CONTENT_URI_TIMES, cv);
-		loadermanager.restartLoader(1, null, this);
-	}
-	
 	public static CountersFragment newInstance() {
 		CountersFragment fragment = new CountersFragment();
 		return fragment;
+	}
+
+	@Override
+	public void onReload() {
+		loadermanager.restartLoader(1, null, this);
 	}
 }
