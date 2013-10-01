@@ -12,6 +12,7 @@ import org.achartengine.model.SeriesSelection;
 import org.achartengine.renderer.DefaultRenderer;
 import org.achartengine.renderer.SimpleSeriesRenderer;
 
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -49,7 +50,7 @@ public class DiagramFragment extends Fragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		loadermanager = getLoaderManager();
-		loadermanager.initLoader(1, null, this);
+
 		super.onCreate(savedInstanceState);
 	}
 
@@ -60,6 +61,7 @@ public class DiagramFragment extends Fragment implements
 		mRenderer.setZoomButtonsVisible(false);
 		mRenderer.setStartAngle(180);
 		mRenderer.setDisplayValues(true);
+		mRenderer.setInScroll(false);
 		return mLayout;
 	}
 
@@ -67,8 +69,7 @@ public class DiagramFragment extends Fragment implements
 	public void onResume() {
 		super.onResume();
 		if (mChartView == null) {
-			LinearLayout layout = (LinearLayout) mLayout
-					.findViewById(R.id.chart);
+			ViewGroup layout = (ViewGroup) mLayout.findViewById(R.id.chart);
 			mChartView = ChartFactory.getPieChartView(this.getActivity(),
 					mSeries, mRenderer);
 			mRenderer.setClickEnabled(true);
@@ -78,14 +79,14 @@ public class DiagramFragment extends Fragment implements
 					SeriesSelection seriesSelection = mChartView
 							.getCurrentSeriesAndPoint();
 					if (seriesSelection == null) {
-						
+
 					} else {
 						for (int i = 0; i < mSeries.getItemCount(); i++) {
 							mRenderer.getSeriesRendererAt(i).setHighlighted(
 									i == seriesSelection.getPointIndex());
 						}
 						mChartView.repaint();
-						
+
 					}
 				}
 			});
@@ -94,7 +95,17 @@ public class DiagramFragment extends Fragment implements
 		} else {
 			mChartView.repaint();
 		}
+		loadermanager.initLoader(1, null, this);
 	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		ViewGroup chartLayout = (ViewGroup) mLayout.findViewById(R.id.chart);
+		chartLayout.removeView(mChartView);
+		mChartView = null;
+
+	};
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
@@ -110,20 +121,36 @@ public class DiagramFragment extends Fragment implements
 		if (cursor != null) {
 			mSeries.clear();
 			ArrayList<Color> c = new ArrayList<Color>();
+			cursor.moveToFirst();
+			long id = cursor.getLong(0);
+			long t = cursor.getLong(1);
+			long start = cursor.getLong(2);
+			String s = cursor.getString(3);
+			boolean isRunning = cursor.getInt(4) == 1;
+			mSeries.add(s == null ? "" : s, isRunning ? new Date().getTime()
+					- start : t);
+			SimpleSeriesRenderer renderer = new SimpleSeriesRenderer();
+			i = i < COLORS.length ? i : 0;
+			renderer.setColor(COLORS[i]);
+			i++;
+			mRenderer.addSeriesRenderer(renderer);
 			while (cursor.moveToNext()) {
-				long id = cursor.getLong(0);
-				long t = cursor.getLong(1);
-				long start = cursor.getLong(2);
-				String s = cursor.getString(3);
-				boolean isRunning = cursor.getInt(4) == 1;
-				mSeries.add(s==null?"":s, isRunning ? new Date().getTime() - start : t);
-				SimpleSeriesRenderer renderer = new SimpleSeriesRenderer();
-				i = i < COLORS.length ? i:0;
+				id = cursor.getLong(0);
+				t = cursor.getLong(1);
+				start = cursor.getLong(2);
+				s = cursor.getString(3);
+				isRunning = cursor.getInt(4) == 1;
+				mSeries.add(s == null ? "" : s,
+						isRunning ? new Date().getTime() - start : t);
+				renderer = new SimpleSeriesRenderer();
+				i = i < COLORS.length ? i : 0;
 				renderer.setColor(COLORS[i]);
 				i++;
 				mRenderer.addSeriesRenderer(renderer);
 			}
-			mChartView.repaint();
+
+			if (mChartView != null)
+				mChartView.repaint();
 		}
 	}
 
@@ -137,7 +164,7 @@ public class DiagramFragment extends Fragment implements
 	public void onReload() {
 		loadermanager.restartLoader(1, null, this);
 	}
-	
+
 	public static DiagramFragment newInstance() {
 		DiagramFragment fragment = new DiagramFragment();
 		return fragment;
