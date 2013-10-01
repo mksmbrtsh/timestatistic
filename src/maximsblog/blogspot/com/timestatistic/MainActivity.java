@@ -3,7 +3,8 @@ package maximsblog.blogspot.com.timestatistic;
 import java.util.ArrayList;
 import java.util.List;
 
-import maximsblog.blogspot.com.timestatistic.AddCounterDialogFragment.AddCounterDialog;
+import maximsblog.blogspot.com.timestatistic.CounterEditorDialogFragment.ICounterEditorDialog;
+import maximsblog.blogspot.com.timestatistic.CounterEditorDialogFragment.Status;
 import maximsblog.blogspot.com.timestatistic.AreYouSureResetAllDialog.ResetAllDialog;
 import maximsblog.blogspot.com.timestatistic.MainActivity.MainFragments;
 
@@ -30,9 +31,9 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 public class MainActivity extends SherlockFragmentActivity implements
-		ResetAllDialog, AddCounterDialog {
+		ResetAllDialog, ICounterEditorDialog {
 
-	public AddCounterDialogFragment mAddCounterDialogFragment;
+	public CounterEditorDialogFragment mAddCounterDialogFragment;
 	private String[] mTitles;
 	private ArrayList<MainFragments> mFragments;
 
@@ -54,7 +55,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		indicator.setViewPager(pager);
 		mFragments = new ArrayList<MainFragments>();
 		// add dialogs
-		mAddCounterDialogFragment = new AddCounterDialogFragment();
+		mAddCounterDialogFragment = new CounterEditorDialogFragment();
 		mAddCounterDialogFragment.setCounterDialogListener(this);
 	}
 
@@ -125,8 +126,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	@Override
-	public void onFinishAddDialog(String inputText, int id) {
-		if (id == -1) {
+	public void onFinishDialog(String inputText, int id, Status status,
+			boolean isRunning) {
+		if (status == Status.ADD) {
 			ContentValues cv = new ContentValues();
 			cv.put(RecordsDbHelper.NAME, inputText);
 			Uri row = getContentResolver().insert(
@@ -136,26 +138,33 @@ public class MainActivity extends SherlockFragmentActivity implements
 			cv.put(RecordsDbHelper.TIMERSID, iDcounters);
 			getContentResolver().insert(RecordsDbHelper.CONTENT_URI_TIMES, cv);
 			reloadFragments();
-		} else {
+		} else if (status == Status.EDIT) {
 			ContentValues cv = new ContentValues();
 			cv.put(RecordsDbHelper.NAME, inputText);
 			getContentResolver().update(
-					RecordsDbHelper.CONTENT_URI_TIMERS, cv, RecordsDbHelper.ID + "=?", new String[] {String.valueOf(id)});
+					RecordsDbHelper.CONTENT_URI_RENAMECOUNTER, cv,
+					RecordsDbHelper.ID + "=?",
+					new String[] { String.valueOf(id) });
+			reloadFragments();
+		} else if (status == Status.DEL) {
+			if (isRunning) {
+				ContentValues cv = new ContentValues();
+				cv.put(RecordsDbHelper.ISRUNNING, 1);
+				getContentResolver().update(
+						RecordsDbHelper.CONTENT_URI_TIMERS, cv,
+						RecordsDbHelper.ID + " = ?",
+						new String[] { String.valueOf(1) });
+			}
+			getContentResolver().delete(RecordsDbHelper.CONTENT_URI_TIMERS,
+					null, new String[] { String.valueOf(id) });
+			reloadFragments();
 		}
 	}
-	
-	@Override
-	public void onFinishDelDialog(int id) {
-		// TODO Auto-generated method stub
-		
-	}
-	
+
 	private void reloadFragments() {
 		for (MainFragments fragments : mFragments) {
 			fragments.onReload();
 		}
 	}
-
-	
 
 }

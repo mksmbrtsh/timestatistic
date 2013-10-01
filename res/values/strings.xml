@@ -14,4 +14,5 @@
 		<item >Счётчики</item>
 		<item >Диаграмма</item>
 	</string-array>
+		<string name="del">Удалить</string>
 </resources>

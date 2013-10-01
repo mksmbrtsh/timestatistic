@@ -12,20 +12,26 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class AddCounterDialogFragment extends DialogFragment implements
+public class CounterEditorDialogFragment extends DialogFragment implements
 		OnClickListener {
 	private EditText mNameEditor;
 	private String mName;
-	private AddCounterDialog mListener;
+	private ICounterEditorDialog mListener;
 	private int mId;
+	private Button mDelButton;
+	private boolean mIsRunning;
 	
-	public interface AddCounterDialog {
-		void onFinishAddDialog(String inputText, int id);
-		void onFinishDelDialog(int id);
-		
+	public enum Status {
+		ADD,
+		EDIT,
+		DEL
+	}
+	
+	public interface ICounterEditorDialog {
+		void onFinishDialog(String inputText, int id, Status status, boolean isRunning);
 	}
 
-	public void setCounterDialogListener(AddCounterDialog listener) {
+	public void setCounterDialogListener(ICounterEditorDialog listener) {
 		mListener = listener;
 	}
 	
@@ -33,30 +39,48 @@ public class AddCounterDialogFragment extends DialogFragment implements
 	{
 		mName = name;
 	}
+	
 	public void setIdCounter(int id)
 	{
 		mId = id;
 	}
-
+	
+	public void setIsRunning(boolean isRunning)
+	{
+		mIsRunning = isRunning;
+	}
+	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		getDialog().setTitle(R.string.add_counter_dialog);
-		View v = inflater.inflate(R.layout.add_counter_dialog_fragment, null);
+		View v = inflater.inflate(R.layout.fragment_counter_editor_dialog, null);
 		v.findViewById(R.id.ok).setOnClickListener(this);
 		v.findViewById(R.id.cancel).setOnClickListener(this);
+		mDelButton = (Button) v.findViewById(R.id.del);
+		mDelButton.setOnClickListener(this);
 		mNameEditor = (EditText) v.findViewById(R.id.name_editor);
 		mNameEditor.requestFocus();
-		mNameEditor.setText(mName);
+		
 		getDialog().getWindow().setSoftInputMode(
 				LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		return v;
 	}
+	
+	@Override
+	public void onResume() {
+		mNameEditor.setText(mName);
+		mDelButton.setVisibility((mId!=-1 && mId != 1) ? View.VISIBLE : View.GONE);
+		super.onResume();
+	};
 
 	public void onClick(View v) {
-		if (v.getId() == R.id.ok) {
-			mListener.onFinishAddDialog(mNameEditor.getText().toString(), mId);
-		} else
-			mListener.onFinishAddDialog(null, -1);
+		int id = v.getId(); 
+		if (id == R.id.ok) {
+			mListener.onFinishDialog(mNameEditor.getText().toString(), mId,mId != -1 ? Status.EDIT : Status.ADD, mIsRunning);
+		} else if(id == R.id.del)
+		{
+			mListener.onFinishDialog(mNameEditor.getText().toString(), mId, Status.DEL, mIsRunning);
+		}
 
 		dismiss();
 	}
