@@ -7,6 +7,7 @@ import maximsblog.blogspot.com.timestatistic.CounterEditorDialogFragment.ICounte
 import maximsblog.blogspot.com.timestatistic.CounterEditorDialogFragment.Status;
 import maximsblog.blogspot.com.timestatistic.AreYouSureResetAllDialog.ResetAllDialog;
 import maximsblog.blogspot.com.timestatistic.MainActivity.MainFragments;
+import maximsblog.blogspot.com.timestatistic.MainActivity.PagesAdapter;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.viewpagerindicator.TabPageIndicator;
@@ -27,15 +28,18 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
+
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 public class MainActivity extends SherlockFragmentActivity implements
-		ResetAllDialog, ICounterEditorDialog {
+		ResetAllDialog, ICounterEditorDialog, OnPageChangeListener {
 
 	public CounterEditorDialogFragment mAddCounterDialogFragment;
 	private String[] mTitles;
-	private ArrayList<MainFragments> mFragments;
+	private PagesAdapter adapter;
+	private ViewPager pager;
 
 	public interface MainFragments {
 		void onReload();
@@ -47,16 +51,23 @@ public class MainActivity extends SherlockFragmentActivity implements
 		setContentView(R.layout.activity_main);
 		mTitles = getResources().getStringArray(R.array.TitlePages);
 		// prepare ViewPagerIndicator
-		FragmentPagerAdapter adapter = new PagesAdapter(
+		adapter = new PagesAdapter(
 				getSupportFragmentManager());
-		ViewPager pager = (ViewPager) findViewById(R.id.pager);
+		pager = (ViewPager) findViewById(R.id.pager);
 		pager.setAdapter(adapter);
 		TitlePageIndicator indicator = (TitlePageIndicator) findViewById(R.id.indicator);
 		indicator.setViewPager(pager);
-		mFragments = new ArrayList<MainFragments>();
-		// add dialogs
+		indicator.setOnPageChangeListener(this);
 		mAddCounterDialogFragment = new CounterEditorDialogFragment();
 		mAddCounterDialogFragment.setCounterDialogListener(this);
+			
+	}
+	
+	public Fragment findFragmentByPosition(int position) {
+	    
+	    return getSupportFragmentManager().findFragmentByTag(
+	            "android:switcher:" + pager.getId() + ":"
+	                    + adapter.getItemId(position));
 	}
 
 	class PagesAdapter extends FragmentPagerAdapter {
@@ -69,11 +80,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 			Fragment f;
 			if (position == 0) {
 				CountersFragment fg = CountersFragment.newInstance();
-				mFragments.add(fg);
 				f = fg;
 			} else {
 				DiagramFragment fg = DiagramFragment.newInstance();
-				mFragments.add(fg);
 				f = fg;
 			}
 
@@ -89,7 +98,10 @@ public class MainActivity extends SherlockFragmentActivity implements
 		public int getCount() {
 			return mTitles.length;
 		}
+		
 	}
+	
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -162,9 +174,28 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	private void reloadFragments() {
-		for (MainFragments fragments : mFragments) {
-			fragments.onReload();
-		}
+		((MainFragments)findFragmentByPosition(0)).onReload();
+		((MainFragments)findFragmentByPosition(1)).onReload();
 	}
+
+	@Override
+	public void onPageScrollStateChanged(int arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onPageScrolled(int arg0, float arg1, int arg2) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onPageSelected(int position) {
+		if(position == 1)
+			((MainFragments)findFragmentByPosition(1)).onReload();
+	}
+
+	
 
 }
