@@ -1,6 +1,5 @@
 package maximsblog.blogspot.com.timestatistic;
 
-import maximsblog.blogspot.com.timestatistic.AddCounterDialogFragment.AddCounterDialog;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;

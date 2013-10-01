@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import maximsblog.blogspot.com.timestatistic.AddCounterDialogFragment.AddCounterDialog;
 import maximsblog.blogspot.com.timestatistic.MainActivity.MainFragments;
 
 import android.content.ContentValues;
@@ -86,18 +85,6 @@ public final class CountersFragment extends Fragment implements
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 		if (mAdapter != null && cursor != null) {
 			mAdapter.swapCursor(cursor); // swap the new cursor in.
-			/*Cursor currentTimer = getActivity().getContentResolver().query(
-					RecordsDbHelper.CONTENT_URI_TIMES,
-					new String[] { RecordsDbHelper.TIMERSID,
-							RecordsDbHelper.LENGHT },
-					RecordsDbHelper.LENGHT + " IS NULL", null, null);
-			if (currentTimer.getCount() == 1) {
-				// launch timer
-				currentTimer.moveToFirst();
-				mCurrentTimerId = currentTimer.getLong(0);
-				mAdapter.setCurrentTimerId(mCurrentTimerId);
-				currentTimer.close();
-			}*/
 		}
 	}
 
@@ -202,8 +189,11 @@ public final class CountersFragment extends Fragment implements
 			long arg3) {
 		int id = mAdapter.getCursor().getInt(1);
 		String name = mAdapter.getCursor().getString(5);
-		((MainActivity)getActivity()).mAddCounterDialogFragment.setIdCounter(id);
-		((MainActivity)getActivity()).mAddCounterDialogFragment.setName(name);
+		boolean isRunning = mAdapter.getCursor().getInt(6) == 1;
+		CounterEditorDialogFragment addCounterDialogFragment = ((MainActivity)getActivity()).mAddCounterDialogFragment;
+		addCounterDialogFragment.setIdCounter(id);
+		addCounterDialogFragment.setName(name);
+		addCounterDialogFragment.setIsRunning(isRunning);
 		((MainActivity)getActivity()).mAddCounterDialogFragment.show(this.getActivity().getSupportFragmentManager(),
 		"dlg1");
 		return false;
