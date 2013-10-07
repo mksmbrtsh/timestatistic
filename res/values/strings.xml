@@ -15,4 +15,7 @@
 		<item >Диаграмма</item>
 	</string-array>
 		<string name="del">Удалить</string>
+	<string name="day1">день</string>
+    <string name="day234">дня</string>
+    <string name="days">дней</string>
 </resources>

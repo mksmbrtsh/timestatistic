@@ -46,8 +46,29 @@ public class CountersCursorAdapter extends SimpleCursorAdapter {
 		seconds = (int) (time / 1000) - day * 24 * 60 * 60 - 60 * 60
 				* hours - 60 * minutes;
 		String s = new String();
-		s = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+		if(day>0)
+		{
+			s = String.format("%s, %02d:%02d:%02d",getTimeString("day", day), hours, minutes, seconds);
+		} else
+			s = String.format("%02d:%02d:%02d", hours, minutes, seconds);
 		t.setText(s);
+	}
+	
+	private String getTimeString(String res, int l) {
+		StringBuilder s = new StringBuilder();
+		s.append(l);
+		s.append(' ');
+		if (l == 1 || (l % 10 == 1 && l != 11)) {
+			s.append(mContext.getString(mContext.getResources().getIdentifier(
+					res + "1", "string", mContext.getPackageName())));
+		} else if ((l % 10 == 2 || l % 10 == 3 || l % 10 == 4) && l != 12
+				&& l != 13 && l != 14) {
+			s.append(mContext.getString(mContext.getResources().getIdentifier(
+					res + "234", "string", mContext.getPackageName())));
+		} else
+			s.append(mContext.getString(mContext.getResources().getIdentifier(
+					res + "s", "string", mContext.getPackageName())));
+		return s.toString();
 	}
 	
 
