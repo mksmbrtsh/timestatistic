@@ -37,6 +37,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		ResetAllDialog, ICounterEditorDialog, OnPageChangeListener {
 
 	public CounterEditorDialogFragment mAddCounterDialogFragment;
+	
 	private String[] mTitles;
 	private PagesAdapter adapter;
 	private ViewPager pager;
@@ -60,7 +61,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		indicator.setOnPageChangeListener(this);
 		mAddCounterDialogFragment = new CounterEditorDialogFragment();
 		mAddCounterDialogFragment.setCounterDialogListener(this);
-			
+		
 	}
 	
 	public Fragment findFragmentByPosition(int position) {
@@ -139,10 +140,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onFinishDialog(String inputText, int id, Status status,
-			boolean isRunning) {
+			boolean isRunning, int color) {
 		if (status == Status.ADD) {
 			ContentValues cv = new ContentValues();
 			cv.put(RecordsDbHelper.NAME, inputText);
+			cv.put(RecordsDbHelper.COLOR, color);
 			Uri row = getContentResolver().insert(
 					RecordsDbHelper.CONTENT_URI_TIMERS, cv);
 			int iDcounters = Integer.valueOf(row.getLastPathSegment());
@@ -153,6 +155,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		} else if (status == Status.EDIT) {
 			ContentValues cv = new ContentValues();
 			cv.put(RecordsDbHelper.NAME, inputText);
+			cv.put(RecordsDbHelper.COLOR, color);
 			getContentResolver().update(
 					RecordsDbHelper.CONTENT_URI_RENAMECOUNTER, cv,
 					RecordsDbHelper.ID + "=?",
