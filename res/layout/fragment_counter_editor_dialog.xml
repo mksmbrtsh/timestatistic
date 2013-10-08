@@ -19,6 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/textView1"
+        android:layout_toLeftOf="@+id/color_imageButton"
         android:ems="10" >
 
         <requestFocus />
@@ -49,5 +50,13 @@
         android:layout_alignBottom="@+id/ok"
         android:layout_toLeftOf="@+id/ok"
         android:text="@string/del" />
+
+    <ImageButton
+        android:id="@+id/color_imageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/color_line" />
 
 </RelativeLayout>

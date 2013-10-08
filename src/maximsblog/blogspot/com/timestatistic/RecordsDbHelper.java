@@ -45,6 +45,7 @@ public class RecordsDbHelper extends ContentProvider {
     public final static String ID = "_id";
     public final static String ID2 = "_idt";
     public final static String NAME = "name";
+    public final static String COLOR = "color";
     public final static String ISRUNNING="isrunning";
     public final static String TIMERSID = "timerid";
     public final static String STARTTIME = "start";
@@ -211,7 +212,7 @@ public class RecordsDbHelper extends ContentProvider {
 		            			"SUM("+ RecordsDbHelper.LENGHT + ") AS " + RecordsDbHelper.LENGHT,
 		            			"MAX(" + RecordsDbHelper.STARTTIME +") AS" + RecordsDbHelper.STARTTIME,
 		            			RecordsDbHelper.NAME,
-		            			RecordsDbHelper.ISRUNNING },
+		            			RecordsDbHelper.ISRUNNING, RecordsDbHelper.COLOR },
 		            			selection,
 		            			RecordsDbHelper.TIMERSID,
 		            			null,
@@ -290,7 +291,7 @@ public class RecordsDbHelper extends ContentProvider {
 		
 		final String CREATE_TABLE_TIMERS = "CREATE TABLE "+TABLE_TIMERS +
                 "( "+ ID +" INTEGER PRIMARY KEY autoincrement, " +
-                NAME + " TEXT, " + ISRUNNING + " INTEGER DEFAULT 0 )";
+                NAME + " TEXT, " + COLOR + " INTEGER, " + ISRUNNING + " INTEGER DEFAULT 0 )";
 		
 		final String CREATE_TABLE_TIMES = "CREATE TABLE "+ TABLE_TIMES +
 				"( "+ ID2 +" INTEGER PRIMARY KEY autoincrement, " + TIMERSID + " INTEGER, " +
@@ -310,6 +311,7 @@ public class RecordsDbHelper extends ContentProvider {
         ContentValues cv = new ContentValues();
         cv.put(NAME, "Idle");
         cv.put(ISRUNNING, 1);
+        cv.put(COLOR, DiagramFragment.getRandomColor());
         long l = db.insert(TABLE_TIMERS, null, cv);
         Date now = new Date();
         cv = new ContentValues();

@@ -1,5 +1,8 @@
 package maximsblog.blogspot.com.timestatistic;
 
+import maximsblog.blogspot.com.timestatistic.ColorPickerDialog.OnColorChangedListener;
+import maximsblog.blogspot.com.timestatistic.ColorPickerDialogFragment.ColorCounterDialog;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -11,15 +14,19 @@ import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 public class CounterEditorDialogFragment extends DialogFragment implements
-		OnClickListener {
+		OnClickListener, ColorCounterDialog {
 	private EditText mNameEditor;
 	private String mName;
 	private ICounterEditorDialog mListener;
 	private int mId;
 	private Button mDelButton;
 	private boolean mIsRunning;
+	private ImageButton mColorButton;
+	private ColorPickerDialogFragment mColorPickerDialogFragment;
+	private int mColor;
 	
 	public enum Status {
 		ADD,
@@ -28,25 +35,25 @@ public class CounterEditorDialogFragment extends DialogFragment implements
 	}
 	
 	public interface ICounterEditorDialog {
-		void onFinishDialog(String inputText, int id, Status status, boolean isRunning);
+		void onFinishDialog(String inputText, int id, Status status, boolean isRunning, int color);
 	}
 
 	public void setCounterDialogListener(ICounterEditorDialog listener) {
 		mListener = listener;
 	}
 	
-	public void setName(String name)
-	{
+	public void setName(String name) {
 		mName = name;
 	}
+	public void setColor(int color) {
+		mColor = color;
+	}
 	
-	public void setIdCounter(int id)
-	{
+	public void setIdCounter(int id) {
 		mId = id;
 	}
 	
-	public void setIsRunning(boolean isRunning)
-	{
+	public void setIsRunning(boolean isRunning)	{
 		mIsRunning = isRunning;
 	}
 	
@@ -58,11 +65,15 @@ public class CounterEditorDialogFragment extends DialogFragment implements
 		v.findViewById(R.id.cancel).setOnClickListener(this);
 		mDelButton = (Button) v.findViewById(R.id.del);
 		mDelButton.setOnClickListener(this);
+		mColorButton = (ImageButton)v.findViewById(R.id.color_imageButton);
+		mColorButton.setOnClickListener(this);
 		mNameEditor = (EditText) v.findViewById(R.id.name_editor);
 		mNameEditor.requestFocus();
 		
 		getDialog().getWindow().setSoftInputMode(
 				LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+		mColorPickerDialogFragment = new ColorPickerDialogFragment();
+		
 		return v;
 	}
 	
@@ -76,12 +87,18 @@ public class CounterEditorDialogFragment extends DialogFragment implements
 	public void onClick(View v) {
 		int id = v.getId(); 
 		if (id == R.id.ok) {
-			mListener.onFinishDialog(mNameEditor.getText().toString(), mId,mId != -1 ? Status.EDIT : Status.ADD, mIsRunning);
-		} else if(id == R.id.del)
-		{
-			mListener.onFinishDialog(mNameEditor.getText().toString(), mId, Status.DEL, mIsRunning);
+			mListener.onFinishDialog(mNameEditor.getText().toString(), mId,mId != -1 ? Status.EDIT : Status.ADD, mIsRunning, mColor);
+		} else if (id == R.id.del) {
+			mListener.onFinishDialog(mNameEditor.getText().toString(), mId, Status.DEL, mIsRunning, mColor);
+		} else if (id == R.id.color_imageButton) {
+			//ColorPickerDialog c = new ColorPickerDialog(getActivity(), this, 1);
+			//c.show();
+			ColorPickerDialogFragment mColorPickerDialogFragment = new ColorPickerDialogFragment();
+			mColorPickerDialogFragment.setColorCounterDialogListener(this);
+			mColorPickerDialogFragment.show(getActivity().getSupportFragmentManager(),
+					"dlg2");
+			return;
 		}
-
 		dismiss();
 	}
 
@@ -91,5 +108,11 @@ public class CounterEditorDialogFragment extends DialogFragment implements
 
 	public void onCancel(DialogInterface dialog) {
 		super.onCancel(dialog);
+	}
+	
+
+	@Override
+	public void colorCounterChanged(int newcolor) {
+		mColor = newcolor;
 	}
 }
