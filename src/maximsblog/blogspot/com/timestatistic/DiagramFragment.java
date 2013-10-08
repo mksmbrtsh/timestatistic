@@ -2,6 +2,8 @@ package maximsblog.blogspot.com.timestatistic;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Random;
+import java.util.Set;
 
 import maximsblog.blogspot.com.timestatistic.MainActivity.MainFragments;
 
@@ -12,10 +14,12 @@ import org.achartengine.model.SeriesSelection;
 import org.achartengine.renderer.DefaultRenderer;
 import org.achartengine.renderer.SimpleSeriesRenderer;
 
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -34,9 +38,6 @@ import android.widget.Toast;
 public class DiagramFragment extends Fragment implements
 		LoaderCallbacks<Cursor>, MainFragments {
 
-	/** Colors to be used for the pie slices. */
-	private int[] COLORS = new int[] { Color.GREEN, Color.BLUE, Color.MAGENTA,
-			Color.CYAN, Color.BLACK };
 	/** The main series that will include all the data. */
 	private CategorySeries mSeries = new CategorySeries("");
 	/** The main renderer for the main dataset. */
@@ -50,7 +51,7 @@ public class DiagramFragment extends Fragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		loadermanager = getLoaderManager();
-
+		
 		super.onCreate(savedInstanceState);
 	}
 
@@ -117,7 +118,6 @@ public class DiagramFragment extends Fragment implements
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 		mRenderer.removeAllRenderers();
-		int i = 0;
 		if (cursor != null) {
 			mSeries.clear();
 			ArrayList<Color> c = new ArrayList<Color>();
@@ -130,9 +130,8 @@ public class DiagramFragment extends Fragment implements
 			mSeries.add(s == null ? "" : s, isRunning ? new Date().getTime()
 					- start : t);
 			SimpleSeriesRenderer renderer = new SimpleSeriesRenderer();
-			i = i < COLORS.length ? i : 0;
-			renderer.setColor(COLORS[i]);
-			i++;
+			int color = cursor.getInt(5);
+			renderer.setColor(color);
 			mRenderer.addSeriesRenderer(renderer);
 			while (cursor.moveToNext()) {
 				id = cursor.getLong(0);
@@ -143,9 +142,8 @@ public class DiagramFragment extends Fragment implements
 				mSeries.add(s == null ? "" : s,
 						isRunning ? new Date().getTime() - start : t);
 				renderer = new SimpleSeriesRenderer();
-				i = i < COLORS.length ? i : 0;
-				renderer.setColor(COLORS[i]);
-				i++;
+				color = cursor.getInt(5);
+				renderer.setColor(color);
 				mRenderer.addSeriesRenderer(renderer);
 			}
 
@@ -168,5 +166,10 @@ public class DiagramFragment extends Fragment implements
 	public static DiagramFragment newInstance() {
 		DiagramFragment fragment = new DiagramFragment();
 		return fragment;
+	}
+	
+	public static int getRandomColor() {
+		Random rnd = new Random(); 
+		return Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));   
 	}
 }
