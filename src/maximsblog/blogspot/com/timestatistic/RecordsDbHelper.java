@@ -191,7 +191,7 @@ public class RecordsDbHelper extends ContentProvider {
 		            			"MAX(" + RecordsDbHelper.STARTTIME +") AS" + RecordsDbHelper.STARTTIME,
 		            			RecordsDbHelper.ID,
 		            			RecordsDbHelper.NAME,
-		            			RecordsDbHelper.ISRUNNING  },
+		            			RecordsDbHelper.ISRUNNING, RecordsDbHelper.COLOR  },
 		            			selection,
 		            			RecordsDbHelper.TIMERSID,
 		            			null,
