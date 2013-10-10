@@ -3,7 +3,9 @@ package maximsblog.blogspot.com.timestatistic;
 import java.util.Date;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.InputFilter.LengthFilter;
 import android.view.View;
@@ -32,6 +34,8 @@ public class CountersCursorAdapter extends SimpleCursorAdapter {
 			TextView t = (TextView) view.findViewById(R.id.current);
 			setTime(t, lenght);
 		}
+		
+		view.setBackgroundColor(cursor.getInt(7));
 	}
 	
 	private void setTime(TextView t, long time)
@@ -48,7 +52,7 @@ public class CountersCursorAdapter extends SimpleCursorAdapter {
 		String s = new String();
 		if(day>0)
 		{
-			s = String.format("%s, %02d:%02d:%02d",getTimeString("day", day), hours, minutes, seconds);
+			s = String.format("%s\n%02d:%02d:%02d",getTimeString("day", day), hours, minutes, seconds);
 		} else
 			s = String.format("%02d:%02d:%02d", hours, minutes, seconds);
 		t.setText(s);
