@@ -29,6 +29,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
@@ -40,7 +41,7 @@ public final class CountersFragment extends Fragment implements
 	private Timer mTimer;
 	private CountersCursorAdapter mAdapter;
 	private LoaderManager loadermanager;
-	private ListView mList;
+	private GridView mList;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -61,7 +62,7 @@ public final class CountersFragment extends Fragment implements
 			Bundle savedInstanceState) {
 		LinearLayout layout = (LinearLayout) inflater.inflate(
 				R.layout.fragment_counters, container, false);
-		mList = (ListView) layout.findViewById(R.id.listView1);
+		mList = (GridView) layout.findViewById(R.id.listView1);
 		mList.setAdapter(mAdapter);
 		mList.setOnItemClickListener(this);
 		mList.setOnItemLongClickListener(this);
