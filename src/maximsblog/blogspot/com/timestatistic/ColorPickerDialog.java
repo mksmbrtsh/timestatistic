@@ -26,13 +26,19 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.SweepGradient;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
+import maximsblog.blogspot.com.timestatistic.ColorPickerDialog.ColorPickerView;
+import maximsblog.blogspot.com.timestatistic.R;
 
-public class ColorPickerDialog extends Dialog {
+public class ColorPickerDialog extends Dialog implements android.view.View.OnClickListener {
 
 	public interface OnColorChangedListener {
 		void colorChanged(int color );
@@ -40,8 +46,9 @@ public class ColorPickerDialog extends Dialog {
 
 	private OnColorChangedListener mListener;
 	private int mInitialColor;
+	private ColorPickerView mColorPickerView;
 
-	private static class ColorPickerView extends View {
+	public static class ColorPickerView extends View {
 		private Paint mPaint;
 		private Paint mCenterPaint;
 		private Paint mRadialPaint;
@@ -50,6 +57,10 @@ public class ColorPickerDialog extends Dialog {
 
 		private Paint mGradientPaint;
 		private int[] mLinearColors;
+		
+		public int getColor() {
+			return mCenterPaint.getColor();
+		}
 
 		ColorPickerView(Context c, OnColorChangedListener l, int color) {
 			super(c);
@@ -125,7 +136,7 @@ public class ColorPickerDialog extends Dialog {
 			mGradientPaint.setShader(shader);
 
 			canvas.translate(-CENTER_X, 0);
-			canvas.drawLine(0, r + 50, CENTER_X * 2, r + 50, mGradientPaint);
+			canvas.drawLine(0, r + 64, CENTER_X * 2, r + 64, mGradientPaint);
 		}
 
 		@Override
@@ -238,9 +249,33 @@ public class ColorPickerDialog extends Dialog {
 				dismiss();
 			}
 		};
-		LinearLayout ll = new LinearLayout(getContext());
-		ll.setGravity(Gravity.CENTER);
-		ll.addView(new ColorPickerView(getContext(), l, mInitialColor));
-		setContentView(ll);
+		setTitle(R.string.change_color);
+		LinearLayout mainLayout = new LinearLayout(getContext());
+		mainLayout.setGravity(Gravity.CENTER);
+		mainLayout.setOrientation(LinearLayout.VERTICAL);
+		mColorPickerView = new ColorPickerView(getContext(), l, mInitialColor);
+		mainLayout.addView(mColorPickerView);
+		View v = this.getLayoutInflater().inflate(R.layout.color_picker_dialog, null, false);
+		Button mOkButton = (Button)v.findViewById(R.id.ok_btn);
+		Button mCancelButton = (Button)v.findViewById(R.id.cancel_btn);
+		mOkButton.setOnClickListener(this);
+		mCancelButton.setOnClickListener(this);
+		mainLayout.addView(v);
+		setContentView(mainLayout);
+	}
+
+	@Override
+	public void onClick(View v) {
+		int id = v.getId();
+		switch(id) {
+		case R.id.ok_btn:
+			int color = mColorPickerView.getColor();
+			mListener.colorChanged(color);
+			dismiss();
+			break;
+		case R.id.cancel_btn:
+			dismiss();
+			break;
+		}
 	}
 }
