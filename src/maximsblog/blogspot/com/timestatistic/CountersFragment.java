@@ -188,12 +188,15 @@ public final class CountersFragment extends Fragment implements
 	@Override
 	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2,
 			long arg3) {
-		int id = mAdapter.getCursor().getInt(1);
-		String name = mAdapter.getCursor().getString(5);
-		boolean isRunning = mAdapter.getCursor().getInt(6) == 1;
+		Cursor cursor = mAdapter.getCursor();
+		int id = cursor.getInt(1);
+		String name = cursor.getString(5);
+		boolean isRunning = cursor.getInt(6) == 1;
+		int color = cursor.getInt(7);
 		CounterEditorDialogFragment addCounterDialogFragment = ((MainActivity)getActivity()).mAddCounterDialogFragment;
 		addCounterDialogFragment.setIdCounter(id);
 		addCounterDialogFragment.setName(name);
+		addCounterDialogFragment.setColor(color);
 		addCounterDialogFragment.setIsRunning(isRunning);
 		((MainActivity)getActivity()).mAddCounterDialogFragment.show(this.getActivity().getSupportFragmentManager(),
 		"dlg1");

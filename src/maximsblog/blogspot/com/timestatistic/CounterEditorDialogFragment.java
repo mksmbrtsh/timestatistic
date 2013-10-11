@@ -95,6 +95,7 @@ public class CounterEditorDialogFragment extends DialogFragment implements
 			//c.show();
 			ColorPickerDialogFragment mColorPickerDialogFragment = new ColorPickerDialogFragment();
 			mColorPickerDialogFragment.setColorCounterDialogListener(this);
+			mColorPickerDialogFragment.setColor(mColor);
 			mColorPickerDialogFragment.show(getActivity().getSupportFragmentManager(),
 					"dlg2");
 			return;
