@@ -18,4 +18,5 @@
 	<string name="day1">день</string>
     <string name="day234">дня</string>
     <string name="days">дней</string>
+    <string name="change_color">Выбор цвета фона</string>
 </resources>
