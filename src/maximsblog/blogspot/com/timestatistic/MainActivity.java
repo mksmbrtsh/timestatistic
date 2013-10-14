@@ -115,6 +115,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		switch (item.getItemId()) {
 		case R.id.item_add:
 			mAddCounterDialogFragment.setIdCounter(-1);
+			mAddCounterDialogFragment.setName("");
 			mAddCounterDialogFragment.show(this.getSupportFragmentManager(),
 					"dlg1");
 			break;
