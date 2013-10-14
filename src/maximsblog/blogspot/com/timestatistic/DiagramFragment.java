@@ -74,6 +74,13 @@ public class DiagramFragment extends Fragment implements
 			mChartView = ChartFactory.getPieChartView(this.getActivity(),
 					mSeries, mRenderer);
 			mRenderer.setClickEnabled(true);
+			mRenderer.setPanEnabled(false);
+			mRenderer.setZoomEnabled(false);
+			mRenderer.setDisplayValues(false);
+			mRenderer.setShowLabels(false);
+			mRenderer.setLegendTextSize(30);
+			mRenderer.setLegendHeight(50);
+			
 			mChartView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -111,7 +118,7 @@ public class DiagramFragment extends Fragment implements
 	@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
 		CursorLoader loader = new CursorLoader(this.getActivity(),
-				RecordsDbHelper.CONTENT_URI_SUMTIMES, null, null, null, null);
+				RecordsDbHelper.CONTENT_URI_TIMES, null, null, null, null);
 		return loader;
 	}
 
@@ -123,26 +130,26 @@ public class DiagramFragment extends Fragment implements
 			ArrayList<Color> c = new ArrayList<Color>();
 			cursor.moveToFirst();
 			long id = cursor.getLong(0);
-			long t = cursor.getLong(1);
-			long start = cursor.getLong(2);
-			String s = cursor.getString(3);
-			boolean isRunning = cursor.getInt(4) == 1;
-			mSeries.add(s == null ? "" : s, isRunning ? new Date().getTime()
+			long t = cursor.getLong(2);
+			long start = cursor.getLong(3);
+			String s = cursor.getString(5);
+			boolean isRunning = cursor.getInt(6) == 1;
+			mSeries.add(s == null ? "" : s, isRunning ? t + new Date().getTime()
 					- start : t);
 			SimpleSeriesRenderer renderer = new SimpleSeriesRenderer();
-			int color = cursor.getInt(5);
+			int color = cursor.getInt(7);
 			renderer.setColor(color);
 			mRenderer.addSeriesRenderer(renderer);
 			while (cursor.moveToNext()) {
 				id = cursor.getLong(0);
-				t = cursor.getLong(1);
-				start = cursor.getLong(2);
-				s = cursor.getString(3);
-				isRunning = cursor.getInt(4) == 1;
+				t = cursor.getLong(2);
+				start = cursor.getLong(3);
+				s = cursor.getString(5);
+				isRunning = cursor.getInt(6) == 1;
 				mSeries.add(s == null ? "" : s,
-						isRunning ? new Date().getTime() - start : t);
+						isRunning ? t + new Date().getTime() - start : t);
 				renderer = new SimpleSeriesRenderer();
-				color = cursor.getInt(5);
+				color = cursor.getInt(7);
 				renderer.setColor(color);
 				mRenderer.addSeriesRenderer(renderer);
 			}
