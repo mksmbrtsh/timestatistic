@@ -34,7 +34,6 @@ public class ColorPickerDialogFragment extends DialogFragment implements OnColor
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		return super.onCreateView(inflater, container, savedInstanceState);
-		
 	};
 	
     @Override
