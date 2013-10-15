@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.InputFilter.LengthFilter;
 import android.view.View;
+import android.widget.GridView;
 import android.widget.TextView;
 
 public class CountersCursorAdapter extends SimpleCursorAdapter {
@@ -23,19 +24,20 @@ public class CountersCursorAdapter extends SimpleCursorAdapter {
 		super.bindView(view, context, cursor);
 		boolean isRunning = cursor.getInt(6) == 1;
 		if (isRunning) {
-			
 				long start = cursor.getLong(3);
 				long now = new Date().getTime();
 				long lenght = now - start +  cursor.getLong(2);
 				TextView t = (TextView) view.findViewById(R.id.current);
 				setTime(t, lenght);
+				view.setSelected(true);
+				
 		} else {
 			long lenght = cursor.getLong(2);
 			TextView t = (TextView) view.findViewById(R.id.current);
 			setTime(t, lenght);
 		}
 		
-		view.setBackgroundColor(cursor.getInt(7));
+		view.findViewById(R.id.linearLayout).setBackgroundColor(cursor.getInt(7));
 	}
 	
 	private void setTime(TextView t, long time)

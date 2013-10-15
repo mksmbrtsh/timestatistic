@@ -47,13 +47,11 @@ public final class CountersFragment extends Fragment implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		loadermanager = getLoaderManager();
-		
 		String[] uiBindFrom = {  RecordsDbHelper.LENGHT, RecordsDbHelper.NAME };
 		int[] uiBindTo = {  R.id.current, R.id.name};
 		
 		mAdapter = new CountersCursorAdapter(this.getActivity(),
 				R.layout.count_row, null, uiBindFrom, uiBindTo, 0);
-		
 		loadermanager.initLoader(1, null, this);
 	}
 
@@ -66,6 +64,8 @@ public final class CountersFragment extends Fragment implements
 		mList.setAdapter(mAdapter);
 		mList.setOnItemClickListener(this);
 		mList.setOnItemLongClickListener(this);
+		
+		
 		return layout;
 	}
 
