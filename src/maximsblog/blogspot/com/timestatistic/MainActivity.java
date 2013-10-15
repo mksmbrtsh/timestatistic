@@ -2,6 +2,7 @@ package maximsblog.blogspot.com.timestatistic;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import maximsblog.blogspot.com.timestatistic.CounterEditorDialogFragment.ICounterEditorDialog;
 import maximsblog.blogspot.com.timestatistic.CounterEditorDialogFragment.Status;
@@ -21,6 +22,7 @@ import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.graphics.Color;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -116,6 +118,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 		case R.id.item_add:
 			mAddCounterDialogFragment.setIdCounter(-1);
 			mAddCounterDialogFragment.setName("");
+			Random rnd = new Random(); 
+			int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));  
+			mAddCounterDialogFragment.setColor(color);
 			mAddCounterDialogFragment.show(this.getSupportFragmentManager(),
 					"dlg1");
 			break;

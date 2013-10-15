@@ -25,7 +25,6 @@ public class CounterEditorDialogFragment extends DialogFragment implements
 	private Button mDelButton;
 	private boolean mIsRunning;
 	private ImageButton mColorButton;
-	private ColorPickerDialogFragment mColorPickerDialogFragment;
 	private int mColor;
 	
 	public enum Status {
@@ -72,8 +71,6 @@ public class CounterEditorDialogFragment extends DialogFragment implements
 		
 		getDialog().getWindow().setSoftInputMode(
 				LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-		mColorPickerDialogFragment = new ColorPickerDialogFragment();
-		
 		return v;
 	}
 	
@@ -91,8 +88,6 @@ public class CounterEditorDialogFragment extends DialogFragment implements
 		} else if (id == R.id.del) {
 			mListener.onFinishDialog(mNameEditor.getText().toString(), mId, Status.DEL, mIsRunning, mColor);
 		} else if (id == R.id.color_imageButton) {
-			//ColorPickerDialog c = new ColorPickerDialog(getActivity(), this, 1);
-			//c.show();
 			ColorPickerDialogFragment mColorPickerDialogFragment = new ColorPickerDialogFragment();
 			mColorPickerDialogFragment.setColorCounterDialogListener(this);
 			mColorPickerDialogFragment.setColor(mColor);
