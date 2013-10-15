@@ -25,6 +25,8 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,7 +80,9 @@ public class DiagramFragment extends Fragment implements
 			mRenderer.setZoomEnabled(false);
 			mRenderer.setDisplayValues(false);
 			mRenderer.setShowLabels(false);
-			mRenderer.setLegendTextSize(30);
+			DisplayMetrics metrics = getActivity().getResources().getDisplayMetrics();
+			float val = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 18, metrics);
+			mRenderer.setLegendTextSize(val);
 			mRenderer.setLegendHeight(50);
 			
 			mChartView.setOnClickListener(new View.OnClickListener() {
