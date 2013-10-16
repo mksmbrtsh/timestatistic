@@ -49,11 +49,12 @@ public class DiagramFragment extends Fragment implements
 	private GraphicalView mChartView;
 	private View mLayout;
 	private LoaderManager loadermanager;
+	private double mAll;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		loadermanager = getLoaderManager();
-		
+
 		super.onCreate(savedInstanceState);
 	}
 
@@ -80,11 +81,12 @@ public class DiagramFragment extends Fragment implements
 			mRenderer.setZoomEnabled(false);
 			mRenderer.setDisplayValues(false);
 			mRenderer.setShowLabels(false);
-			DisplayMetrics metrics = getActivity().getResources().getDisplayMetrics();
-			float val = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 18, metrics);
+			DisplayMetrics metrics = getActivity().getResources()
+					.getDisplayMetrics();
+			float val = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
+					15, metrics);
 			mRenderer.setLegendTextSize(val);
-			mRenderer.setLegendHeight(50);
-			
+
 			mChartView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -93,11 +95,21 @@ public class DiagramFragment extends Fragment implements
 					if (seriesSelection == null) {
 
 					} else {
+						double cur = 0.0;
+						int c=0;
 						for (int i = 0; i < mSeries.getItemCount(); i++) {
-							mRenderer.getSeriesRendererAt(i).setHighlighted(
-									i == seriesSelection.getPointIndex());
+							if (i == seriesSelection.getPointIndex()) {
+								mRenderer.getSeriesRendererAt(i)
+										.setHighlighted(true);
+								cur = mSeries.getValue(i);
+								c = i;
+							}
+							else
+								mRenderer.getSeriesRendererAt(i)
+								.setHighlighted(false);
 						}
 						mChartView.repaint();
+						Toast.makeText(getActivity(), String.format(mSeries.getCategory(c) + ": %2.1f%%", 100.0*cur/mAll), Toast.LENGTH_SHORT).show();
 
 					}
 				}
@@ -138,20 +150,22 @@ public class DiagramFragment extends Fragment implements
 			long start = cursor.getLong(3);
 			String s = cursor.getString(5);
 			boolean isRunning = cursor.getInt(6) == 1;
-			mSeries.add(s == null ? "" : s, isRunning ? t + new Date().getTime()
-					- start : t);
+			mSeries.add(s == null ? "" : s,
+					isRunning ? t + new Date().getTime() - start : t);
 			SimpleSeriesRenderer renderer = new SimpleSeriesRenderer();
 			int color = cursor.getInt(7);
 			renderer.setColor(color);
 			mRenderer.addSeriesRenderer(renderer);
+			mAll = 0.0;
 			while (cursor.moveToNext()) {
 				id = cursor.getLong(0);
 				t = cursor.getLong(2);
 				start = cursor.getLong(3);
 				s = cursor.getString(5);
 				isRunning = cursor.getInt(6) == 1;
-				mSeries.add(s == null ? "" : s,
-						isRunning ? t + new Date().getTime() - start : t);
+				double itm = isRunning ? t + new Date().getTime() - start : t;
+				mAll += itm;
+				mSeries.add(s == null ? "" : s, itm);
 				renderer = new SimpleSeriesRenderer();
 				color = cursor.getInt(7);
 				renderer.setColor(color);
@@ -178,9 +192,10 @@ public class DiagramFragment extends Fragment implements
 		DiagramFragment fragment = new DiagramFragment();
 		return fragment;
 	}
-	
+
 	public static int getRandomColor() {
-		Random rnd = new Random(); 
-		return Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));   
+		Random rnd = new Random();
+		return Color.argb(255, rnd.nextInt(256), rnd.nextInt(256),
+				rnd.nextInt(256));
 	}
 }
