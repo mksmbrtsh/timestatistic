@@ -5,6 +5,7 @@ import java.util.Date;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.InputFilter.LengthFilter;
@@ -23,22 +24,26 @@ public class CountersCursorAdapter extends SimpleCursorAdapter {
 	public void bindView(View view, Context context, Cursor cursor) {
 		super.bindView(view, context, cursor);
 		boolean isRunning = cursor.getInt(6) == 1;
+		int intColor = cursor.getInt(7);
+		TextView t = (TextView) view.findViewById(R.id.current);
+		t.setTextColor(~0xFFFFFF | (0xFFFFFF & ~intColor));
 		if (isRunning) {
 				long start = cursor.getLong(3);
 				long now = new Date().getTime();
 				long lenght = now - start +  cursor.getLong(2);
-				TextView t = (TextView) view.findViewById(R.id.current);
+
 				setTime(t, lenght);
 				view.findViewById(R.id.selectorLayout).setVisibility(View.VISIBLE);
 				
 		} else {
 			long lenght = cursor.getLong(2);
-			TextView t = (TextView) view.findViewById(R.id.current);
 			setTime(t, lenght);
 			view.findViewById(R.id.selectorLayout).setVisibility(View.GONE);
 		}
+		t = (TextView) view.findViewById(R.id.name);
+		t.setTextColor(~0xFFFFFF | (0xFFFFFF & ~intColor));
 		
-		view.findViewById(R.id.linearLayout).setBackgroundColor(cursor.getInt(7));
+		view.findViewById(R.id.linearLayout).setBackgroundColor(intColor);
 	}
 	
 	private void setTime(TextView t, long time)
