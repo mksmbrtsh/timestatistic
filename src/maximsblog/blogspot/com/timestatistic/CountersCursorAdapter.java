@@ -25,8 +25,10 @@ public class CountersCursorAdapter extends SimpleCursorAdapter {
 		super.bindView(view, context, cursor);
 		boolean isRunning = cursor.getInt(6) == 1;
 		int intColor = cursor.getInt(7);
+		view.findViewById(R.id.linearLayout).setBackgroundColor(intColor);
 		TextView t = (TextView) view.findViewById(R.id.current);
-		t.setTextColor(~0xFFFFFF | (0xFFFFFF & ~intColor));
+		intColor = ~0xFFFFFF | (0xFFFFFF & ~intColor);
+		t.setTextColor(intColor);
 		if (isRunning) {
 				long start = cursor.getLong(3);
 				long now = new Date().getTime();
@@ -41,9 +43,9 @@ public class CountersCursorAdapter extends SimpleCursorAdapter {
 			view.findViewById(R.id.selectorLayout).setVisibility(View.GONE);
 		}
 		t = (TextView) view.findViewById(R.id.name);
-		t.setTextColor(~0xFFFFFF | (0xFFFFFF & ~intColor));
+		t.setTextColor(intColor);
 		
-		view.findViewById(R.id.linearLayout).setBackgroundColor(intColor);
+		
 	}
 	
 	private void setTime(TextView t, long time)
