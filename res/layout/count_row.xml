@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="120dp"
-    android:layout_height="120dp"
-    android:padding="10dp">
+    android:layout_width="100dp"
+    android:layout_height="100dp"
+    android:padding="2dp">
+
+    <LinearLayout
+        android:id="@+id/selectorLayout"
+        android:layout_width="95dp"
+        android:layout_height="95dp"
+        android:layout_centerInParent="true"
+        android:background="@color/default_underline_indicator_selected_color"
+        android:gravity="center"
+        android:orientation="vertical" >
+    </LinearLayout>
+
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
         android:layout_centerInParent="true"
         android:gravity="center"
         android:orientation="vertical" >
@@ -18,7 +29,7 @@
              android:layout_margin="4dip"
              android:gravity="center"
              android:text="@+id/textSwitcher1"
-             android:textSize="19sp"
+             android:textSize="18sp"
              android:textStyle="bold" />
          
         <TextView
@@ -30,7 +41,7 @@
             android:text="TextView"
             android:ellipsize="end"
             android:maxLines="3"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:textStyle="italic" />
    
     </LinearLayout>
