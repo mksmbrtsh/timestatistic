@@ -1,6 +1,7 @@
 package maximsblog.blogspot.com.timestatistic;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Random;
 import java.util.Set;
@@ -49,7 +50,6 @@ public class DiagramFragment extends Fragment implements
 	private GraphicalView mChartView;
 	private View mLayout;
 	private LoaderManager loadermanager;
-	private double mAll;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -79,41 +79,13 @@ public class DiagramFragment extends Fragment implements
 			mRenderer.setClickEnabled(true);
 			mRenderer.setPanEnabled(false);
 			mRenderer.setZoomEnabled(false);
-			mRenderer.setDisplayValues(false);
-			mRenderer.setShowLabels(false);
+			mRenderer.setDisplayValues(true);
 			DisplayMetrics metrics = getActivity().getResources()
 					.getDisplayMetrics();
 			float val = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
 					15, metrics);
 			mRenderer.setLegendTextSize(val);
-
-			mChartView.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					SeriesSelection seriesSelection = mChartView
-							.getCurrentSeriesAndPoint();
-					if (seriesSelection == null) {
-
-					} else {
-						double cur = 0.0;
-						int c=0;
-						for (int i = 0; i < mSeries.getItemCount(); i++) {
-							if (i == seriesSelection.getPointIndex()) {
-								mRenderer.getSeriesRendererAt(i)
-										.setHighlighted(true);
-								cur = mSeries.getValue(i);
-								c = i;
-							}
-							else
-								mRenderer.getSeriesRendererAt(i)
-								.setHighlighted(false);
-						}
-						mChartView.repaint();
-						Toast.makeText(getActivity(), String.format(mSeries.getCategory(c) + ": %2.1f%%", 100.0*cur/mAll), Toast.LENGTH_SHORT).show();
-
-					}
-				}
-			});
+			mRenderer.setLabelsTextSize(val);
 			layout.addView(mChartView, new LayoutParams(
 					LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 		} else {
@@ -145,32 +117,42 @@ public class DiagramFragment extends Fragment implements
 			mSeries.clear();
 			ArrayList<Color> c = new ArrayList<Color>();
 			cursor.moveToFirst();
+			ArrayList<Double> values = new ArrayList<Double>();
+			ArrayList<String> nvalues = new ArrayList<String>();
 			long id = cursor.getLong(0);
 			long t = cursor.getLong(2);
 			long start = cursor.getLong(3);
 			String s = cursor.getString(5);
+			nvalues.add(s);
 			boolean isRunning = cursor.getInt(6) == 1;
-			mSeries.add(s == null ? "" : s,
-					isRunning ? t + new Date().getTime() - start : t);
+			Double sum = 0.0;
+			values.add(sum = (double) (isRunning ? t + new Date().getTime() - start : t));
+			
 			SimpleSeriesRenderer renderer = new SimpleSeriesRenderer();
 			int color = cursor.getInt(7);
 			renderer.setColor(color);
+			
 			mRenderer.addSeriesRenderer(renderer);
-			mAll = 0.0;
 			while (cursor.moveToNext()) {
 				id = cursor.getLong(0);
 				t = cursor.getLong(2);
 				start = cursor.getLong(3);
 				s = cursor.getString(5);
+				nvalues.add(s);
 				isRunning = cursor.getInt(6) == 1;
-				double itm = isRunning ? t + new Date().getTime() - start : t;
-				mAll += itm;
-				mSeries.add(s == null ? "" : s, itm);
+				double v =(double) (isRunning ? t + new Date().getTime() - start : t);
+				sum += v;
+				values.add(v);
 				renderer = new SimpleSeriesRenderer();
 				color = cursor.getInt(7);
 				renderer.setColor(color);
 				mRenderer.addSeriesRenderer(renderer);
 			}
+			for(int i1 = 0,cnt1=values.size();i1<cnt1;i1++)
+			{
+				mSeries.add(nvalues.get(i1), 100.0 * values.get(i1) / sum);
+			}
+			
 
 			if (mChartView != null)
 				mChartView.repaint();
