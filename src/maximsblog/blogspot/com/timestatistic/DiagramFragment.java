@@ -1,5 +1,8 @@
 package maximsblog.blogspot.com.timestatistic;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -131,8 +134,11 @@ public class DiagramFragment extends Fragment implements
 			SimpleSeriesRenderer renderer = new SimpleSeriesRenderer();
 			int color = cursor.getInt(7);
 			renderer.setColor(color);
-			
+			NumberFormat nf = NumberFormat.getPercentInstance();
+			nf.setMaximumFractionDigits(1);
+			renderer.setChartValuesFormat(nf);
 			mRenderer.addSeriesRenderer(renderer);
+			
 			while (cursor.moveToNext()) {
 				id = cursor.getLong(0);
 				t = cursor.getLong(2);
@@ -146,11 +152,12 @@ public class DiagramFragment extends Fragment implements
 				renderer = new SimpleSeriesRenderer();
 				color = cursor.getInt(7);
 				renderer.setColor(color);
+				renderer.setChartValuesFormat(nf);
 				mRenderer.addSeriesRenderer(renderer);
 			}
 			for(int i1 = 0,cnt1=values.size();i1<cnt1;i1++)
 			{
-				mSeries.add(nvalues.get(i1), 100.0 * values.get(i1) / sum);
+				mSeries.add(nvalues.get(i1),  values.get(i1) / sum);
 			}
 			
 
