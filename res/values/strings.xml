@@ -2,12 +2,12 @@
 <resources>
 
     <string name="app_name">timestatistic</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Настройки</string>
     <string name="last_value">Последнее значение</string>
     <string name="name">Название</string>
     <string name="add_counter_dialog">Добавление нового счетчика</string>
     <string name="add">Добавить</string>
+    <string name="about">О программе</string>
     <string name="reset_all">Сбросить все счетчики</string>
 	<string name="are_you_sure">Вы уверены?</string>
 	<string-array name="TitlePages">
@@ -19,4 +19,7 @@
     <string name="day234">дня</string>
     <string name="days">дней</string>
     <string name="change_color">Выбор цвета фона</string>
+    <string name="version">версия</string>
+    <string name="about_text">
+        Идея: <a href="mailto:ruslan.popov@gmail.com">Ruslan Popov</a>\n\nРазработчик: <a href="mailto:mksmbtrsh@gmail.com">Maksim Bartosh</a>\n\nДругие приложения на <a href="https://play.google.com/store/search?q=maksim+bartosh&amp;c=apps">GooglePlay</a>\n\n<a href="mailto:mksmbtrsh@gmail.com">Связь для предложений и замечаний</a></string>
 </resources>
