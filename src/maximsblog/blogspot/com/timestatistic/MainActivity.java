@@ -39,7 +39,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		ResetAllDialog, ICounterEditorDialog, OnPageChangeListener {
 
 	public CounterEditorDialogFragment mAddCounterDialogFragment;
-	
+
 	private String[] mTitles;
 	private PagesAdapter adapter;
 	private ViewPager pager;
@@ -54,8 +54,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		setContentView(R.layout.activity_main);
 		mTitles = getResources().getStringArray(R.array.TitlePages);
 		// prepare ViewPagerIndicator
-		adapter = new PagesAdapter(
-				getSupportFragmentManager());
+		adapter = new PagesAdapter(getSupportFragmentManager());
 		pager = (ViewPager) findViewById(R.id.pager);
 		pager.setAdapter(adapter);
 		TitlePageIndicator indicator = (TitlePageIndicator) findViewById(R.id.indicator);
@@ -63,14 +62,14 @@ public class MainActivity extends SherlockFragmentActivity implements
 		indicator.setOnPageChangeListener(this);
 		mAddCounterDialogFragment = new CounterEditorDialogFragment();
 		mAddCounterDialogFragment.setCounterDialogListener(this);
-		
+
 	}
-	
+
 	public Fragment findFragmentByPosition(int position) {
-	    
-	    return getSupportFragmentManager().findFragmentByTag(
-	            "android:switcher:" + pager.getId() + ":"
-	                    + adapter.getItemId(position));
+
+		return getSupportFragmentManager().findFragmentByTag(
+				"android:switcher:" + pager.getId() + ":"
+						+ adapter.getItemId(position));
 	}
 
 	class PagesAdapter extends FragmentPagerAdapter {
@@ -101,10 +100,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 		public int getCount() {
 			return mTitles.length;
 		}
-		
+
 	}
-	
-	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -114,22 +111,31 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		FragmentTransaction ft;
 		switch (item.getItemId()) {
 		case R.id.item_add:
 			mAddCounterDialogFragment.setIdCounter(-1);
 			mAddCounterDialogFragment.setName("");
-			Random rnd = new Random(); 
-			int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));  
+			Random rnd = new Random();
+			int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256),
+					rnd.nextInt(256));
 			mAddCounterDialogFragment.setColor(color);
 			mAddCounterDialogFragment.show(this.getSupportFragmentManager(),
 					"dlg1");
 			break;
-		case R.id.item_reset_all:
-			FragmentTransaction ft = getSupportFragmentManager()
+		case R.id.item_reset_all: 
+			ft = getSupportFragmentManager()
 					.beginTransaction();
 			AreYouSureResetAllDialog newFragment = new AreYouSureResetAllDialog();
 			newFragment.setResetAllDialogListener(this);
 			newFragment.show(ft, "dialog");
+			
+			break;
+		case R.id.item_about:
+			ft = getSupportFragmentManager()
+					.beginTransaction();
+			AboutDialog aboutFragment = new AboutDialog();
+			aboutFragment.show(ft, "aboutDialog");
 			break;
 		default:
 			break;
@@ -171,9 +177,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 			if (isRunning) {
 				ContentValues cv = new ContentValues();
 				cv.put(RecordsDbHelper.ISRUNNING, 1);
-				getContentResolver().update(
-						RecordsDbHelper.CONTENT_URI_TIMERS, cv,
-						RecordsDbHelper.ID + " = ?",
+				getContentResolver().update(RecordsDbHelper.CONTENT_URI_TIMERS,
+						cv, RecordsDbHelper.ID + " = ?",
 						new String[] { String.valueOf(1) });
 			}
 			getContentResolver().delete(RecordsDbHelper.CONTENT_URI_TIMERS,
@@ -183,28 +188,26 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	private void reloadFragments() {
-		((MainFragments)findFragmentByPosition(0)).onReload();
-		((MainFragments)findFragmentByPosition(1)).onReload();
+		((MainFragments) findFragmentByPosition(0)).onReload();
+		((MainFragments) findFragmentByPosition(1)).onReload();
 	}
 
 	@Override
 	public void onPageScrollStateChanged(int arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onPageScrolled(int arg0, float arg1, int arg2) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onPageSelected(int position) {
-		if(position == 1)
-			((MainFragments)findFragmentByPosition(1)).onReload();
+		if (position == 1)
+			((MainFragments) findFragmentByPosition(1)).onReload();
 	}
-
-	
 
 }
