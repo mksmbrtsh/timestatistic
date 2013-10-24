@@ -77,7 +77,13 @@ public class CounterEditorDialogFragment extends DialogFragment implements
 	@Override
 	public void onResume() {
 		mNameEditor.setText(mName);
-		mDelButton.setVisibility((mId!=-1 && mId != 1) ? View.VISIBLE : View.GONE);
+		if(mId!=-1 && mId != 1){
+			mDelButton.setVisibility(View.VISIBLE);
+			getDialog().setTitle(R.string.edit_counter_dialog);
+		} else {  
+			mDelButton.setVisibility(View.GONE);
+			getDialog().setTitle(R.string.add_counter_dialog);
+		}
 		super.onResume();
 	};
 
