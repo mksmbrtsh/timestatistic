@@ -34,7 +34,7 @@ public class RecordsDbHelper extends ContentProvider {
 	public static final int SUMTIMES = 5;
 	public static final int RESETCOUNTERS = 6;
 	public static final int RENAMECOUNTER = 7;
-	
+	public static final int ALLTIMES = 8;
 	
 	final static String DB_NAME = "timestat.db";
 	final static int DB_VER = 1;
@@ -60,6 +60,7 @@ public class RecordsDbHelper extends ContentProvider {
 		sUriMatcher.addURI(AUTHORITY, "sumtimes", SUMTIMES);
 		sUriMatcher.addURI(AUTHORITY, "resetcounters", RESETCOUNTERS);
 		sUriMatcher.addURI(AUTHORITY, "renamecounter", RENAMECOUNTER);
+		sUriMatcher.addURI(AUTHORITY, "alltimes", ALLTIMES);
 		
 		timersProjectionMap = new HashMap<String, String>();
 		timersProjectionMap.put(ID, ID);
@@ -79,6 +80,7 @@ public class RecordsDbHelper extends ContentProvider {
     public static final Uri CONTENT_URI_SUMTIMES = Uri.parse("content://" + AUTHORITY + "/sumtimes");
     public static final Uri CONTENT_URI_RESETCOUNTERS = Uri.parse("content://" + AUTHORITY + "/resetcounters");
     public static final Uri CONTENT_URI_RENAMECOUNTER= Uri.parse("content://" + AUTHORITY + "/renamecounter");
+    public static final Uri CONTENT_URI_ALLTIMES = Uri.parse("content://" + AUTHORITY + "/alltimes");
 	public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.jwei512.notes";
   
     SQLiteDatabase mDB;
@@ -103,6 +105,8 @@ public class RecordsDbHelper extends ContentProvider {
 		case TIMES_ID:
 			return "vnd.android.cursor.dir/vnd.jwei512.times";
 		case SUMTIMES:
+			return "vnd.android.cursor.dir/vnd.jwei512.times";
+		case ALLTIMES:
 			return "vnd.android.cursor.dir/vnd.jwei512.times";
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
@@ -221,6 +225,10 @@ public class RecordsDbHelper extends ContentProvider {
 		            	c = mDB.rawQuery(s, selectionArgs);
 		            	c.setNotificationUri(getContext().getContentResolver(), uri);
 		            	return c;
+		            case ALLTIMES:
+		            	qb.setTables(TABLE_TIMES);
+		            	qb.setProjectionMap(timesProjectionMap);
+		            	break;
 		            default:
 		                throw new IllegalArgumentException("Unknown URI " + uri);
 		        }
