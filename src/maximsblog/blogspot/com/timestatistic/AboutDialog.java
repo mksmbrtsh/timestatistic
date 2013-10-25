@@ -8,6 +8,8 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -26,9 +28,9 @@ public class AboutDialog extends DialogFragment {
 			Bundle savedInstanceState) {
 		View view =  inflater.inflate(R.layout.fragment_about,container, false);
 		TextView t = (TextView) view.findViewById(R.id.textView1);
-		t.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-		t.setClickable(true);
+		t.setText(getResources().getText(R.string.about_text));
 		Linkify.addLinks(t, Linkify.ALL);
+		t.setMovementMethod(LinkMovementMethod.getInstance());
 		getDialog().setTitle(getString(R.string.app_name));
 		try {
 			String nameversion = getString(R.string.version) + ": " + getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
