@@ -27,17 +27,17 @@ public class TimeRecordsFragment extends Fragment implements
 
 	private LoaderManager loadermanager;
 	private ListView mList;
-	private SimpleCursorAdapter mAdapter;
+	private TimesCursorAdapter mAdapter;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		loadermanager = getLoaderManager();
-		String[] uiBindFrom = { RecordsDbHelper.STARTTIME, RecordsDbHelper.LENGHT };
-		int[] uiBindTo = { android.R.id.text1, android.R.id.text2 };
+		String[] uiBindFrom = { RecordsDbHelper.NAME, RecordsDbHelper.STARTTIME, RecordsDbHelper.LENGHT };
+		int[] uiBindTo = { R.id.name, R.id.start, R.id.lenght };
 
-		mAdapter = new SimpleCursorAdapter(this.getActivity(),
-				android.R.layout.simple_list_item_2, null, uiBindFrom, uiBindTo, 0);
+		mAdapter = new TimesCursorAdapter(this.getActivity(),
+				R.layout.time_row, null, uiBindFrom, uiBindTo, 0);
 		loadermanager.initLoader(1, null, this);
 	}
 
