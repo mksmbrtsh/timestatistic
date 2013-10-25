@@ -2,41 +2,59 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal" >
+    android:orientation="horizontal" 
+    android:gravity="center" >
+
+    <LinearLayout
+        android:id="@+id/LinearLayout01"
+        android:layout_width="12dip"
+        android:layout_height="12dip"
+        android:orientation="horizontal" >
+    </LinearLayout>
+
     <TextView
-             android:id="@+id/name"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_margin="4dip"
-             android:gravity="center"
-             android:text=""
-             android:textSize="12sp"
-             android:textStyle="bold" />
-	<TextView
-             android:id="@+id/start"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_margin="4dip"
-             android:gravity="center"
-             android:text=""
-             android:textSize="12sp"
-             android:textStyle="bold" />
-	<TextView
-             android:id="@+id/stop"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_margin="4dip"
-             android:gravity="center"
-             android:text=""
-             android:textSize="12sp"
-             android:textStyle="bold" />
-	<TextView
-             android:id="@+id/lenght"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_margin="4dip"
-             android:gravity="center"
-             android:text=""
-             android:textSize="12sp"
-             android:textStyle="bold" />
+        android:id="@+id/name"
+        android:layout_width="80dip"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dip"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:gravity="left"
+        android:text="@string/name"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/start"
+        android:layout_width="80dip"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dip"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/start_time"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/stop"
+        android:layout_width="80dip"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dip"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/end_time"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/lenght"
+        android:layout_width="80dip"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dip"
+        android:layout_weight="1"
+        android:gravity="right"
+        android:text="@string/lenght"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
 </LinearLayout>
