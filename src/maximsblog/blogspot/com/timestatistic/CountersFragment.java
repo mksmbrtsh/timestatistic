@@ -6,7 +6,9 @@ import java.util.TimerTask;
 
 import maximsblog.blogspot.com.timestatistic.MainActivity.MainFragments;
 
+import android.app.NotificationManager;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
@@ -16,6 +18,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -133,6 +136,10 @@ public final class CountersFragment extends Fragment implements
 		getActivity().getContentResolver().update(
 				RecordsDbHelper.CONTENT_URI_TIMERS, cv, RecordsDbHelper.ID + " = ?", new String[] { String.valueOf(counterId) });
 		loadermanager.restartLoader(1, null, this);
+		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(  
+                getActivity()).setSmallIcon(R.drawable.ic_launcher);
+		NotificationManager mNotificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+		mNotificationManager.notify(100, mBuilder.build()); 
 	}
 
 	
