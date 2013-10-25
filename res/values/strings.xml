@@ -13,6 +13,7 @@
 	<string name="are_you_sure">Вы уверены?</string>
 	<string-array name="TitlePages">
 		<item >Счётчики</item>
+		<item >Записи</item>
 		<item >Диаграмма</item>
 	</string-array>
 		<string name="del">Удалить</string>

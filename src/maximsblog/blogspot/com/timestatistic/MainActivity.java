@@ -83,11 +83,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 			if (position == 0) {
 				CountersFragment fg = CountersFragment.newInstance();
 				f = fg;
+			} else if(position == 1) {
+				TimeRecordsFragment fg = TimeRecordsFragment.newInstance();
+				f = fg;
 			} else {
 				DiagramFragment fg = DiagramFragment.newInstance();
 				f = fg;
 			}
-
 			return f;
 		}
 
@@ -206,8 +208,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onPageSelected(int position) {
-		if (position == 1)
-			((MainFragments) findFragmentByPosition(1)).onReload();
+		if (position == 2)
+			((MainFragments) findFragmentByPosition(position)).onReload();
 	}
 
 }
