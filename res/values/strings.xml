@@ -21,6 +21,5 @@
     <string name="days">дней</string>
     <string name="change_color">Выбор цвета фона</string>
     <string name="version">версия</string>
-    <string name="about_text">
-        Идея: <a href="mailto:ruslan.popov@gmail.com">Ruslan Popov</a>\n\nРазработчик: <a href="mailto:mksmbtrsh@gmail.com">Maksim Bartosh</a>\n\nДругие приложения на <a href="https://play.google.com/store/search?q=maksim+bartosh&amp;c=apps">GooglePlay</a>\n\n<a href="mailto:mksmbtrsh@gmail.com">Связь для предложений и замечаний</a></string>
+    <string name="about_text">Идея: <a href="mailto:ruslan.popov@gmail.com">Ruslan Popov</a>\n\nРазработчик: <a href="mailto:mksmbtrsh@gmail.com">Maksim Bartosh</a>\n\nДругие приложения на <a href="https://play.google.com/store/search?q=maksim+bartosh&amp;c=apps">GooglePlay</a>\n\n<a href="mailto:mksmbtrsh@gmail.com">Связь для предложений и замечаний</a></string>
 </resources>
