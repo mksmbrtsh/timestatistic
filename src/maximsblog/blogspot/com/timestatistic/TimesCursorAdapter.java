@@ -1,5 +1,6 @@
 package maximsblog.blogspot.com.timestatistic;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.content.Context;
@@ -15,9 +16,12 @@ import android.widget.TextView;
 
 public class TimesCursorAdapter extends SimpleCursorAdapter {
 
+	private SimpleDateFormat mSimpleDateFormat;
+
 	public TimesCursorAdapter(Context context, int layout, Cursor c,
 			String[] from, int[] to, int flags) {
 		super(context, layout, c, from, to, flags);
+		mSimpleDateFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
 	}
 
 	@Override
@@ -27,11 +31,12 @@ public class TimesCursorAdapter extends SimpleCursorAdapter {
 		TextView stop = (TextView) view.findViewById(R.id.stop);
 		TextView lenght = (TextView) view.findViewById(R.id.lenght);
 		Date d = new Date(cursor.getLong(2));
-		start.setText(d.toLocaleString());
+		start.setText(mSimpleDateFormat.format(d));
 		d = new Date(cursor.getLong(1) + cursor.getLong(2));
-		stop.setText(d.toLocaleString());
+		stop.setText(mSimpleDateFormat.format(d));
 		setTime(lenght, cursor.getLong(1));
 		
+		view.findViewById(R.id.LinearLayout01).setBackgroundColor(cursor.getInt(4));
 		
 		
 		
