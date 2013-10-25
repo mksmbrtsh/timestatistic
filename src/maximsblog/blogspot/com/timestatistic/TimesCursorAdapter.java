@@ -13,9 +13,9 @@ import android.view.View;
 import android.widget.GridView;
 import android.widget.TextView;
 
-public class CountersCursorAdapter extends SimpleCursorAdapter {
+public class TimesCursorAdapter extends SimpleCursorAdapter {
 
-	public CountersCursorAdapter(Context context, int layout, Cursor c,
+	public TimesCursorAdapter(Context context, int layout, Cursor c,
 			String[] from, int[] to, int flags) {
 		super(context, layout, c, from, to, flags);
 	}
@@ -23,27 +23,20 @@ public class CountersCursorAdapter extends SimpleCursorAdapter {
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
 		super.bindView(view, context, cursor);
-		boolean isRunning = cursor.getInt(6) == 1;
-		int intColor = cursor.getInt(7);
-		view.findViewById(R.id.linearLayout).setBackgroundColor(intColor);
-		TextView t = (TextView) view.findViewById(R.id.current);
-		intColor = ~0xFFFFFF | (0xFFFFFF & ~intColor);
-		t.setTextColor(intColor);
-		if (isRunning) {
-				long start = cursor.getLong(3);
-				long now = new Date().getTime();
-				long lenght = now - start +  cursor.getLong(2);
-
-				setTime(t, lenght);
-				view.findViewById(R.id.selectorLayout).setVisibility(View.VISIBLE);
-				
-		} else {
-			long lenght = cursor.getLong(2);
-			setTime(t, lenght);
-			view.findViewById(R.id.selectorLayout).setVisibility(View.GONE);
-		}
-		t = (TextView) view.findViewById(R.id.name);
-		t.setTextColor(intColor);
+		TextView start = (TextView) view.findViewById(R.id.start);
+		TextView stop = (TextView) view.findViewById(R.id.stop);
+		TextView lenght = (TextView) view.findViewById(R.id.lenght);
+		Date d = new Date(cursor.getLong(2));
+		start.setText(d.toLocaleString());
+		d = new Date(cursor.getLong(1) + cursor.getLong(2));
+		stop.setText(d.toLocaleString());
+		setTime(lenght, cursor.getLong(1));
+		
+		
+		
+		
+		
+		
 	}
 	
 	private void setTime(TextView t, long time)
