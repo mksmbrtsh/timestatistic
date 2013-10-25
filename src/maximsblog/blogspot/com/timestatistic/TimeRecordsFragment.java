@@ -1,12 +1,74 @@
 package maximsblog.blogspot.com.timestatistic;
 
+import maximsblog.blogspot.com.timestatistic.MainActivity.MainFragments;
+import android.database.Cursor;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ListView;
+import android.support.v4.widget.SimpleCursorAdapter;
 
-public class TimeRecordsFragment  extends Fragment {
-
+public class TimeRecordsFragment extends Fragment implements
+		LoaderCallbacks<Cursor> {
 	public static TimeRecordsFragment newInstance() {
-		
+
 		return new TimeRecordsFragment();
+	}
+
+	private LoaderManager loadermanager;
+	private ListView mList;
+	private SimpleCursorAdapter mAdapter;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		loadermanager = getLoaderManager();
+		String[] uiBindFrom = { RecordsDbHelper.STARTTIME, RecordsDbHelper.LENGHT };
+		int[] uiBindTo = { android.R.id.text1, android.R.id.text2 };
+
+		mAdapter = new SimpleCursorAdapter(this.getActivity(),
+				android.R.layout.simple_list_item_2, null, uiBindFrom, uiBindTo, 0);
+		loadermanager.initLoader(1, null, this);
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		LinearLayout layout = (LinearLayout) inflater.inflate(
+				R.layout.fragment_time_records, container, false);
+		mList = (ListView) layout.findViewById(R.id.listView1);
+		mList.setAdapter(mAdapter);
+		return layout;
+	}
+
+	@Override
+	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
+		CursorLoader loader = new CursorLoader(this.getActivity(),
+				RecordsDbHelper.CONTENT_URI_ALLTIMES, null, RecordsDbHelper.STARTTIME + " IS NOT NULL AND " + RecordsDbHelper.LENGHT +" <>0", null, null);
+		return loader;
+	}
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> arg0, Cursor cursor) {
+		if (mAdapter != null && cursor != null) {
+			mAdapter.swapCursor(cursor); // swap the new cursor in.
+		}
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> arg0) {
+		// TODO Auto-generated method stub
+
 	}
 
 }
