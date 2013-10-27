@@ -57,43 +57,40 @@ public class DiagramFragment extends Fragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		loadermanager = getLoaderManager();
-
 		super.onCreate(savedInstanceState);
+		mRenderer.setZoomButtonsVisible(false);
+		mRenderer.setStartAngle(180);
+		mRenderer.setDisplayValues(true);
+		mRenderer.setInScroll(false);
+		mRenderer.setClickEnabled(false);
+		mRenderer.setPanEnabled(false);
+		mRenderer.setZoomEnabled(false);
+		DisplayMetrics metrics = getActivity().getResources()
+				.getDisplayMetrics();
+		float val = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
+				15, metrics);
+		mRenderer.setLegendTextSize(val);
+		mRenderer.setLabelsTextSize(val);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		mLayout = inflater.inflate(R.layout.fragment_diagram, container, false);
-		mRenderer.setZoomButtonsVisible(false);
-		mRenderer.setStartAngle(180);
-		mRenderer.setDisplayValues(true);
-		mRenderer.setInScroll(false);
+		if (mChartView == null) {
+			ViewGroup layout = (ViewGroup) mLayout.findViewById(R.id.chart);
+			mChartView = ChartFactory.getPieChartView(this.getActivity(),
+					mSeries, mRenderer);
+			layout.addView(mChartView, new LayoutParams(
+					LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		}
 		return mLayout;
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (mChartView == null) {
-			ViewGroup layout = (ViewGroup) mLayout.findViewById(R.id.chart);
-			mChartView = ChartFactory.getPieChartView(this.getActivity(),
-					mSeries, mRenderer);
-			mRenderer.setClickEnabled(true);
-			mRenderer.setPanEnabled(false);
-			mRenderer.setZoomEnabled(false);
-			mRenderer.setDisplayValues(true);
-			DisplayMetrics metrics = getActivity().getResources()
-					.getDisplayMetrics();
-			float val = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
-					15, metrics);
-			mRenderer.setLegendTextSize(val);
-			mRenderer.setLabelsTextSize(val);
-			layout.addView(mChartView, new LayoutParams(
-					LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-		} else {
-			mChartView.repaint();
-		}
+		
 		loadermanager.initLoader(1, null, this);
 	}
 
@@ -160,9 +157,10 @@ public class DiagramFragment extends Fragment implements
 				mSeries.add(nvalues.get(i1),  values.get(i1) / sum);
 			}
 			
-
-			if (mChartView != null)
+			
+			if (mChartView != null) {
 				mChartView.repaint();
+			}
 		}
 	}
 
