@@ -31,10 +31,11 @@ public class AboutDialog extends DialogFragment {
 		t.setText(getResources().getText(R.string.about_text));
 		Linkify.addLinks(t, Linkify.ALL);
 		t.setMovementMethod(LinkMovementMethod.getInstance());
-		getDialog().setTitle(getString(R.string.app_name));
+		
 		try {
 			String nameversion = getString(R.string.version) + ": " + getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
-			((TextView)view.findViewById(R.id.version_txt)).setText(nameversion);
+			getDialog().setTitle(getString(R.string.app_name) + " " + nameversion);
+			
 		} catch (NameNotFoundException e) {
 
 		}
