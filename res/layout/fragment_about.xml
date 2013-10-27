@@ -16,8 +16,7 @@
         android:id="@+id/version_txt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:gravity="center" />
 
     <TextView
         android:id="@+id/textView1"
