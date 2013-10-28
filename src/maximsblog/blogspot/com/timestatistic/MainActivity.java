@@ -22,6 +22,7 @@ import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -139,6 +140,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 			AboutDialog aboutFragment = new AboutDialog();
 			aboutFragment.show(ft, "aboutDialog");
 			break;
+		case R.id.action_settings:
+			Intent i = new Intent(this, SettingsActivity.class);
+			startActivity(i);
 		default:
 			break;
 		}

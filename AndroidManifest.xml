@@ -26,6 +26,7 @@
             android:authorities="maximsblogspot.com.timestatistic.providers.db" >
             
         </provider>
+        <activity android:name="SettingsActivity"></activity>
     </application>
 
 </manifest>
