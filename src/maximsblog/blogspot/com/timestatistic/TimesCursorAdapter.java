@@ -24,24 +24,34 @@ public class TimesCursorAdapter extends SimpleCursorAdapter {
 		mSimpleDateFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
 	}
 
+	private static class ViewHolder {
+		public TextView start;
+		public TextView stop;
+		public TextView lenght;
+		public View LinearLayout01;
+	}
+	
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
 		super.bindView(view, context, cursor);
-		TextView start = (TextView) view.findViewById(R.id.start);
-		TextView stop = (TextView) view.findViewById(R.id.stop);
-		TextView lenght = (TextView) view.findViewById(R.id.lenght);
+		ViewHolder holder;
+		if(view.getTag() == null){
+			holder = new ViewHolder();
+			holder.start = (TextView) view.findViewById(R.id.start);
+			holder.stop = (TextView) view.findViewById(R.id.stop);
+			holder.lenght = (TextView) view.findViewById(R.id.lenght);
+			holder.LinearLayout01 =  view.findViewById(R.id.LinearLayout01);
+			view.setTag(holder);
+		} else {
+			holder = (ViewHolder) view.getTag();
+		}
+		
 		Date d = new Date(cursor.getLong(2));
-		start.setText(mSimpleDateFormat.format(d));
+		holder.start.setText(mSimpleDateFormat.format(d));
 		d = new Date(cursor.getLong(1) + cursor.getLong(2));
-		stop.setText(mSimpleDateFormat.format(d));
-		setTime(lenght, cursor.getLong(1));
-		
-		view.findViewById(R.id.LinearLayout01).setBackgroundColor(cursor.getInt(4));
-		
-		
-		
-		
-		
+		holder.stop.setText(mSimpleDateFormat.format(d));
+		setTime(holder.lenght, cursor.getLong(1));
+		holder.LinearLayout01.setBackgroundColor(cursor.getInt(4));
 	}
 	
 	private void setTime(TextView t, long time)
