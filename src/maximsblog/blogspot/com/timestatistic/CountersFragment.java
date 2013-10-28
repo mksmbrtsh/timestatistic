@@ -136,10 +136,7 @@ public final class CountersFragment extends Fragment implements
 		getActivity().getContentResolver().update(
 				RecordsDbHelper.CONTENT_URI_TIMERS, cv, RecordsDbHelper.ID + " = ?", new String[] { String.valueOf(counterId) });
 		loadermanager.restartLoader(1, null, this);
-		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(  
-                getActivity()).setSmallIcon(R.drawable.ic_launcher);
-		NotificationManager mNotificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-		mNotificationManager.notify(100, mBuilder.build()); 
+		SettingsActivity.visibleNotif(getActivity(),cursor.getLong(3), cursor.getString(5));
 	}
 
 	
