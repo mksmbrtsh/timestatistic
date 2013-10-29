@@ -1,5 +1,7 @@
 package maximsblog.blogspot.com.timestatistic;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
@@ -13,14 +15,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.Preference;
+import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceManager;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NotificationCompat;
 
 public class SettingsActivity extends SherlockPreferenceActivity implements
-		OnPreferenceChangeListener {
+		OnPreferenceChangeListener, OnPreferenceClickListener {
 
 	/** Called when the activity is first created. */
 	@Override
@@ -29,6 +33,10 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 		addPreferencesFromResource(R.xml.settings);
 		Preference p = findPreference("visible_notif");
 		p.setOnPreferenceChangeListener(this);
+		p = findPreference("export");
+		p.setOnPreferenceClickListener(this);
+		p = findPreference("import");
+		p.setOnPreferenceClickListener(this);
 	}
 
 	@Override
@@ -55,10 +63,10 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 			final Intent intent1 = new Intent(context, MainActivity.class);
 			final PendingIntent contentIntent = PendingIntent.getActivity(
 					context.getApplicationContext(), 0, intent1,
-					Intent.FLAG_ACTIVITY_NO_HISTORY);
+					Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
 					context).setSmallIcon(R.drawable.ic_launcher)
-					.setContentTitle((new Date(start)).toLocaleString())
+					.setContentTitle((new Date(start)).toString())
 					.setContentText(name).setOngoing(false)
 					.setAutoCancel(false).setUsesChronometer(true);
 			NotificationManager mNotificationManager = (NotificationManager) context
@@ -79,6 +87,33 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 				context.getApplicationContext()).getBoolean("visible_notif",
 				false);
 		visibleNotif(context, start, string, visible);
+	}
+
+	@Override
+	public boolean onPreferenceClick(Preference preference) {
+		if (preference.getKey().equals("export")) {
+			OpenHelper o = new OpenHelper(getApplicationContext());
+			try {
+				o.exportDatabase(getFilesDir(), getExternalFilesDir(null)
+						.getAbsolutePath() + File.separator + "1.db");
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			o.close();
+		} else {
+			OpenHelper o = new OpenHelper(getApplicationContext());
+			try {
+				o.importDatabase(getFilesDir(), getExternalFilesDir(null)
+						.getAbsolutePath() + File.separator + "1.db");
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			o.close();
+		}
+		getContentResolver().notifyChange(RecordsDbHelper.CONTENT_URI_TIMES, null);
+		return false;
 	}
 
 }
