@@ -67,12 +67,13 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 			NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
 					context).setSmallIcon(R.drawable.ic_launcher)
 					.setContentTitle((new Date(start)).toString())
-					.setContentText(name).setOngoing(false)
+					.setContentText(name).setOngoing(false).setWhen(start)
 					.setAutoCancel(false).setUsesChronometer(true);
 			NotificationManager mNotificationManager = (NotificationManager) context
 					.getSystemService(Context.NOTIFICATION_SERVICE);
 			Notification n = mBuilder.build();
 			n.contentIntent = contentIntent;
+			
 			n.flags = Notification.FLAG_ONGOING_EVENT;
 			mNotificationManager.notify(100, n);
 		} else {
