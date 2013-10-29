@@ -17,7 +17,12 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.IDN;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -35,21 +40,22 @@ public class RecordsDbHelper extends ContentProvider {
 	public static final int RESETCOUNTERS = 6;
 	public static final int RENAMECOUNTER = 7;
 	public static final int ALLTIMES = 8;
+	
+	final static String TABLE_TIMERS = OpenHelper.TABLE_TIMERS;
+	final static String TABLE_TIMES = OpenHelper.TABLE_TIMES;
+	public final static String ID = OpenHelper.ID;
+	public final static String ID2 = OpenHelper.ID2;
+	public final static String NAME = OpenHelper.NAME;
+	public final static String COLOR = OpenHelper.COLOR;
+	public final static String ISRUNNING = OpenHelper.ISRUNNING;
+	public final static String TIMERSID = OpenHelper.TIMERSID;
+	public final static String STARTTIME = OpenHelper.STARTTIME;
+	public final static String LENGHT = OpenHelper.LENGHT;
 
-	final static String DB_NAME = "timestat.db";
-	final static int DB_VER = 1;
-	final static String TABLE_TIMERS = "timers";
-	final static String TABLE_TIMES = "times";
+	
 	private static HashMap<String, String> timersProjectionMap;
 	private static HashMap<String, String> timesProjectionMap;
-	public final static String ID = "_id";
-	public final static String ID2 = "_idt";
-	public final static String NAME = "name";
-	public final static String COLOR = "color";
-	public final static String ISRUNNING = "isrunning";
-	public final static String TIMERSID = "timerid";
-	public final static String STARTTIME = "start";
-	public final static String LENGHT = "lenght";
+	
 
 	static {
 		sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -90,15 +96,16 @@ public class RecordsDbHelper extends ContentProvider {
 	public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.jwei512.notes";
 
 	SQLiteDatabase mDB;
+	private OpenHelper openHelper;
 
 	@Override
 	public boolean onCreate() {
 		Context context = getContext();
-		OpenHelper openHelper = new OpenHelper(context);
+		openHelper = new OpenHelper(context);
 		mDB = openHelper.getWritableDatabase();
 		return (mDB == null) ? false : true;
 	}
-
+	
 	@Override
 	public String getType(Uri uri) {
 		switch (sUriMatcher.match(uri)) {
@@ -306,47 +313,5 @@ public class RecordsDbHelper extends ContentProvider {
 		return count;
 	}
 
-	private class OpenHelper extends SQLiteOpenHelper {
-
-		final String CREATE_TABLE_TIMERS = "CREATE TABLE " + TABLE_TIMERS
-				+ "( " + ID + " INTEGER PRIMARY KEY autoincrement, " + NAME
-				+ " TEXT, " + COLOR + " INTEGER, " + ISRUNNING
-				+ " INTEGER DEFAULT 0 )";
-
-		final String CREATE_TABLE_TIMES = "CREATE TABLE " + TABLE_TIMES + "( "
-				+ ID2 + " INTEGER PRIMARY KEY autoincrement, " + TIMERSID
-				+ " INTEGER, " + STARTTIME + " INTEGER, " + LENGHT
-				+ " INTEGER DEFAULT 0 )";
-
-		final String DROP_TABLE_TIMERS = "DROP TABLE IF EXISTS " + TABLE_TIMERS;
-		final String DROP_TABLE_TIMES = "DROP TABLE IF EXISTS " + TABLE_TIMES;
-
-		public OpenHelper(Context context) {
-			super(context, DB_NAME, null, DB_VER);
-		}
-
-		@Override
-		public void onCreate(SQLiteDatabase db) {
-			db.execSQL(CREATE_TABLE_TIMERS);
-			db.execSQL(CREATE_TABLE_TIMES);
-			ContentValues cv = new ContentValues();
-			cv.put(NAME, "Idle");
-			cv.put(ISRUNNING, 1);
-			cv.put(COLOR, DiagramFragment.getRandomColor());
-			long l = db.insert(TABLE_TIMERS, null, cv);
-			Date now = new Date();
-			cv = new ContentValues();
-			cv.put(TIMERSID, l);
-			cv.put(STARTTIME, now.getTime());
-			db.insert(TABLE_TIMES, null, cv);
-		}
-
-		@Override
-		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			db.execSQL(DROP_TABLE_TIMERS);
-			db.execSQL(DROP_TABLE_TIMES);
-			onCreate(db);
-		}
-
-	}
+	
 }

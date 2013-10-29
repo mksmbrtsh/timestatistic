@@ -28,4 +28,7 @@
     <string name="name">Название</string>
     <string name="lenght">Всего</string>
     <string name="visible_notif">Отображение значка в трее</string>
+    <string name="Import">Импорт</string>
+    <string name="Export">Экспорт</string>
+    <string name="exim">Бекап</string>
 </resources>
