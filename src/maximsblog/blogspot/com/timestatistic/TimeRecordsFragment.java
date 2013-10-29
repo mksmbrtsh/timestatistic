@@ -19,7 +19,7 @@ import android.widget.ListView;
 import android.support.v4.widget.SimpleCursorAdapter;
 
 public class TimeRecordsFragment extends Fragment implements
-		LoaderCallbacks<Cursor> {
+		LoaderCallbacks<Cursor>, MainFragments {
 	public static TimeRecordsFragment newInstance() {
 
 		return new TimeRecordsFragment();
@@ -69,6 +69,11 @@ public class TimeRecordsFragment extends Fragment implements
 	public void onLoaderReset(Loader<Cursor> arg0) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void onReload() {
+		loadermanager.restartLoader(1, null, this);
 	}
 
 }
