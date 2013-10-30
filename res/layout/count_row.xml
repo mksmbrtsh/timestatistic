@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="100dp"
-    android:layout_height="100dp"
-    android:padding="2dp">
+    android:layout_width="fill_parent"
+    android:layout_height="170dp">
 
     <LinearLayout
         android:id="@+id/selectorLayout"
-        android:layout_width="95dp"
-        android:layout_height="95dp"
-        android:layout_centerInParent="true"
+        android:layout_width="fill_parent"
+        android:layout_height="165dp"
         android:background="@color/default_underline_indicator_selected_color"
         android:gravity="center"
         android:orientation="vertical" >
@@ -16,34 +14,52 @@
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="85dp"
-        android:layout_height="85dp"
-        android:layout_centerInParent="true"
+        android:layout_width="10dp"
+        android:layout_height="165dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:gravity="center"
-        android:orientation="vertical" >
-        
-         <TextView
-             android:id="@+id/current"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_margin="4dip"
-             android:gravity="center"
-             android:text="@+id/textSwitcher1"
-             android:textSize="18sp"
-             android:textStyle="bold" />
-         
-        <TextView
-            android:id="@+id/name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dip"
-            android:gravity="center"
-            android:text="TextView"
-            android:ellipsize="end"
-            android:maxLines="3"
-            android:textSize="16sp"
-            android:textStyle="italic" />
-   
+        android:orientation="vertical"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp" >
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dip"
+        android:layout_toRightOf="@id/linearLayout"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="3"
+        android:text="TextView"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/current"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="false"
+        android:layout_alignWithParentIfMissing="false"
+        android:layout_below="@id/name"
+        android:layout_centerInParent="false"
+        android:layout_margin="4dip"
+        android:layout_toRightOf="@id/linearLayout"
+        android:gravity="center"
+        android:text="@+id/textSwitcher1"
+        android:textSize="18sp"
+        android:textStyle="normal"
+        android:typeface="serif" />
+
+    <TextView
+        android:id="@+id/running"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@id/linearLayout"
+        android:text="Остановлен" />
 
 </RelativeLayout>
