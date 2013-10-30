@@ -136,7 +136,7 @@ public final class CountersFragment extends Fragment implements
 		getActivity().getContentResolver().update(
 				RecordsDbHelper.CONTENT_URI_TIMERS, cv, RecordsDbHelper.ID + " = ?", new String[] { String.valueOf(counterId) });
 		loadermanager.restartLoader(1, null, this);
-		SettingsActivity.visibleNotif(getActivity(),cursor.getLong(3), cursor.getString(5));
+		SettingsActivity.visibleNotif(getActivity(),cursor.getLong(3),cursor.getLong(2), cursor.getString(5));
 	}
 
 	
