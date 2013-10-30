@@ -49,16 +49,19 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 		c.moveToFirst();
 
 		if ((Boolean) newValue) {
-			visibleNotif(this, c.getLong(3), c.getString(5), true);
+			visibleNotif(this,c.getLong(3), c.getLong(2), c.getString(5), true);
 		} else {
-			visibleNotif(this, c.getLong(3), c.getString(5), false);
+			visibleNotif(this,c.getLong(3), c.getLong(2), c.getString(5), false);
 		}
 		c.close();
 		return true;
 	}
 
-	public static void visibleNotif(Context context, long start, String name,
+	public static void visibleNotif(Context context, long start, long lenght, String name,
 			boolean visible) {
+		NotificationManager mNotificationManager = (NotificationManager) context
+				.getSystemService(Context.NOTIFICATION_SERVICE);
+		mNotificationManager.cancel(100);
 		if (visible) {
 			final Intent intent1 = new Intent(context, MainActivity.class);
 			final PendingIntent contentIntent = PendingIntent.getActivity(
@@ -66,28 +69,24 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 					Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
 					context).setSmallIcon(R.drawable.ic_launcher)
-					.setContentTitle((new Date(start)).toString())
-					.setContentText(name).setOngoing(false).setWhen(start)
+					.setContentTitle(name)
+					.setContentText((new Date(start)).toString()).setOngoing(false).setWhen(new Date().getTime() - lenght)
 					.setAutoCancel(false).setUsesChronometer(true);
-			NotificationManager mNotificationManager = (NotificationManager) context
-					.getSystemService(Context.NOTIFICATION_SERVICE);
+
 			Notification n = mBuilder.build();
 			n.contentIntent = contentIntent;
+			n.when = new Date().getTime() - lenght;
 			
 			n.flags = Notification.FLAG_ONGOING_EVENT;
 			mNotificationManager.notify(100, n);
-		} else {
-			NotificationManager mNotificationManager = (NotificationManager) context
-					.getSystemService(Context.NOTIFICATION_SERVICE);
-			mNotificationManager.cancel(100);
-		}
+		} 
 	}
 
-	public static void visibleNotif(Context context, long start, String string) {
+	public static void visibleNotif(Context context, long start, long lenght, String string) {
 		boolean visible = PreferenceManager.getDefaultSharedPreferences(
 				context.getApplicationContext()).getBoolean("visible_notif",
 				false);
-		visibleNotif(context, start, string, visible);
+		visibleNotif(context, start,lenght, string, visible);
 	}
 
 	@Override
