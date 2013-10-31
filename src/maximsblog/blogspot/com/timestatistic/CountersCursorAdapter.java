@@ -67,7 +67,7 @@ public class CountersCursorAdapter extends SimpleCursorAdapter {
 		{
 			s = String.format("%s\n%02d:%02d:%02d",getTimeString("day", day), hours, minutes, seconds);
 		} else
-			s = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+			s = String.format("\n%02d:%02d:%02d", hours, minutes, seconds);
 		t.setText(s);
 	}
 	
