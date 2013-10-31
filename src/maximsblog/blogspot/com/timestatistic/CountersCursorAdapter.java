@@ -35,12 +35,10 @@ public class CountersCursorAdapter extends SimpleCursorAdapter {
 				long lenght = now - start +  cursor.getLong(2);
 
 				setTime(t, lenght);
-				view.findViewById(R.id.selectorLayout).setVisibility(View.VISIBLE);
 				
 		} else {
 			long lenght = cursor.getLong(2);
 			setTime(t, lenght);
-			view.findViewById(R.id.selectorLayout).setVisibility(View.GONE);
 		}
 		t = (TextView) view.findViewById(R.id.name);
 		t.setTextColor(intColor);
