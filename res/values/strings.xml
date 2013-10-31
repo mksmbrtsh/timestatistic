@@ -31,4 +31,6 @@
     <string name="Import">Импорт</string>
     <string name="Export">Экспорт</string>
     <string name="exim">Бекап</string>
+    <string name="running">запущен</string>
+    <string name="stopped">остановлен</string>
 </resources>
