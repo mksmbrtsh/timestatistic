@@ -40,7 +40,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 		ResetAllDialog, ICounterEditorDialog, OnPageChangeListener {
 
 	public CounterEditorDialogFragment mAddCounterDialogFragment;
-
+	
+	
 	private String[] mTitles;
 	private PagesAdapter adapter;
 	private ViewPager pager;
@@ -63,7 +64,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		indicator.setOnPageChangeListener(this);
 		mAddCounterDialogFragment = new CounterEditorDialogFragment();
 		mAddCounterDialogFragment.setCounterDialogListener(this);
-
+		
 	}
 
 	public Fragment findFragmentByPosition(int position) {
@@ -216,4 +217,5 @@ public class MainActivity extends SherlockFragmentActivity implements
 			((MainFragments) findFragmentByPosition(position)).onReload();
 	}
 
+	
 }

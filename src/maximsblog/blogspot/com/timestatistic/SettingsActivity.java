@@ -50,8 +50,10 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 
 		if ((Boolean) newValue) {
 			visibleNotif(this,c.getLong(3), c.getLong(2), c.getString(5), true);
+			app.alarm.SetAlarm(getApplicationContext());
 		} else {
 			visibleNotif(this,c.getLong(3), c.getLong(2), c.getString(5), false);
+			app.alarm.CancelAlarm(getApplicationContext());
 		}
 		c.close();
 		return true;
