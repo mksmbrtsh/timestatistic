@@ -11,6 +11,9 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.Vibrator;
@@ -50,12 +53,19 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
  					context.getApplicationContext(), 0, intent1,
  					Intent.FLAG_ACTIVITY_CLEAR_TASK);
  			NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
- 					context).setSmallIcon(R.drawable.ic_launcher);
-
+ 					context).setSmallIcon(R.drawable.ic_launcher).setLights(Color.RED, 500, 500);
+ 			Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            if(alarmSound == null){
+                alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+                if(alarmSound == null){
+                    alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+                }
+            }
+            mBuilder.setSound(alarmSound);
  			Notification n = mBuilder.build();
  			n.contentIntent = contentIntent;
  			n.flags = Notification.FLAG_AUTO_CANCEL;
- 			mNotificationManager.notify(new Date().getSeconds() +new Date().getMinutes()*100 , n);
+ 			mNotificationManager.notify(101 , n);
  			((Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(100);
  	}
      
@@ -70,7 +80,7 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
      intent.putExtra(ONE_TIME, Boolean.FALSE);
      PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
      //After after 15 minute
-     am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 *60 * 15 , pi); 
+     am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 *60 *15  , pi); 
  }
 
  public void CancelAlarm(Context context)

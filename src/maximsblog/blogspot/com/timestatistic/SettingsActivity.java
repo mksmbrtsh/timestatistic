@@ -2,7 +2,9 @@ package maximsblog.blogspot.com.timestatistic;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 
@@ -22,9 +24,12 @@ import android.preference.PreferenceManager;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NotificationCompat;
+import android.widget.Toast;
 
 public class SettingsActivity extends SherlockPreferenceActivity implements
 		OnPreferenceChangeListener, OnPreferenceClickListener {
+
+	private static final int OPENDB = 1;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -71,8 +76,7 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 					Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
 					context).setSmallIcon(R.drawable.ic_launcher)
-					.setContentTitle(name)
-					.setContentText((new Date(start)).toString()).setOngoing(false).setWhen(new Date().getTime() - lenght)
+					.setContentTitle(name).setOngoing(false).setWhen(new Date().getTime() - lenght)
 					.setAutoCancel(false).setUsesChronometer(true);
 
 			Notification n = mBuilder.build();
@@ -95,27 +99,48 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 	public boolean onPreferenceClick(Preference preference) {
 		if (preference.getKey().equals("export")) {
 			OpenHelper o = new OpenHelper(getApplicationContext());
+			String d = "";
+			SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy");			
 			try {
-				o.exportDatabase(getFilesDir(), getExternalFilesDir(null)
-						.getAbsolutePath() + File.separator + "1.db");
+				o.exportDatabase(getFilesDir(),  d = getExternalFilesDir(null)
+						.getAbsolutePath() + File.separator + "timestat"+sdf.format(new Date())+".db");
 
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			o.close();
+			if(d.length() >0)
+				d = getString(R.string.exportok) +":\n" + d;
+			else
+				d = getString(R.string.exportfail);
+			Toast.makeText(getApplicationContext(), d, Toast.LENGTH_LONG).show();
+			
 		} else {
+			Intent intent = new Intent(this, FileDialog.class);
+			intent.putExtra(FileDialog.FORMAT_FILTER, new String[] { ".db", ".sqlite"});
+			intent.putExtra(FileDialog.SELECTION_MODE, SelectionMode.MODE_OPEN);
+			startActivityForResult(intent, OPENDB);
+		}
+		
+		return false;
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (data != null && requestCode == OPENDB && resultCode == RESULT_OK) {
+			String newDbOpen = data.getStringExtra(FileDialog.RESULT_PATH);
 			OpenHelper o = new OpenHelper(getApplicationContext());
 			try {
-				o.importDatabase(getFilesDir(), getExternalFilesDir(null)
-						.getAbsolutePath() + File.separator + "1.db");
+				o.importDatabase(getFilesDir(), newDbOpen);
 
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			o.close();
+			Toast.makeText(getApplicationContext(), getString(R.string.importok), Toast.LENGTH_LONG).show();
+			getContentResolver().notifyChange(RecordsDbHelper.CONTENT_URI_TIMES, null);
 		}
-		getContentResolver().notifyChange(RecordsDbHelper.CONTENT_URI_TIMES, null);
-		return false;
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 }

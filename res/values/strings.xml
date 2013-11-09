@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
-
     <string name="app_name">timestatistic</string>
     <string name="action_settings">Настройки</string>
     <string name="last_value">Последнее значение</string>
@@ -10,14 +9,14 @@
     <string name="add">Добавить</string>
     <string name="about">О программе</string>
     <string name="reset_all">Сбросить все счетчики</string>
-	<string name="are_you_sure">Вы уверены?</string>
-	<string-array name="TitlePages">
-		<item >Счётчики</item>
-		<item >Записи</item>
-		<item >Диаграмма</item>
-	</string-array>
-		<string name="del">Удалить</string>
-	<string name="day1">день</string>
+    <string name="are_you_sure">Вы уверены?</string>
+    <string-array name="TitlePages">
+        <item>Счётчики</item>
+        <item>Записи</item>
+        <item>Диаграмма</item>
+    </string-array>
+    <string name="del">Удалить</string>
+    <string name="day1">день</string>
     <string name="day234">дня</string>
     <string name="days">дней</string>
     <string name="change_color">Выбор цвета фона</string>
@@ -28,7 +27,15 @@
     <string name="name">Название</string>
     <string name="lenght">Всего</string>
     <string name="visible_notif">Отображение значка в трее</string>
+    <string name="visible_notif_mode">раз в 15 минут устройство будет оповещать вас</string>
+    <string name="visible_notif_umode">вы сами следите за временем и переключаете счетчики</string>
     <string name="Import">Импорт</string>
     <string name="Export">Экспорт</string>
     <string name="exim">Бекап</string>
+    <string name="no_data">Нет данных</string>
+    <string name="cant_read_folder">нельзя открыть директорию!</string>
+    <string name="location">Путь</string>
+    <string name="importok">Данные успешно импортированы</string>
+    <string name="exportok">Данные сохранены тут</string>
+    <string name="exportfail">Ошибка экспорта данных</string>
 </resources>
