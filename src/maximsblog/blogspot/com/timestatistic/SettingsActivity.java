@@ -75,7 +75,7 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 					context.getApplicationContext(), 0, intent1,
 					Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
-					context).setSmallIcon(R.drawable.ic_launcher)
+					context).setSmallIcon(R.drawable.ic_notif1)
 					.setContentTitle(name).setOngoing(false).setWhen(new Date().getTime() - lenght)
 					.setAutoCancel(false).setUsesChronometer(true);
 

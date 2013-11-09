@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
-    <string name="app_name">timestatistic</string>
+    <string name="app_name">Time Statistic</string>
     <string name="action_settings">Настройки</string>
     <string name="last_value">Последнее значение</string>
     <string name="name">Название</string>
@@ -21,7 +21,7 @@
     <string name="days">дней</string>
     <string name="change_color">Выбор цвета фона</string>
     <string name="version">версия</string>
-    <string name="about_text">Идея: <a href="mailto:ruslan.popov@gmail.com">Ruslan Popov</a>\n\nРазработчик: <a href="mailto:mksmbtrsh@gmail.com">Maksim Bartosh</a>\n\nДругие приложения на <a href="https://play.google.com/store/search?q=maksim+bartosh&amp;c=apps">GooglePlay</a>\n\n<a href="mailto:mksmbtrsh@gmail.com">Связь для предложений и замечаний</a></string>
+    <string name="about_text">Идея: <a href="mailto:ruslan.popov@gmail.com">Ruslan Popov</a>\n\nДизайн иконки: Сергей Барков (superbarok) \n\nРазработчик: <a href="mailto:mksmbtrsh@gmail.com">Maksim Bartosh</a>\n\nДругие приложения на <a href="https://play.google.com/store/search?q=maksim+bartosh&amp;c=apps">GooglePlay</a>\n\n<a href="mailto:mksmbtrsh@gmail.com">Связь для предложений и замечаний</a></string>
     <string name="start_time">Начало</string>
     <string name="end_time">Конец</string>
     <string name="name">Название</string>
