@@ -38,4 +38,6 @@
     <string name="importok">Данные успешно импортированы</string>
     <string name="exportok">Данные сохранены тут</string>
     <string name="exportfail">Ошибка экспорта данных</string>
+    <string name="notif">Оповещение о деятельности!</string>
+    
 </resources>

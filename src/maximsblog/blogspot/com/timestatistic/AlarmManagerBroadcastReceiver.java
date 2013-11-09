@@ -23,6 +23,7 @@ import android.widget.Toast;
 public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
 
 	 final public static String ONE_TIME = "onetime";
+	 final public static String NAME = "name";
      @Override
      public void onReceive(Context context, Intent intent) {
               PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
@@ -62,7 +63,8 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
                 }
             }
             mBuilder.setSound(alarmSound);
- 			Notification n = mBuilder.build();
+            Format formatter = new SimpleDateFormat("HH:mm");
+ 			Notification n = mBuilder.setContentTitle(context.getString(R.string.notif)).setContentText(formatter.format(new Date())).build();
  			n.contentIntent = contentIntent;
  			n.flags = Notification.FLAG_AUTO_CANCEL;
  			mNotificationManager.notify(101 , n);
