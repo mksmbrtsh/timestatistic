@@ -81,7 +81,7 @@ public class CounterEditorDialogFragment extends DialogFragment implements
 			mDelButton.setVisibility(View.VISIBLE);
 			getDialog().setTitle(R.string.edit_counter_dialog);
 		} else {  
-			mDelButton.setVisibility(View.GONE);
+			mDelButton.setVisibility(View.INVISIBLE);
 			getDialog().setTitle(R.string.add_counter_dialog);
 		}
 		super.onResume();
