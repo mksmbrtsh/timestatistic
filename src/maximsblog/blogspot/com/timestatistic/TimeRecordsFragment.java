@@ -54,7 +54,7 @@ public class TimeRecordsFragment extends Fragment implements
 	@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
 		CursorLoader loader = new CursorLoader(this.getActivity(),
-				RecordsDbHelper.CONTENT_URI_ALLTIMES, null, RecordsDbHelper.STARTTIME + " IS NOT NULL AND " + RecordsDbHelper.LENGHT +" <>0", null, null);
+				RecordsDbHelper.CONTENT_URI_ALLTIMES, null, RecordsDbHelper.STARTTIME + " IS NOT NULL " , null, null);
 		return loader;
 	}
 

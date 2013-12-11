@@ -3,7 +3,6 @@
     <string name="app_name">Time Statistic</string>
     <string name="action_settings">Настройки</string>
     <string name="last_value">Последнее значение</string>
-    <string name="name">Название</string>
     <string name="add_counter_dialog">Добавление нового счетчика</string>
     <string name="edit_counter_dialog">Изменение счетчика</string>
     <string name="add">Добавить</string>
@@ -39,5 +38,4 @@
     <string name="exportok">Данные сохранены тут</string>
     <string name="exportfail">Ошибка экспорта данных</string>
     <string name="notif">Оповещение о деятельности!</string>
-    
 </resources>

@@ -213,7 +213,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onPageSelected(int position) {
-		if (position == 2)
+		if (position == 2 || position == 1)
 			((MainFragments) findFragmentByPosition(position)).onReload();
 	}
 
