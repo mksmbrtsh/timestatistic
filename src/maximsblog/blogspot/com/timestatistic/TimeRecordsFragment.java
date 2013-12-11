@@ -1,6 +1,7 @@
 package maximsblog.blogspot.com.timestatistic;
 
 import maximsblog.blogspot.com.timestatistic.MainActivity.MainFragments;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.AdapterView.OnItemClickListener;
@@ -19,7 +21,7 @@ import android.widget.ListView;
 import android.support.v4.widget.SimpleCursorAdapter;
 
 public class TimeRecordsFragment extends Fragment implements
-		LoaderCallbacks<Cursor>, MainFragments {
+		LoaderCallbacks<Cursor>, MainFragments, OnItemLongClickListener {
 	public static TimeRecordsFragment newInstance() {
 
 		return new TimeRecordsFragment();
@@ -28,7 +30,7 @@ public class TimeRecordsFragment extends Fragment implements
 	private LoaderManager loadermanager;
 	private ListView mList;
 	private TimesCursorAdapter mAdapter;
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -48,6 +50,7 @@ public class TimeRecordsFragment extends Fragment implements
 				R.layout.fragment_time_records, container, false);
 		mList = (ListView) layout.findViewById(R.id.listView1);
 		mList.setAdapter(mAdapter);
+		mList.setOnItemLongClickListener(this);
 		return layout;
 	}
 
@@ -74,6 +77,18 @@ public class TimeRecordsFragment extends Fragment implements
 	@Override
 	public void onReload() {
 		loadermanager.restartLoader(1, null, this);
+	}
+
+	@Override
+	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2,
+			long arg3) {
+		Cursor cursor = mAdapter.getCursor();
+		int id = cursor.getInt(0);
+		SplitRecordDialogFragment mSplitRecordDialog = ((MainActivity)getActivity()).mSplitRecordDialog;
+		mSplitRecordDialog.setPosition(id);
+		((MainActivity)getActivity()).mSplitRecordDialog.show(this.getActivity().getSupportFragmentManager(),
+		"dlg1");
+		return false;
 	}
 
 }

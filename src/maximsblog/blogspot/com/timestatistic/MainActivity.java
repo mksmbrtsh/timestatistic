@@ -9,6 +9,7 @@ import maximsblog.blogspot.com.timestatistic.CounterEditorDialogFragment.Status;
 import maximsblog.blogspot.com.timestatistic.AreYouSureResetAllDialog.ResetAllDialog;
 import maximsblog.blogspot.com.timestatistic.MainActivity.MainFragments;
 import maximsblog.blogspot.com.timestatistic.MainActivity.PagesAdapter;
+import maximsblog.blogspot.com.timestatistic.SplitRecordDialogFragment.ISplitRecordDialog;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.viewpagerindicator.TabPageIndicator;
@@ -37,10 +38,10 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 public class MainActivity extends SherlockFragmentActivity implements
-		ResetAllDialog, ICounterEditorDialog, OnPageChangeListener {
+		ResetAllDialog, ICounterEditorDialog, OnPageChangeListener, ISplitRecordDialog {
 
 	public CounterEditorDialogFragment mAddCounterDialogFragment;
-	
+	public SplitRecordDialogFragment mSplitRecordDialog;
 	
 	private String[] mTitles;
 	private PagesAdapter adapter;
@@ -64,7 +65,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 		indicator.setOnPageChangeListener(this);
 		mAddCounterDialogFragment = new CounterEditorDialogFragment();
 		mAddCounterDialogFragment.setCounterDialogListener(this);
-		
+		mSplitRecordDialog = new SplitRecordDialogFragment();
+		mSplitRecordDialog.setCounterDialogListener(this);
 	}
 
 	public Fragment findFragmentByPosition(int position) {
@@ -215,6 +217,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public void onPageSelected(int position) {
 		if (position == 2 || position == 1)
 			((MainFragments) findFragmentByPosition(position)).onReload();
+	}
+
+	@Override
+	public void onFinishDialog() {
+		reloadFragments();
 	}
 
 	
