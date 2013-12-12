@@ -22,9 +22,10 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 	private ISplitRecordDialog mListener;
 	private Button mDelButton;
 	private boolean mIsRunning;
-	private int mPosition;
+	private int mIDtimer;
 	private Spinner mCurrentCounter;
 	private Spinner mNewCounter;
+	private int mPosition;
 
 
 	public interface ISplitRecordDialog {
@@ -60,6 +61,15 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 				RecordsDbHelper.STARTTIME,
 				RecordsDbHelper.NAME,
 				RecordsDbHelper.COLOR }, null, null, null);
+		for(int i1=0,cnt1 = newtimers.getCount();i1<cnt1;i1++)
+		{
+			newtimers.moveToPosition(i1);
+			if(newtimers.getInt(1) == mIDtimer)
+			{
+				mPosition = i1;
+				break;
+			}
+		}
 		SimpleCursorAdapter sca = new SimpleCursorAdapter(getActivity(), android.R.layout.simple_spinner_item, timers, from, to);
 		mCurrentCounter.setAdapter(sca);
 		
@@ -72,7 +82,7 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 
 	@Override
 	public void onResume() {
-		mCurrentCounter.setSelection(mPosition-1);
+		mCurrentCounter.setSelection(mPosition);
 		super.onResume();
 	};
 
@@ -95,8 +105,8 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 	}
 
 
-	public void setPosition(int id) {
-		mPosition = id;
+	public void setID(int id) {
+		mIDtimer = id;
 	}
 
 	
