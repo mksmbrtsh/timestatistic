@@ -4,6 +4,7 @@
         android:id="@+id/item_add"
         android:showAsAction="always"
         android:orderInCategory="1"
+        android:icon="@drawable/add"
         android:title="@string/add">
     </item>
     <item
