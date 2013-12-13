@@ -1,6 +1,9 @@
 package maximsblog.blogspot.com.timestatistic;
 
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.database.Cursor;
@@ -14,7 +17,7 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.SimpleCursorAdapter;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 
 public class SplitRecordDialogFragment extends DialogFragment implements
@@ -26,7 +29,14 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 	private Spinner mCurrentCounter;
 	private Spinner mNewCounter;
 	private int mPosition;
-
+	private long mStart;
+	private long mLenght;
+	private EditText mCurrentStart;
+	private EditText mCurrentStop;
+	private SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat();
+	private Calendar mCalendar = Calendar.getInstance();
+	private SimpleCursorAdapter mCurrentCounterAdapter;
+	private SimpleCursorAdapter mNewCounterAdapter;
 
 	public interface ISplitRecordDialog {
 		void onFinishDialog();
@@ -49,13 +59,33 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 		v.findViewById(R.id.cancel).setOnClickListener(this);
 		mCurrentCounter = (Spinner) v.findViewById(R.id.current_counter);
 		mNewCounter = (Spinner) v.findViewById(R.id.new_record_counter);
+		
+		String[] from = { RecordsDbHelper.NAME };
+		int[] to = {  android.R.id.text1 };
+		
+		mCurrentCounterAdapter = new SimpleCursorAdapter(getActivity(), android.R.layout.simple_spinner_item, null, from, to);
+		mCurrentCounter.setAdapter(mCurrentCounterAdapter);
+		
+		mNewCounterAdapter = new SimpleCursorAdapter(getActivity(), android.R.layout.simple_spinner_item, null, from, to);
+		mNewCounter.setAdapter(mNewCounterAdapter);
+		getDialog().getWindow().setSoftInputMode(
+				LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+		
+		mCurrentStart = (EditText) v.findViewById(R.id.current_start);
+		mCurrentStop = (EditText) v.findViewById(R.id.current_stop);
+		
+		
+		return v;
+	}
+
+	@Override
+	public void onResume() {
 		Cursor timers = getActivity().getContentResolver().query(RecordsDbHelper.CONTENT_URI_TIMES, new String[] {RecordsDbHelper.ID,
 				RecordsDbHelper.LENGHT,
 				RecordsDbHelper.STARTTIME,
 				RecordsDbHelper.NAME,
 				RecordsDbHelper.COLOR }, null, null, null);
-		String[] from = { RecordsDbHelper.NAME };
-		int[] to = {  android.R.id.text1 };
+		
 		Cursor newtimers = getActivity().getContentResolver().query(RecordsDbHelper.CONTENT_URI_TIMES, new String[] {RecordsDbHelper.ID,
 				RecordsDbHelper.LENGHT,
 				RecordsDbHelper.STARTTIME,
@@ -70,19 +100,19 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 				break;
 			}
 		}
-		SimpleCursorAdapter sca = new SimpleCursorAdapter(getActivity(), android.R.layout.simple_spinner_item, timers, from, to);
-		mCurrentCounter.setAdapter(sca);
 		
-		SimpleCursorAdapter sca2 = new SimpleCursorAdapter(getActivity(), android.R.layout.simple_spinner_item, newtimers, from, to);
-		mNewCounter.setAdapter(sca2);
-		getDialog().getWindow().setSoftInputMode(
-				LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-		return v;
-	}
-
-	@Override
-	public void onResume() {
+		
+		
+		((SimpleCursorAdapter)mCurrentCounter.getAdapter()).swapCursor(timers);
+		((SimpleCursorAdapter)mNewCounter.getAdapter()).swapCursor(newtimers);
+		
+		
 		mCurrentCounter.setSelection(mPosition);
+		mCalendar.setTimeInMillis(mStart);
+		mCurrentStart.setText(mSimpleDateFormat.format(mCalendar.getTime()));
+		mCalendar = Calendar.getInstance();
+		mCalendar.setTimeInMillis(mStart + mLenght);
+		mCurrentStop.setText(mSimpleDateFormat.format(mCalendar.getTime()));
 		super.onResume();
 	};
 
@@ -105,8 +135,12 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 	}
 
 
-	public void setID(int id) {
+	public void setValues(int id, long start, long lenght) {
 		mIDtimer = id;
+		mStart = start;
+		mLenght = lenght;
+		
+		
 	}
 
 	

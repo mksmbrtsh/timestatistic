@@ -84,8 +84,10 @@ public class TimeRecordsFragment extends Fragment implements
 			long arg3) {
 		Cursor cursor = mAdapter.getCursor();
 		int id = cursor.getInt(0);
+		long start = cursor.getLong(2);
+		long lenght = cursor.getLong(1);
 		SplitRecordDialogFragment mSplitRecordDialog = ((MainActivity)getActivity()).mSplitRecordDialog;
-		mSplitRecordDialog.setID(id);
+		mSplitRecordDialog.setValues(id, start, lenght);
 		((MainActivity)getActivity()).mSplitRecordDialog.show(this.getActivity().getSupportFragmentManager(),
 		"dlg1");
 		return false;
