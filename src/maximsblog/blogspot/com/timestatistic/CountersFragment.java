@@ -52,7 +52,7 @@ public final class CountersFragment extends Fragment implements
 		loadermanager = getLoaderManager();
 		String[] uiBindFrom = {  RecordsDbHelper.LENGHT, RecordsDbHelper.NAME };
 		int[] uiBindTo = {  R.id.current, R.id.name};
-		
+
 		mAdapter = new CountersCursorAdapter(this.getActivity(),
 				R.layout.count_row, null, uiBindFrom, uiBindTo, 0);
 		loadermanager.initLoader(1, null, this);
@@ -106,7 +106,7 @@ public final class CountersFragment extends Fragment implements
         		new String[] {RecordsDbHelper.ID,
     			RecordsDbHelper.NAME,
     			RecordsDbHelper.ISRUNNING,
-    			RecordsDbHelper.STARTTIME, RecordsDbHelper.TIMERSID}, RecordsDbHelper.ISRUNNING + "='1'", null, null);
+    			RecordsDbHelper.STARTTIME, RecordsDbHelper.TIMERSID}, RecordsDbHelper.ISRUNNING + "=?", new String[] { String.valueOf(1) }, null);
         c.moveToFirst();
         int timeId = c.getInt(0);
         long start = c.getLong(3);
@@ -204,6 +204,6 @@ public final class CountersFragment extends Fragment implements
 		addCounterDialogFragment.setIsRunning(isRunning);
 		((MainActivity)getActivity()).mAddCounterDialogFragment.show(this.getActivity().getSupportFragmentManager(),
 		"dlg1");
-		return false;
+		return true;
 	}
 }
