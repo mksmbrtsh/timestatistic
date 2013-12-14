@@ -4,7 +4,7 @@
         android:id="@+id/item_add"
         android:showAsAction="always"
         android:orderInCategory="1"
-        android:icon="@drawable/add"
+        android:icon="@drawable/abs__ic_menu_add_normal_holo_dark"
         android:title="@string/add">
     </item>
     <item
