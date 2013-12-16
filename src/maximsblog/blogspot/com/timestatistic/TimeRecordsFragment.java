@@ -82,14 +82,14 @@ public class TimeRecordsFragment extends Fragment implements
 	@Override
 	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2,
 			long arg3) {
-		/*Cursor cursor = mAdapter.getCursor();
+		Cursor cursor = mAdapter.getCursor();
 		int id = cursor.getInt(0);
 		long start = cursor.getLong(2);
 		long lenght = cursor.getLong(1);
 		SplitRecordDialogFragment mSplitRecordDialog = ((MainActivity)getActivity()).mSplitRecordDialog;
 		mSplitRecordDialog.setValues(id, start, lenght);
 		((MainActivity)getActivity()).mSplitRecordDialog.show(this.getActivity().getSupportFragmentManager(),
-		"dlg1");*/
+		"dlg1");
 		return false;
 	}
 

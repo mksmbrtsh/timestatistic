@@ -38,4 +38,5 @@
     <string name="exportok">Данные сохранены тут</string>
     <string name="exportfail">Ошибка экспорта данных</string>
     <string name="notif">Оповещение о деятельности!</string>
+    <string name="edit">Редактирование</string>
 </resources>

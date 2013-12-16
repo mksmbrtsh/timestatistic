@@ -38,4 +38,5 @@
     <string name="exportok">Export finished successful</string>
     <string name="exportfail">Error export</string>
     <string name="notif">Alert about activity!</string>
+    <string name="edit">Edit</string>
 </resources>

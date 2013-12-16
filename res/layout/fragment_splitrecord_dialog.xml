@@ -4,11 +4,17 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <TextView
+        android:id="@+id/period"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="TextView" />
+
     <Spinner
         android:id="@+id/current_counter"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content" >
 
         <requestFocus />
     </Spinner>
@@ -19,12 +25,30 @@
         android:layout_height="wrap_content"
         android:text="@string/start_time" />
 
-    <EditText
-        android:id="@+id/current_start"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="date" />
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/current_startdate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:hint="Date"
+            android:text="Button" />
+
+        <Button
+            android:id="@+id/current_starttime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:hint="Date"
+            android:text="Button" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textView2"
@@ -32,12 +56,29 @@
         android:layout_height="wrap_content"
         android:text="@string/end_time" />
 
-    <EditText
-        android:id="@+id/current_stop"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="date" />
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/current_stopdate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="date"
+            android:text="Button" />
+
+        <Button
+            android:id="@+id/current_stoptime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="date"
+            android:text="Button" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textView3"
@@ -48,8 +89,7 @@
     <Spinner
         android:id="@+id/new_record_counter"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+        android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/TextView02"
@@ -57,12 +97,29 @@
         android:layout_height="wrap_content"
         android:text="@string/start_time" />
 
-    <EditText
-        android:id="@+id/EditText02"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="date" />
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/new_startdate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:hint="Date"
+            android:text="Button" />
+
+        <Button
+            android:id="@+id/new_starttime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:hint="Date"
+            android:text="Button" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/TextView01"
@@ -70,12 +127,30 @@
         android:layout_height="wrap_content"
         android:text="@string/end_time" />
 
-    <EditText
-        android:id="@+id/EditText01"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="date" />
+        android:layout_weight="1"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/new_stopdate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:hint="Date"
+            android:text="Button" />
+
+        <Button
+            android:id="@+id/new_stoptime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:hint="Date"
+            android:text="Button" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -94,7 +169,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@android:string/ok" />
-
     </LinearLayout>
 
 </LinearLayout>
