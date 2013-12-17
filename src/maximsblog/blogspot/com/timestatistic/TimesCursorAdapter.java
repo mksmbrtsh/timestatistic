@@ -40,7 +40,7 @@ public class TimesCursorAdapter extends SimpleCursorAdapter {
 			holder.start = (TextView) view.findViewById(R.id.start);
 			holder.stop = (TextView) view.findViewById(R.id.stop);
 			holder.lenght = (TextView) view.findViewById(R.id.lenght);
-			holder.LinearLayout01 = view.findViewById(R.id.LinearLayout01);
+			holder.LinearLayout01 = view.findViewById(R.id.before_record);
 			view.setTag(holder);
 		} else {
 			holder = (ViewHolder) view.getTag();

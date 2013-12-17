@@ -39,4 +39,11 @@
     <string name="exportfail">Ошибка экспорта данных</string>
     <string name="notif">Оповещение о деятельности!</string>
     <string name="edit">Редактирование</string>
+    <string name="time">Время</string>
+    <string name="date">Дата</string>
+    <string name="current">Текущая запись</string>
+    <string name="before">Предведущая запись</string>
+    <string name="after">Следующая запись</string>
+    <string name="less_min">Меньше даты начала записи</string>
+    <string name="more_max">Больше даты конца записи</string>
 </resources>

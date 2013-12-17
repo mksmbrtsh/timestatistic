@@ -39,4 +39,11 @@
     <string name="exportfail">Error export</string>
     <string name="notif">Alert about activity!</string>
     <string name="edit">Edit</string>
+    <string name="time">Time</string>
+    <string name="date">Date</string>
+    <string name="current">Current record</string>
+    <string name="before">Before record</string>
+    <string name="after">Next record</string>
+    <string name="less_min">Less start data of record</string>
+    <string name="more_max">More stop data of record</string>
 </resources>

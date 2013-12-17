@@ -244,7 +244,7 @@ public class RecordsDbHelper extends ContentProvider {
 					RecordsDbHelper.LENGHT,
 					RecordsDbHelper.STARTTIME,
 					RecordsDbHelper.NAME,
-					RecordsDbHelper.COLOR },
+					RecordsDbHelper.COLOR, RecordsDbHelper.ID2 },
 					selection, null, null, RecordsDbHelper.STARTTIME + " DESC", null);
 			c = mDB.rawQuery(s, selectionArgs);
 			c.setNotificationUri(getContext().getContentResolver(), uri);

@@ -7,11 +7,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.zip.DataFormatException;
 
-
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -21,12 +21,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.WindowManager.LayoutParams;
+import android.webkit.WebChromeClient.CustomViewCallback;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -39,41 +41,39 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 	private ISplitRecordDialog mListener;
 	private Button mDelButton;
 	private boolean mIsRunning;
-	private int mIDtimer;
-	private Spinner mCurrentCounter;
-	private Spinner mNewCounter;
 	
+	
+	private Spinner mCurrentCounter;
+	private Spinner mAfterCounter;
+	private Spinner mBeforeCounter;
+
 	// original values
 	private int mOriginalPosition;
 	private long mOriginalStart;
 	private long mOriginalLenght;
+	private int mIDtimer;
+	private int mIDrecord;
 	
 	// edit values
 	private int mCurrentPosition;
 	private long mCurrentStart;
 	private long mCurrentLenght;
-	private long mNewStart;
-	private long mNewLenght;
-	
-	
+
 	private Calendar mCalendar = Calendar.getInstance();
 	private SimpleCursorAdapter mCurrentCounterAdapter;
-	private SimpleCursorAdapter mNewCounterAdapter;
-	private TextView mPeriod;
-	
-	private Button mCurrentStopDate;
-	private Button mCurrentStopTime;
-	private Button mCurrentStartTime;
-	private Button mCurrentStartDate;
+	private SimpleCursorAdapter mAfterCounterAdapter;
+	private SimpleCursorAdapter mBeforeCounterAdapter;
 
-	private Button mNewStopDate;
-	private Button mNewStopTime;
-	private Button mNewStartTime;
-	private Button mNewStartDate;
-	
-	DateFormat mFormatterDate = DateFormat.getDateInstance();
-	DateFormat mFormatterTime = DateFormat.getTimeInstance(DateFormat.SHORT);
-	
+	private Button mCurrentStopDateTime;
+	private Button mCurrentStartDateTime;
+
+	DateFormat mFormatterDateTime = DateFormat.getDateTimeInstance(
+			DateFormat.SHORT, DateFormat.SHORT);
+	private View mAfterLayout;
+	private View mBeforeLayout;
+	private TextView mAfterText;
+	private TextView mBeforeText;
+
 
 	public interface ISplitRecordDialog {
 		void onFinishDialog();
@@ -93,8 +93,10 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 		View v = inflater.inflate(R.layout.fragment_splitrecord_dialog, null);
 		v.findViewById(R.id.ok).setOnClickListener(this);
 		v.findViewById(R.id.cancel).setOnClickListener(this);
+
 		mCurrentCounter = (Spinner) v.findViewById(R.id.current_counter);
-		mNewCounter = (Spinner) v.findViewById(R.id.new_record_counter);
+		mAfterCounter = (Spinner) v.findViewById(R.id.after_record_counter);
+		mBeforeCounter = (Spinner) v.findViewById(R.id.before_record_counter);
 
 		String[] from = { RecordsDbHelper.NAME };
 		int[] to = { android.R.id.text1 };
@@ -103,46 +105,35 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 				android.R.layout.simple_spinner_item, null, from, to);
 		mCurrentCounter.setAdapter(mCurrentCounterAdapter);
 
-		mNewCounterAdapter = new SimpleCursorAdapter(getActivity(),
+		mAfterCounterAdapter = new SimpleCursorAdapter(getActivity(),
 				android.R.layout.simple_spinner_item, null, from, to);
-		mNewCounter.setAdapter(mNewCounterAdapter);
-		getDialog().getWindow().setSoftInputMode(
-				LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+		mAfterCounter.setAdapter(mAfterCounterAdapter);
 
-		mCurrentStartTime = (Button) v.findViewById(R.id.current_starttime);
-		mCurrentStartDate = (Button) v.findViewById(R.id.current_startdate);
-		mCurrentStopDate = (Button) v.findViewById(R.id.current_stopdate);
-		mCurrentStopTime = (Button) v.findViewById(R.id.current_stoptime);
-		
-		mNewStopDate = (Button) v.findViewById(R.id.new_stopdate);
-		mNewStopTime = (Button) v.findViewById(R.id.new_stoptime);
-		mNewStartTime = (Button) v.findViewById(R.id.new_starttime);
-		mNewStartDate = (Button) v.findViewById(R.id.new_startdate);
-		
-		mPeriod = (TextView) v.findViewById(R.id.period);
+		mBeforeCounterAdapter = new SimpleCursorAdapter(getActivity(),
+				android.R.layout.simple_spinner_item, null, from, to);
+		mBeforeCounter.setAdapter(mAfterCounterAdapter);
 
-		mCurrentStartTime.setOnClickListener(this);
-		mCurrentStartDate.setOnClickListener(this);
-		mCurrentStopTime.setOnClickListener(this);
-		mCurrentStopDate.setOnClickListener(this);
+		mCurrentStartDateTime = (Button) v
+				.findViewById(R.id.current_startdatetime);
+		mCurrentStopDateTime = (Button) v
+				.findViewById(R.id.current_stopdatetime);
+
+		mCurrentStartDateTime.setOnClickListener(this);
+		mCurrentStopDateTime.setOnClickListener(this);
+
+		mAfterLayout = v.findViewById(R.id.after_record);
+		mBeforeLayout = v.findViewById(R.id.before_record);
+		mAfterLayout.setVisibility(View.GONE);
+		mBeforeLayout.setVisibility(View.GONE);
 		
-		mNewStopDate.setOnClickListener(this);
-		mNewStopTime.setOnClickListener(this);
-		mNewStartTime.setOnClickListener(this);
-		mNewStartDate.setOnClickListener(this);
+		mAfterText = (TextView)v.findViewById(R.id.after_period_value);
+		mBeforeText = (TextView)v.findViewById(R.id.before_period_value);
 		
 		return v;
 	}
 
-	
 	@Override
 	public void onResume() {
-		Cursor timers = getActivity().getContentResolver().query(
-				RecordsDbHelper.CONTENT_URI_TIMES,
-				new String[] { RecordsDbHelper.ID, RecordsDbHelper.LENGHT,
-						RecordsDbHelper.STARTTIME, RecordsDbHelper.NAME,
-						RecordsDbHelper.COLOR }, null, null, null);
-
 		Cursor newtimers = getActivity().getContentResolver().query(
 				RecordsDbHelper.CONTENT_URI_TIMES,
 				new String[] { RecordsDbHelper.ID, RecordsDbHelper.LENGHT,
@@ -156,88 +147,77 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 			}
 		}
 
-		((SimpleCursorAdapter) mCurrentCounter.getAdapter()).swapCursor(timers);
-		((SimpleCursorAdapter) mNewCounter.getAdapter()).swapCursor(newtimers);
-
+		((SimpleCursorAdapter) mCurrentCounter.getAdapter()).swapCursor(newtimers);
+		((SimpleCursorAdapter) mAfterCounter.getAdapter()).swapCursor(newtimers);
+		((SimpleCursorAdapter) mBeforeCounter.getAdapter()).swapCursor(newtimers);
+		
 		mCurrentCounter.setSelection(mOriginalPosition);
 		mCalendar.setTimeInMillis(mCurrentStart);
-		
-		String startString = mFormatterDate.format(mCalendar.getTime());
-		mCurrentStartDate.setText(startString);
-		startString = mFormatterTime.format(mCalendar.getTime());
-		mCurrentStartTime.setText(startString);
-		mCalendar.setTimeInMillis(mCurrentStart + mCurrentLenght);
-		String stopString = mFormatterDate.format(mCalendar.getTime());
-		mCurrentStopDate.setText(stopString);
-		stopString = mFormatterTime.format(mCalendar.getTime());
-		mCurrentStopTime.setText(stopString);
-		
-		mPeriod.setText(startString + " - " + stopString);
 
-		mCalendar.setTimeInMillis(mNewStart);
-		startString = mFormatterTime.format(mCalendar.getTime());
-		mNewStartTime.setText(startString);
-		startString = mFormatterDate.format(mCalendar.getTime());
-		mNewStartDate.setText(startString);
-		mCalendar.setTimeInMillis(mNewStart + mNewLenght);
-		stopString = mFormatterTime.format(mCalendar.getTime());
-		mNewStopTime.setText(stopString);
-		stopString = mFormatterDate.format(mCalendar.getTime());
-		mNewStopDate.setText(stopString);
-		
-		
+		String startString = mFormatterDateTime.format(mCalendar.getTime());
+		mCurrentStartDateTime.setText(startString);
+		mCalendar.setTimeInMillis(mCurrentStart + mCurrentLenght);
+		String stopString = mFormatterDateTime.format(mCalendar.getTime());
+		mCurrentStopDateTime.setText(stopString);
 		super.onResume();
 	};
-	
-	private void showPickerFragment(int id, long time, boolean istime)
-	{
-		if(istime) {
-			TimePickerFragment newFragment = new TimePickerFragment();
-			Bundle b = new Bundle();
-			b.putLong("time", time);
-			b.putInt("id", id);
-			newFragment.setArguments(b);
-			newFragment.setDateChange(this);
-			newFragment.show(getActivity().getSupportFragmentManager(),
-					"timePicker");
-		} else {
-			DatePickerFragment newFragment = new DatePickerFragment();
-			Bundle b = new Bundle();
-			b.putLong("time", time);
-			b.putInt("id", id);
-			newFragment.setArguments(b);
-			newFragment.setDateChange(this);
-			newFragment.show(getActivity().getSupportFragmentManager(),
-					"datePicker");
-		}
+
+	private void showPickerFragment(int id, long time, boolean istime) {
+		CustomDateTimePickerFragment newFragment = new CustomDateTimePickerFragment();
+		Bundle b = new Bundle();
+		b.putLong("time", time);
+		b.putInt("id", id);
+		newFragment.setArguments(b);
+		newFragment.setDateChange(this);
+		newFragment.show(getActivity().getSupportFragmentManager(),
+				"timePicker");
 	}
-	
+
 	public void onClick(View v) {
 		int id = v.getId();
 		if (id == R.id.ok) {
+			if(mCurrentPosition != mCurrentCounter.getSelectedItemPosition() || mOriginalStart != mCurrentStart || mOriginalLenght != mCurrentLenght )
+				editRecord();
 			mListener.onFinishDialog();
 			dismiss();
-		} else if (id == R.id.del) {
-			mListener.onFinishDialog();
+		} else if (id == R.id.cancel) {
 			dismiss();
-		} else if (id == R.id.current_starttime) {
+		} else if (id == R.id.current_startdatetime) {
 			showPickerFragment(id, mCurrentStart, true);
-		} else if (id == R.id.current_startdate) {
-			showPickerFragment(id, mCurrentStart, false);
-		} else if (id == R.id.current_stoptime) {
+		} else if (id == R.id.current_stopdatetime) {
 			showPickerFragment(id, mCurrentStart + mCurrentLenght, true);
-		} else if (id == R.id.current_stopdate) {
-			showPickerFragment(id, mCurrentStart + mCurrentLenght, false);
-		} else if (id == R.id.new_starttime) {
-			showPickerFragment(id, mCurrentStart, true);
-		} else if (id == R.id.new_startdate) {
-			showPickerFragment(id, mCurrentStart, false);
-		} else if (id == R.id.new_stoptime) {
-			showPickerFragment(id, mCurrentStart + mCurrentLenght, true);
-		} else if (id == R.id.new_stopdate) {
-			showPickerFragment(id, mCurrentStart + mCurrentLenght, false);
 		}
 
+	}
+
+	private void editRecord() {
+		ContentValues cv = new ContentValues();
+		Cursor c = ((SimpleCursorAdapter) mCurrentCounter.getAdapter()).getCursor();
+		c.moveToPosition(mCurrentCounter.getSelectedItemPosition());
+		cv.put(RecordsDbHelper.TIMERSID, c.getInt(1));
+		cv.put(RecordsDbHelper.STARTTIME, mCurrentStart);
+		cv.put(RecordsDbHelper.LENGHT, mCurrentLenght);
+		getActivity().getContentResolver().update(RecordsDbHelper.CONTENT_URI_TIMES, cv, RecordsDbHelper.ID2+"=?", new String[] { String.valueOf(mIDrecord)});
+		
+		if(mOriginalStart != mCurrentStart)
+		{
+			c = ((SimpleCursorAdapter) mBeforeCounter.getAdapter()).getCursor();
+			c.moveToPosition(mBeforeCounter.getSelectedItemPosition());
+			cv.put(RecordsDbHelper.TIMERSID, c.getInt(1));
+			cv.put(RecordsDbHelper.STARTTIME, mOriginalStart);
+			cv.put(RecordsDbHelper.LENGHT, mCurrentStart - mOriginalStart);
+			getActivity().getContentResolver().insert(RecordsDbHelper.CONTENT_URI_TIMES, cv);
+		}
+		
+		if(mOriginalLenght != mCurrentLenght)
+		{
+			c = ((SimpleCursorAdapter) mAfterCounter.getAdapter()).getCursor();
+			c.moveToPosition(mAfterCounter.getSelectedItemPosition());
+			cv.put(RecordsDbHelper.TIMERSID, c.getInt(1));
+			cv.put(RecordsDbHelper.STARTTIME, mCurrentStart + mCurrentLenght);
+			cv.put(RecordsDbHelper.LENGHT, mOriginalStart + mOriginalLenght - (mCurrentStart + mCurrentLenght));
+			getActivity().getContentResolver().insert(RecordsDbHelper.CONTENT_URI_TIMES, cv);
+		}
 	}
 
 	public void onDismiss(DialogInterface dialog) {
@@ -248,117 +228,103 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 		super.onCancel(dialog);
 	}
 
-	public void setValues(int id, long start, long lenght) {
+	public void setValues(int id, int idRecord, long start, long lenght) {
 		mIDtimer = id;
+		mIDrecord = idRecord;
 		mOriginalStart = start;
 		mOriginalLenght = lenght;
-		
+
 		mCurrentStart = start;
 		mCurrentLenght = lenght;
-		
-		mNewStart = start + lenght;
-		mNewLenght = 0;
 	}
 
-	
-	public static class TimePickerFragment extends DialogFragment implements
-			TimePickerDialog.OnTimeSetListener {
+	public static class CustomDateTimePickerFragment extends DialogFragment
+			implements ICustomDateTimeListener {
 		private Calendar c;
 		private IdateChange mIdateChange;
 		private int id;
-		
+
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
 			c = Calendar.getInstance();
 			c.setTimeInMillis(getArguments().getLong("time"));
 			id = getArguments().getInt("id");
-			int hour = c.get(Calendar.HOUR_OF_DAY);
-			int minute = c.get(Calendar.MINUTE);
-			return new TimePickerDialog(getActivity(), this, hour, minute, true);
-		}
-		public void setDateChange(IdateChange idc)
-		{
-			mIdateChange = idc;		
+			CustomDateTimePicker customDateTimePicker = new CustomDateTimePicker(
+					getActivity(), this, c);
+			return customDateTimePicker;
 		}
 
-		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-			c.set(Calendar.HOUR_OF_DAY, hourOfDay);
-			c.set(Calendar.MINUTE, minute);
-			mIdateChange.timeChange(id, c.getTimeInMillis());	
+		public void setDateChange(IdateChange idc) {
+			mIdateChange = idc;
 		}
-	}
 
-	public static class DatePickerFragment extends DialogFragment implements
-			DatePickerDialog.OnDateSetListener {
-		private Calendar c;
-		private IdateChange mIdateChange;
-		private int id;
-		
 		@Override
-		public Dialog onCreateDialog(Bundle savedInstanceState) {
-			c = Calendar.getInstance();
-			c.setTimeInMillis(getArguments().getLong("time"));
-			id = getArguments().getInt("id");
-			int year = c.get(Calendar.YEAR);
-			int month = c.get(Calendar.MONTH);
-			int day = c.get(Calendar.DAY_OF_MONTH);
-			return new DatePickerDialog(getActivity(), this, year, month, day);
+		public void onSet(Dialog dialog, Calendar calendarSelected,
+				Date dateSelected, int year, String monthFullName,
+				String monthShortName, int monthNumber, int date,
+				String weekDayFullName, String weekDayShortName, int hour24,
+				int hour12, int min, int sec, String AM_PM) {
+			c.setTime(dateSelected);
+			mIdateChange.timeChange(id, c.getTimeInMillis());
+			super.dismiss();
 		}
-		public void setDateChange(IdateChange idc)
-		{
-			mIdateChange = idc;		
-		}
-		public void onDateSet(DatePicker view, int year, int month, int day) {
-			c.set(Calendar.YEAR, year);
-			c.set(Calendar.MONTH, month);
-			c.set(Calendar.DAY_OF_MONTH, day);
-			mIdateChange.timeChange(id, c.getTimeInMillis());	
+
+		@Override
+		public void onCancel() {
+			super.dismiss();
 		}
 	}
 
 	@Override
 	public void timeChange(int id, long newvalue) {
-		if (id == R.id.current_startdate)
-		{
+		if (id == R.id.current_startdatetime) {
 			mCurrentStart = newvalue;
+			
+			if(mCurrentStart > mOriginalStart)
+			{
+				if(mCurrentStart > mOriginalStart + mOriginalLenght)
+				{
+					mBeforeLayout.setVisibility(View.GONE);
+					mCurrentStart = mOriginalStart;
+					Toast.makeText(getActivity(), getString(R.string.more_max), Toast.LENGTH_SHORT).show();
+				} else
+					mBeforeLayout.setVisibility(View.VISIBLE);
+			} else {
+				mBeforeLayout.setVisibility(View.GONE);
+				mCurrentStart = mOriginalStart;
+				Toast.makeText(getActivity(), getString(R.string.less_min), Toast.LENGTH_SHORT).show();
+			}
+			mCalendar.setTimeInMillis(mOriginalStart);
+			StringBuilder sb = new StringBuilder(mFormatterDateTime.format(mCalendar.getTime()));
+			sb.append(" - ");
 			mCalendar.setTimeInMillis(mCurrentStart);
-			mCurrentStartDate.setText(mFormatterDate.format(mCalendar.getTime()));
-		} else if (id == R.id.current_starttime)
-		{
-			mCurrentStart = newvalue;
-			mCalendar.setTimeInMillis(mCurrentStart);
-			mCurrentStartTime.setText(mFormatterTime.format(mCalendar.getTime()));
-		} else if (id == R.id.current_stopdate)
-		{
+			mCurrentStartDateTime.setText(mFormatterDateTime.format(mCalendar.getTime()));
+			sb.append(mCurrentStartDateTime.getText());
+			mBeforeText.setText(sb.toString());
+		} else if (id == R.id.current_stopdatetime) {
 			mCurrentLenght = newvalue - mCurrentStart;
+			if(mCurrentStart + mCurrentLenght  < mOriginalStart + mOriginalLenght)
+			{
+				if(mCurrentStart + mCurrentLenght < mOriginalStart) {
+					mAfterLayout.setVisibility(View.GONE);
+					mCurrentLenght = mOriginalStart + mOriginalLenght - mCurrentStart;
+					Toast.makeText(getActivity(), getString(R.string.less_min), Toast.LENGTH_SHORT).show();
+				} else
+					mAfterLayout.setVisibility(View.VISIBLE);
+			} else {
+				mAfterLayout.setVisibility(View.GONE);
+				mCurrentLenght = mOriginalStart + mOriginalLenght - mCurrentStart;
+				Toast.makeText(getActivity(), getString(R.string.more_max), Toast.LENGTH_SHORT).show();
+			}
+			
 			mCalendar.setTimeInMillis(mCurrentStart + mCurrentLenght);
-			mCurrentStopDate.setText(mFormatterDate.format(mCalendar.getTime()));
-		} else if (id == R.id.current_stoptime)
-		{
-			mCurrentLenght = newvalue - mCurrentStart;
-			mCalendar.setTimeInMillis(mCurrentStart + mCurrentLenght);
-			mCurrentStopTime.setText(mFormatterTime.format(mCalendar.getTime()));
-		} else if (id == R.id.new_startdate)// new
-		{
-			mNewStart = newvalue;
-			mCalendar.setTimeInMillis(mNewStart);
-			mNewStartDate.setText(mFormatterDate.format(mCalendar.getTime()));
-		} else if (id == R.id.new_starttime)
-		{
-			mNewStart = newvalue;
-			mCalendar.setTimeInMillis(mNewStart);
-			mNewStartTime.setText(mFormatterTime.format(mCalendar.getTime()));
-		} else if (id == R.id.new_stopdate)
-		{
-			mNewLenght = newvalue - mNewStart;
-			mCalendar.setTimeInMillis(mNewStart + mNewLenght);
-			mNewStopDate.setText(mFormatterDate.format(mCalendar.getTime()));
-		} else if (id == R.id.new_stoptime)
-		{
-			mNewLenght = newvalue - mNewStart;
-			mCalendar.setTimeInMillis(mNewStart + mNewLenght);
-			mNewStopTime.setText(mFormatterTime.format(mCalendar.getTime()));
-		}
-		
+			mCurrentStopDateTime
+					.setText(mFormatterDateTime.format(mCalendar.getTime()));
+			StringBuilder sb = new StringBuilder(mFormatterDateTime.format(mCalendar.getTime()));
+			sb.append(" - ");
+			mCalendar.setTimeInMillis(mOriginalStart + mOriginalLenght);
+			sb.append(mFormatterDateTime.format(mCalendar.getTime()));
+			mAfterText.setText(sb.toString());
+		} 
 	}
 }
