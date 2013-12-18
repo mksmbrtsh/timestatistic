@@ -101,14 +101,17 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 
 		mCurrentCounterAdapter = new SimpleCursorAdapter(getActivity(),
 				android.R.layout.simple_spinner_item, null, from, to);
+		mCurrentCounterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		mCurrentCounter.setAdapter(mCurrentCounterAdapter);
 
 		mAfterCounterAdapter = new SimpleCursorAdapter(getActivity(),
 				android.R.layout.simple_spinner_item, null, from, to);
+		mAfterCounterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		mAfterCounter.setAdapter(mAfterCounterAdapter);
 
 		mBeforeCounterAdapter = new SimpleCursorAdapter(getActivity(),
 				android.R.layout.simple_spinner_item, null, from, to);
+		mBeforeCounterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		mBeforeCounter.setAdapter(mBeforeCounterAdapter);
 
 		mCurrentStartDateTime = (Button) v
