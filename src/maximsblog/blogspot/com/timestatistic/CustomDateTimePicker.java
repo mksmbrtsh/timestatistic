@@ -42,11 +42,12 @@ public class CustomDateTimePicker extends Dialog implements OnClickListener {
 	private int selectedHour, selectedMinute;
 
 	public CustomDateTimePicker(Context c,
-			ICustomDateTimeListener customDateTimeListener, Calendar date) {
+			ICustomDateTimeListener customDateTimeListener, long date) {
 		super(c);
 		mContext = c;
 		iCustomDateTimeListener = customDateTimeListener;
-		calendar_date = date;
+		calendar_date = Calendar.getInstance();
+		calendar_date.setTimeInMillis(date);
 	}
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +67,14 @@ public class CustomDateTimePicker extends Dialog implements OnClickListener {
 		datePicker.updateDate(calendar_date.get(Calendar.YEAR),
 				calendar_date.get(Calendar.MONTH),
 				calendar_date.get(Calendar.DATE));
+		
+		timePicker.setOnTimeChangedListener(new OnTimeChangedListener() {
+			@Override
+			public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+				selectedHour = hourOfDay;
+				selectedMinute = minute;
+			}
+		});
 		btn_setTime.performClick();
 	}
 	
@@ -116,13 +125,7 @@ public class CustomDateTimePicker extends Dialog implements OnClickListener {
 
 		datePicker = new DatePicker(mContext);
 		timePicker = new TimePicker(mContext);
-		timePicker.setOnTimeChangedListener(new OnTimeChangedListener() {
-			@Override
-			public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-				selectedHour = hourOfDay;
-				selectedMinute = minute;
-			}
-		});
+		
 
 		
 		viewSwitcher.addView(datePicker);

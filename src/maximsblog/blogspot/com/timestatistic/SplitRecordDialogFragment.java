@@ -39,8 +39,6 @@ import android.widget.Spinner;
 public class SplitRecordDialogFragment extends DialogFragment implements
 		OnClickListener, IdateChange {
 	private ISplitRecordDialog mListener;
-	private Button mDelButton;
-	private boolean mIsRunning;
 
 	private Spinner mCurrentCounter;
 	private Spinner mAfterCounter;
@@ -73,6 +71,10 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 	private TextView mAfterText;
 	private TextView mBeforeText;
 
+	private int mBeforePosition;
+
+	private int mAfterPosition;
+
 	public interface ISplitRecordDialog {
 		void onFinishDialog();
 	}
@@ -81,9 +83,45 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 		mListener = listener;
 	}
 
-	public void setIsRunning(boolean isRunning) {
-		mIsRunning = isRunning;
-	}
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		if (savedInstanceState != null) {
+			mOriginalPosition = savedInstanceState.getInt("mOriginalPosition");
+			mOriginalStart = savedInstanceState.getLong("mOriginalStart");
+			mOriginalLenght = savedInstanceState.getLong("mOriginalLenght");
+			mIDtimer = savedInstanceState.getInt("mIDtimer");
+			mIDrecord = savedInstanceState.getInt("mIDrecord");
+			
+			mCurrentPosition = savedInstanceState.getInt("mCurrentPosition");
+			mCurrentStart = savedInstanceState.getLong("mCurrentStart");
+			mCurrentLenght = savedInstanceState.getLong("mCurrentLenght");
+			
+			mBeforePosition = savedInstanceState.getInt("mBeforeCounter");
+			mAfterPosition = savedInstanceState.getInt("mAfterCounter");
+		}
+
+	};
+	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		// original values
+		outState.putInt("mOriginalPosition", mOriginalPosition);
+		outState.putLong("mOriginalStart", mOriginalStart);
+		outState.putLong("mOriginalLenght", mOriginalLenght);
+		outState.putInt("mIDtimer", mIDtimer);
+		outState.putInt("mIDrecord", mIDrecord);
+
+		// edit values
+		outState.putInt("mCurrentPosition", mCurrentCounter.getSelectedItemPosition());
+		outState.putLong("mCurrentStart", mCurrentStart);
+		outState.putLong("mCurrentLenght", mCurrentLenght);
+		
+		outState.putInt("mBeforeCounter", mBeforeCounter.getSelectedItemPosition());
+		outState.putInt("mAfterCounter", mAfterCounter.getSelectedItemPosition());
+	};
+	
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -130,11 +168,13 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 		mAfterText = (TextView) v.findViewById(R.id.after_period_value);
 		mBeforeText = (TextView) v.findViewById(R.id.before_period_value);
 
+		
 		return v;
 	}
 
 	@Override
 	public void onResume() {
+		super.onResume();
 		Cursor newtimers = getActivity().getContentResolver().query(
 				RecordsDbHelper.CONTENT_URI_TIMES,
 				new String[] { RecordsDbHelper.ID, RecordsDbHelper.LENGHT,
@@ -155,9 +195,10 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 		((SimpleCursorAdapter) mBeforeCounter.getAdapter())
 				.swapCursor(newtimers);
 
-		mCurrentCounter.setSelection(mOriginalPosition);
-		mAfterCounter.setSelection(mOriginalPosition);
-		mBeforeCounter.setSelection(mOriginalPosition);
+		mCurrentCounter.setSelection(mCurrentPosition);
+		mAfterCounter.setSelection(mAfterPosition);
+		mBeforeCounter.setSelection(mBeforePosition);
+		
 		mCalendar.setTimeInMillis(mCurrentStart);
 
 		String startString = mFormatterDateTime.format(mCalendar.getTime());
@@ -170,7 +211,6 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 		{
 			mCurrentStopDateTime.setText(getString(R.string.now));
 		}
-		super.onResume();
 	};
 
 	private void showPickerFragment(int id, long time, boolean istime) {
@@ -270,17 +310,14 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 
 	public static class CustomDateTimePickerFragment extends DialogFragment
 			implements ICustomDateTimeListener {
-		private Calendar c;
 		private IdateChange mIdateChange;
 		private int id;
 
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
-			c = Calendar.getInstance();
-			c.setTimeInMillis(getArguments().getLong("time"));
 			id = getArguments().getInt("id");
 			CustomDateTimePicker customDateTimePicker = new CustomDateTimePicker(
-					getActivity(), this, c);
+					getActivity(), this, getArguments().getLong("time"));
 			return customDateTimePicker;
 		}
 
@@ -294,8 +331,7 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 				String monthShortName, int monthNumber, int date,
 				String weekDayFullName, String weekDayShortName, int hour24,
 				int hour12, int min, int sec, String AM_PM) {
-			c.setTime(dateSelected);
-			mIdateChange.timeChange(id, c.getTimeInMillis());
+			mIdateChange.timeChange(id, dateSelected.getTime());
 			super.dismiss();
 		}
 
@@ -307,75 +343,98 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 
 	@Override
 	public void timeChange(int id, long newvalue) {
+		int result = 0;
 		if (id == R.id.current_startdatetime) {
 			mCurrentStart = newvalue;
-			long lenght;
-			if(mOriginalLenght == 0 )
-				lenght = new Date().getTime() - mOriginalStart;
-			else
-				lenght = mOriginalLenght;
-			mCurrentLenght = mOriginalStart + lenght - mCurrentStart;
-			if (mCurrentStart > mOriginalStart) {
-				if (mCurrentStart > mOriginalStart + lenght) {
-					mBeforeLayout.setVisibility(View.GONE);
-					mCurrentStart = mOriginalStart;
-					mCurrentLenght = mOriginalLenght;
-					Toast.makeText(getActivity(), getString(R.string.more_max),
-							Toast.LENGTH_SHORT).show();
-				} else
-					mBeforeLayout.setVisibility(View.VISIBLE);
-			} else {
+			result = validateStartValue();
+		} else if (id == R.id.current_stopdatetime) {
+			mCurrentLenght = newvalue - mCurrentStart;
+			result = validateStopValue();
+		}
+		switch (result) {
+		case 0:
+			break;
+		case 1:
+			Toast.makeText(getActivity(), getString(R.string.more_max),
+					Toast.LENGTH_SHORT).show();
+			break;
+		case -1:
+			Toast.makeText(getActivity(), getString(R.string.less_min),
+					Toast.LENGTH_SHORT).show();
+			break;
+		default:
+			break;
+		}
+	}
+
+	private int validateStartValue() {
+		long lenght;
+		if(mOriginalLenght == 0 )
+			lenght = new Date().getTime() - mOriginalStart;
+		else
+			lenght = mOriginalLenght;
+		mCurrentLenght = mOriginalStart + lenght - mCurrentStart;
+		if (mCurrentStart > mOriginalStart) {
+			if (mCurrentStart > mOriginalStart + lenght) {
 				mBeforeLayout.setVisibility(View.GONE);
 				mCurrentStart = mOriginalStart;
 				mCurrentLenght = mOriginalLenght;
-				Toast.makeText(getActivity(), getString(R.string.less_min),
-						Toast.LENGTH_SHORT).show();
-			}
-			mCalendar.setTimeInMillis(mOriginalStart);
-			StringBuilder sb = new StringBuilder(
-					mFormatterDateTime.format(mCalendar.getTime()));
-			sb.append(" - ");
-			mCalendar.setTimeInMillis(mCurrentStart);
-			mCurrentStartDateTime.setText(mFormatterDateTime.format(mCalendar
-					.getTime()));
-			sb.append(mCurrentStartDateTime.getText());
-			mBeforeText.setText(sb.toString());
-		} else if (id == R.id.current_stopdatetime) {
-			mCurrentLenght = newvalue - mCurrentStart;
-			long lenght;
-			if(mOriginalLenght == 0 )
-				lenght = new Date().getTime() - mOriginalStart;
-			else
-				lenght = mOriginalLenght;
-			if (mCurrentStart + mCurrentLenght < mOriginalStart
-					+ lenght) {
-				if (mCurrentStart + mCurrentLenght < mOriginalStart) {
-					mAfterLayout.setVisibility(View.GONE);
-					mCurrentLenght = mOriginalStart + mOriginalLenght
-							- mCurrentStart;
-					Toast.makeText(getActivity(), getString(R.string.less_min),
-							Toast.LENGTH_SHORT).show();
-				} else
-					mAfterLayout.setVisibility(View.VISIBLE);
-			} else {
+				return 1;
+				
+			} else
+				mBeforeLayout.setVisibility(View.VISIBLE);
+		} else {
+			mBeforeLayout.setVisibility(View.GONE);
+			mCurrentStart = mOriginalStart;
+			mCurrentLenght = mOriginalLenght;
+			return -1;
+			
+		}
+		mCalendar.setTimeInMillis(mOriginalStart);
+		StringBuilder sb = new StringBuilder(
+				mFormatterDateTime.format(mCalendar.getTime()));
+		sb.append(" - ");
+		mCalendar.setTimeInMillis(mCurrentStart);
+		mCurrentStartDateTime.setText(mFormatterDateTime.format(mCalendar
+				.getTime()));
+		sb.append(mCurrentStartDateTime.getText());
+		mBeforeText.setText(sb.toString());
+		return 0;
+	}
+	
+	private int validateStopValue(){
+		long lenght;
+		if(mOriginalLenght == 0 )
+			lenght = new Date().getTime() - mOriginalStart;
+		else
+			lenght = mOriginalLenght;
+		if (mCurrentStart + mCurrentLenght < mOriginalStart
+				+ lenght) {
+			if (mCurrentStart + mCurrentLenght < mOriginalStart) {
 				mAfterLayout.setVisibility(View.GONE);
 				mCurrentLenght = mOriginalStart + mOriginalLenght
 						- mCurrentStart;
-				Toast.makeText(getActivity(), getString(R.string.more_max),
-						Toast.LENGTH_SHORT).show();
-			}
-			mCalendar.setTimeInMillis(mCurrentStart + mCurrentLenght);
-			mCurrentStopDateTime.setText(mFormatterDateTime.format(mCalendar
-					.getTime()));
-			StringBuilder sb = new StringBuilder(
-					mFormatterDateTime.format(mCalendar.getTime()));
-			sb.append(" - ");
-			mCalendar.setTimeInMillis(mOriginalStart + mOriginalLenght);
-			if(mOriginalLenght == 0)
-				sb.append(getString(R.string.now));
-			else
-				sb.append(mFormatterDateTime.format(mCalendar.getTime()));
-			mAfterText.setText(sb.toString());
+				return -1;
+			} else
+				mAfterLayout.setVisibility(View.VISIBLE);
+		} else {
+			mAfterLayout.setVisibility(View.GONE);
+			mCurrentLenght = mOriginalStart + mOriginalLenght
+					- mCurrentStart;
+			return 1;
 		}
+		mCalendar.setTimeInMillis(mCurrentStart + mCurrentLenght);
+		mCurrentStopDateTime.setText(mFormatterDateTime.format(mCalendar
+				.getTime()));
+		StringBuilder sb = new StringBuilder(
+				mFormatterDateTime.format(mCalendar.getTime()));
+		sb.append(" - ");
+		mCalendar.setTimeInMillis(mOriginalStart + mOriginalLenght);
+		if(mOriginalLenght == 0)
+			sb.append(getString(R.string.now));
+		else
+			sb.append(mFormatterDateTime.format(mCalendar.getTime()));
+		mAfterText.setText(sb.toString());
+		return 0;
 	}
 }
