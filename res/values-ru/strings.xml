@@ -46,4 +46,5 @@
     <string name="after">Следующая запись</string>
     <string name="less_min">Меньше даты начала записи</string>
     <string name="more_max">Больше даты конца записи</string>
+    <string name="now">Сейчас</string>
 </resources>
