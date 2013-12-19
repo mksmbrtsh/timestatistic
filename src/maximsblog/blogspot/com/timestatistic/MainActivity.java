@@ -38,11 +38,12 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 public class MainActivity extends SherlockFragmentActivity implements
-		ResetAllDialog, ICounterEditorDialog, OnPageChangeListener, ISplitRecordDialog {
+		ResetAllDialog, ICounterEditorDialog, OnPageChangeListener,
+		ISplitRecordDialog {
 
 	public CounterEditorDialogFragment mAddCounterDialogFragment;
 	public SplitRecordDialogFragment mSplitRecordDialog;
-	
+
 	private String[] mTitles;
 	private PagesAdapter adapter;
 	private ViewPager pager;
@@ -63,10 +64,17 @@ public class MainActivity extends SherlockFragmentActivity implements
 		TitlePageIndicator indicator = (TitlePageIndicator) findViewById(R.id.indicator);
 		indicator.setViewPager(pager);
 		indicator.setOnPageChangeListener(this);
-		mAddCounterDialogFragment = new CounterEditorDialogFragment();
-		mAddCounterDialogFragment.setCounterDialogListener(this);
-		mSplitRecordDialog = new SplitRecordDialogFragment();
-		mSplitRecordDialog.setCounterDialogListener(this);
+		if (savedInstanceState == null) {
+			mAddCounterDialogFragment = new CounterEditorDialogFragment();
+			mAddCounterDialogFragment.setCounterDialogListener(this);
+		} else {
+			FragmentManager fm = getSupportFragmentManager();
+			mSplitRecordDialog = (SplitRecordDialogFragment) fm
+					.findFragmentByTag("mSplitRecordDialog");
+			if(mSplitRecordDialog != null)
+				mSplitRecordDialog.setCounterDialogListener(this);
+
+		}
 	}
 
 	public Fragment findFragmentByPosition(int position) {
@@ -87,7 +95,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			if (position == 0) {
 				CountersFragment fg = CountersFragment.newInstance();
 				f = fg;
-			} else if(position == 1) {
+			} else if (position == 1) {
 				TimeRecordsFragment fg = TimeRecordsFragment.newInstance();
 				f = fg;
 			} else {
@@ -129,17 +137,15 @@ public class MainActivity extends SherlockFragmentActivity implements
 			mAddCounterDialogFragment.show(this.getSupportFragmentManager(),
 					"dlg1");
 			break;
-		case R.id.item_reset_all: 
-			ft = getSupportFragmentManager()
-					.beginTransaction();
+		case R.id.item_reset_all:
+			ft = getSupportFragmentManager().beginTransaction();
 			AreYouSureResetAllDialog newFragment = new AreYouSureResetAllDialog();
 			newFragment.setResetAllDialogListener(this);
 			newFragment.show(ft, "dialog");
-			
+
 			break;
 		case R.id.item_about:
-			ft = getSupportFragmentManager()
-					.beginTransaction();
+			ft = getSupportFragmentManager().beginTransaction();
 			AboutDialog aboutFragment = new AboutDialog();
 			aboutFragment.show(ft, "aboutDialog");
 			break;
@@ -224,5 +230,4 @@ public class MainActivity extends SherlockFragmentActivity implements
 		reloadFragments();
 	}
 
-	
 }

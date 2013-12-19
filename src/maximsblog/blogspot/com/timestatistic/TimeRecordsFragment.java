@@ -83,14 +83,15 @@ public class TimeRecordsFragment extends Fragment implements
 	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2,
 			long arg3) {
 		Cursor cursor = mAdapter.getCursor();
-		int idtimer = cursor.getInt(5);
-		int id = cursor.getInt(0);
+		int idtimer = cursor.getInt(0);
+		int idRecord = cursor.getInt(5);
 		long start = cursor.getLong(2);
 		long lenght = cursor.getLong(1);
-		SplitRecordDialogFragment mSplitRecordDialog = ((MainActivity)getActivity()).mSplitRecordDialog;
-		mSplitRecordDialog.setValues(id, idtimer, start, lenght);
-		((MainActivity)getActivity()).mSplitRecordDialog.show(this.getActivity().getSupportFragmentManager(),
-		"dlg1");
+		SplitRecordDialogFragment mSplitRecordDialog = new SplitRecordDialogFragment();
+		mSplitRecordDialog.setCounterDialogListener((MainActivity)getActivity());
+		mSplitRecordDialog.setValues(idtimer, idRecord, start, lenght);
+		mSplitRecordDialog.show(this.getActivity().getSupportFragmentManager(),
+		"mSplitRecordDialog");
 		return false;
 	}
 

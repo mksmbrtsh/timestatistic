@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TimePicker;
 import android.widget.TimePicker.OnTimeChangedListener;
 import android.widget.ViewSwitcher;
@@ -156,8 +157,10 @@ public class CustomDateTimePicker extends Dialog implements OnClickListener {
 		linear_child.addView(linear_bottom);
 
 		linear_main.addView(linear_child);
-
-		return linear_main;
+		ScrollView s = new ScrollView(mContext);
+		s.addView(linear_main);
+		s.setLayoutParams(linear_match_wrap);
+		return s;
 	}
 
 	@Override
@@ -308,6 +311,13 @@ public class CustomDateTimePicker extends Dialog implements OnClickListener {
 	private void resetData() {
 		calendar_date = null;
 		is24HourView = true;
+	}
+	
+	public long getTime()
+	{
+		calendar_date.set(Calendar.HOUR_OF_DAY, selectedHour);
+		calendar_date.set(Calendar.MINUTE, selectedMinute);
+		return calendar_date.getTime().getTime();
 	}
 
 	public static String pad(int integerToPad) {
