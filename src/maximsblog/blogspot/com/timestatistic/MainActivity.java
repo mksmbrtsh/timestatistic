@@ -41,9 +41,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 		ResetAllDialog, ICounterEditorDialog, OnPageChangeListener,
 		ISplitRecordDialog {
 
-	public CounterEditorDialogFragment mAddCounterDialogFragment;
-	public SplitRecordDialogFragment mSplitRecordDialog;
-
 	private String[] mTitles;
 	private PagesAdapter adapter;
 	private ViewPager pager;
@@ -68,13 +65,16 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		} else {
 			FragmentManager fm = getSupportFragmentManager();
-			mSplitRecordDialog = (SplitRecordDialogFragment) fm
+			SplitRecordDialogFragment splitRecordDialog = (SplitRecordDialogFragment) fm
 					.findFragmentByTag("mSplitRecordDialog");
-			if(mSplitRecordDialog != null)
-				mSplitRecordDialog.setCounterDialogListener(this);
-			mAddCounterDialogFragment = (CounterEditorDialogFragment) fm.findFragmentByTag("mAddCounterDialogFragment");
-			if(mAddCounterDialogFragment!=null)
-				mAddCounterDialogFragment.setCounterDialogListener(this);
+			if(splitRecordDialog != null)
+				splitRecordDialog.setCounterDialogListener(this);
+			CounterEditorDialogFragment counterEditorDialogFragment = (CounterEditorDialogFragment) fm.findFragmentByTag("mCounterEditorDialogFragment");
+			if(counterEditorDialogFragment!=null)
+				counterEditorDialogFragment.setCounterDialogListener(this);
+			AreYouSureResetAllDialog areYouSureResetAllDialog = (AreYouSureResetAllDialog) fm.findFragmentByTag("mAreYouSureResetAllDialog");
+			if(areYouSureResetAllDialog!=null)
+				areYouSureResetAllDialog.setResetAllDialogListener(this);
 		}
 	}
 
@@ -129,21 +129,22 @@ public class MainActivity extends SherlockFragmentActivity implements
 		FragmentTransaction ft;
 		switch (item.getItemId()) {
 		case R.id.item_add:
-			mAddCounterDialogFragment.setIdCounter(-1);
-			mAddCounterDialogFragment.setName("");
+			CounterEditorDialogFragment counterEditorDialogFragment = new CounterEditorDialogFragment();
+			counterEditorDialogFragment.setIdCounter(-1);
+			counterEditorDialogFragment.setCounterDialogListener(this);
+			counterEditorDialogFragment.setName("");
 			Random rnd = new Random();
 			int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256),
 					rnd.nextInt(256));
-			mAddCounterDialogFragment.setColor(color);
-			mAddCounterDialogFragment.show(this.getSupportFragmentManager(),
-					"dlg1");
+			counterEditorDialogFragment.setColor(color);
+			counterEditorDialogFragment.show(this.getSupportFragmentManager(),
+					"mCounterEditorDialogFragment");
 			break;
 		case R.id.item_reset_all:
 			ft = getSupportFragmentManager().beginTransaction();
-			AreYouSureResetAllDialog newFragment = new AreYouSureResetAllDialog();
-			newFragment.setResetAllDialogListener(this);
-			newFragment.show(ft, "dialog");
-
+			AreYouSureResetAllDialog areYouSureResetAllDialog = new AreYouSureResetAllDialog();
+			areYouSureResetAllDialog.setResetAllDialogListener(this);
+			areYouSureResetAllDialog.show(ft, "mAreYouSureResetAllDialog");
 			break;
 		case R.id.item_about:
 			ft = getSupportFragmentManager().beginTransaction();

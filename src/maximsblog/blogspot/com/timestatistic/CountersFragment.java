@@ -201,15 +201,15 @@ public final class CountersFragment extends Fragment implements
 		String name = cursor.getString(5);
 		boolean isRunning = cursor.getInt(6) == 1;
 		int color = cursor.getInt(7);
-		CounterEditorDialogFragment addCounterDialogFragment = new CounterEditorDialogFragment();
-		addCounterDialogFragment
+		CounterEditorDialogFragment counterEditorDialogFragment = new CounterEditorDialogFragment();
+		counterEditorDialogFragment
 				.setCounterDialogListener((MainActivity) getActivity());
-		addCounterDialogFragment.setIdCounter(id);
-		addCounterDialogFragment.setName(name);
-		addCounterDialogFragment.setColor(color);
-		addCounterDialogFragment.setIsRunning(isRunning);
-		addCounterDialogFragment.show(this.getActivity()
-				.getSupportFragmentManager(), "mAddCounterDialogFragment");
+		counterEditorDialogFragment.setIdCounter(id);
+		counterEditorDialogFragment.setName(name);
+		counterEditorDialogFragment.setColor(color);
+		counterEditorDialogFragment.setIsRunning(isRunning);
+		counterEditorDialogFragment.show(this.getActivity()
+				.getSupportFragmentManager(), "mCounterEditorDialogFragment");
 		return true;
 	}
 }
