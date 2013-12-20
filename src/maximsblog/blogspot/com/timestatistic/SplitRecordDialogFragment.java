@@ -105,8 +105,10 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 					.findFragmentByTag("timePicker");
 			if (customDateTimePickerFragment != null)
 				customDateTimePickerFragment.setDateChange(this);
-		} else
+		} else {
 			mOriginalPosition = -1;
+			mCurrentPosition = -1;
+		}
 
 	};
 
@@ -177,7 +179,8 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 
 		mAfterText = (TextView) v.findViewById(R.id.after_period_value);
 		mBeforeText = (TextView) v.findViewById(R.id.before_period_value);
-		if (mOriginalStart + mOriginalLenght < mCurrentStart + mCurrentLenght && mCurrentLenght != 0)
+		if (mOriginalStart + mOriginalLenght < mCurrentStart + mCurrentLenght
+				&& mCurrentLenght != 0)
 			mAfterLayout.setVisibility(View.VISIBLE);
 		else if (mCurrentLenght == 0
 				|| mOriginalStart + mOriginalLenght == mCurrentStart
@@ -185,7 +188,7 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 			mAfterLayout.setVisibility(View.GONE);
 		else
 			mAfterLayout.setVisibility(View.VISIBLE);
-		if(mCurrentStart > mOriginalStart)
+		if (mCurrentStart > mOriginalStart)
 			mBeforeLayout.setVisibility(View.VISIBLE);
 		else
 			mBeforeLayout.setVisibility(View.GONE);
@@ -198,18 +201,16 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 	public void onResume() {
 		super.onResume();
 		Cursor newtimers = getActivity().getContentResolver().query(
-				RecordsDbHelper.CONTENT_URI_TIMES,
-				null,
-				null, null, null);
-		for (int i1 = 0, cnt1 = newtimers.getCount(); i1 < cnt1; i1++) {
-			newtimers.moveToPosition(i1);
-			if (newtimers.getInt(4) == mIDtimer) {
-				if (mOriginalPosition == -1)
+				RecordsDbHelper.CONTENT_URI_TIMES, null, null, null, null);
+		if (mOriginalPosition != -1)
+			for (int i1 = 0, cnt1 = newtimers.getCount(); i1 < cnt1; i1++) {
+				newtimers.moveToPosition(i1);
+				if (newtimers.getInt(4) == mIDtimer) {
 					mOriginalPosition = i1;
-				mCurrentPosition = i1;
-				break;
+					mCurrentPosition = i1;
+					break;
+				}
 			}
-		}
 		((SimpleCursorAdapter) mCurrentCounter.getAdapter())
 				.swapCursor(newtimers);
 		((SimpleCursorAdapter) mAfterCounter.getAdapter())
@@ -326,7 +327,8 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 			cv.clear();
 		}
 
-		if (mOriginalLenght + mOriginalStart != mCurrentStart + mCurrentLenght && mCurrentLenght !=0) {
+		if (mOriginalLenght + mOriginalStart != mCurrentStart + mCurrentLenght
+				&& mCurrentLenght != 0) {
 			c.moveToPosition(mAfterCounter.getSelectedItemPosition());
 			cv.put(RecordsDbHelper.TIMERSID, c.getInt(4));
 			cv.put(RecordsDbHelper.STARTTIME, mCurrentStart + mCurrentLenght);
@@ -431,11 +433,11 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 		switch (result) {
 		case 0:
 			if (id == R.id.current_startdatetime) {
-				if(mOriginalLenght == 0)
+				if (mOriginalLenght == 0)
 					mCurrentLenght = 0;
 				else
 					mCurrentLenght = mOriginalStart + mOriginalLenght
-						- mCurrentStart;
+							- mCurrentStart;
 			}
 			break;
 		case 1:
@@ -443,11 +445,11 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 				mCurrentStart = mOriginalStart;
 				mCurrentLenght = mOriginalLenght;
 			} else {
-				if(mOriginalLenght == 0)
+				if (mOriginalLenght == 0)
 					mCurrentLenght = 0;
 				else
 					mCurrentLenght = mOriginalStart + mOriginalLenght
-						- mCurrentStart;
+							- mCurrentStart;
 			}
 			Toast.makeText(getActivity(), getString(R.string.more_max),
 					Toast.LENGTH_SHORT).show();
