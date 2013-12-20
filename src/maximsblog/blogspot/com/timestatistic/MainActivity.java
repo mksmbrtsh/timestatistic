@@ -65,15 +65,16 @@ public class MainActivity extends SherlockFragmentActivity implements
 		indicator.setViewPager(pager);
 		indicator.setOnPageChangeListener(this);
 		if (savedInstanceState == null) {
-			mAddCounterDialogFragment = new CounterEditorDialogFragment();
-			mAddCounterDialogFragment.setCounterDialogListener(this);
+
 		} else {
 			FragmentManager fm = getSupportFragmentManager();
 			mSplitRecordDialog = (SplitRecordDialogFragment) fm
 					.findFragmentByTag("mSplitRecordDialog");
 			if(mSplitRecordDialog != null)
 				mSplitRecordDialog.setCounterDialogListener(this);
-
+			mAddCounterDialogFragment = (CounterEditorDialogFragment) fm.findFragmentByTag("mAddCounterDialogFragment");
+			if(mAddCounterDialogFragment!=null)
+				mAddCounterDialogFragment.setCounterDialogListener(this);
 		}
 	}
 

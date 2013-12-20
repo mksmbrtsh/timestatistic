@@ -39,8 +39,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public final class CountersFragment extends Fragment implements
-		LoaderCallbacks<Cursor>, OnItemClickListener, MainFragments, OnItemLongClickListener {
-	
+		LoaderCallbacks<Cursor>, OnItemClickListener, MainFragments,
+		OnItemLongClickListener {
+
 	private Timer mTimer;
 	private CountersCursorAdapter mAdapter;
 	private LoaderManager loadermanager;
@@ -50,8 +51,8 @@ public final class CountersFragment extends Fragment implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		loadermanager = getLoaderManager();
-		String[] uiBindFrom = {  RecordsDbHelper.LENGHT, RecordsDbHelper.NAME };
-		int[] uiBindTo = {  R.id.current, R.id.name};
+		String[] uiBindFrom = { RecordsDbHelper.LENGHT, RecordsDbHelper.NAME };
+		int[] uiBindTo = { R.id.current, R.id.name };
 
 		mAdapter = new CountersCursorAdapter(this.getActivity(),
 				R.layout.count_row, null, uiBindFrom, uiBindTo, 0);
@@ -67,15 +68,14 @@ public final class CountersFragment extends Fragment implements
 		mList.setAdapter(mAdapter);
 		mList.setOnItemClickListener(this);
 		mList.setOnItemLongClickListener(this);
-		
-		
+
 		return layout;
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		
+
 	}
 
 	@Override
@@ -94,35 +94,37 @@ public final class CountersFragment extends Fragment implements
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> arg0) {
-		
+
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 			long arg3) {
-        ContentValues cv = new ContentValues();
-        long now = new Date().getTime();
-        Cursor c = getActivity().getContentResolver().query(RecordsDbHelper.CONTENT_URI_TIMES,
-        		new String[] {RecordsDbHelper.ID,
-    			RecordsDbHelper.NAME,
-    			RecordsDbHelper.ISRUNNING,
-    			RecordsDbHelper.STARTTIME, RecordsDbHelper.TIMERSID}, RecordsDbHelper.ISRUNNING + "=?", new String[] { String.valueOf(1) }, null);
-        c.moveToFirst();
-        int timeId = c.getInt(0);
-        long start = c.getLong(3);
-        c.close();
-        long lenght = now - start;
-        cv = new ContentValues();
+		ContentValues cv = new ContentValues();
+		long now = new Date().getTime();
+		Cursor c = getActivity().getContentResolver().query(
+				RecordsDbHelper.CONTENT_URI_TIMES,
+				new String[] { RecordsDbHelper.ID, RecordsDbHelper.NAME,
+						RecordsDbHelper.ISRUNNING, RecordsDbHelper.STARTTIME,
+						RecordsDbHelper.TIMERSID },
+				RecordsDbHelper.ISRUNNING + "=?",
+				new String[] { String.valueOf(1) }, null);
+		c.moveToFirst();
+		int timeId = c.getInt(0);
+		long start = c.getLong(3);
+		c.close();
+		long lenght = now - start;
+		cv = new ContentValues();
 		cv.put(RecordsDbHelper.LENGHT, lenght);
 		getActivity().getContentResolver().update(
 				RecordsDbHelper.CONTENT_URI_TIMES, cv,
-				RecordsDbHelper.ID2+ "=?",
+				RecordsDbHelper.ID2 + "=?",
 				new String[] { String.valueOf(timeId) });
 		cv.clear();
 		Cursor cursor = mAdapter.getCursor();
 		boolean isRunning = cursor.getInt(6) == 1;
 		int counterId;
-		if(isRunning) {
+		if (isRunning) {
 			counterId = 1;
 		} else {
 			counterId = cursor.getInt(4);
@@ -134,12 +136,13 @@ public final class CountersFragment extends Fragment implements
 		cv.clear();
 		cv.put(RecordsDbHelper.ISRUNNING, 1);
 		getActivity().getContentResolver().update(
-				RecordsDbHelper.CONTENT_URI_TIMERS, cv, RecordsDbHelper.ID + " = ?", new String[] { String.valueOf(counterId) });
+				RecordsDbHelper.CONTENT_URI_TIMERS, cv,
+				RecordsDbHelper.ID + " = ?",
+				new String[] { String.valueOf(counterId) });
 		loadermanager.restartLoader(1, null, this);
-		SettingsActivity.visibleNotif(getActivity(),cursor.getLong(3),cursor.getLong(2), cursor.getString(5));
+		SettingsActivity.visibleNotif(getActivity(), cursor.getLong(3),
+				cursor.getLong(2), cursor.getString(5));
 	}
-
-	
 
 	public final void timerAlert() {
 
@@ -158,7 +161,7 @@ public final class CountersFragment extends Fragment implements
 						mList.scrollBy(0, y);
 					}
 				};
-					getActivity().runOnUiThread(update);
+				getActivity().runOnUiThread(update);
 			}
 
 		};
@@ -171,7 +174,7 @@ public final class CountersFragment extends Fragment implements
 		timerAlert();
 		super.onResume();
 	};
-	
+
 	@Override
 	public void onPause() {
 		mTimer.cancel();
@@ -189,6 +192,7 @@ public final class CountersFragment extends Fragment implements
 		loadermanager.restartLoader(1, null, this);
 	}
 
+	
 	@Override
 	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2,
 			long arg3) {
@@ -197,13 +201,15 @@ public final class CountersFragment extends Fragment implements
 		String name = cursor.getString(5);
 		boolean isRunning = cursor.getInt(6) == 1;
 		int color = cursor.getInt(7);
-		CounterEditorDialogFragment addCounterDialogFragment = ((MainActivity)getActivity()).mAddCounterDialogFragment;
+		CounterEditorDialogFragment addCounterDialogFragment = new CounterEditorDialogFragment();
+		addCounterDialogFragment
+				.setCounterDialogListener((MainActivity) getActivity());
 		addCounterDialogFragment.setIdCounter(id);
 		addCounterDialogFragment.setName(name);
 		addCounterDialogFragment.setColor(color);
 		addCounterDialogFragment.setIsRunning(isRunning);
-		((MainActivity)getActivity()).mAddCounterDialogFragment.show(this.getActivity().getSupportFragmentManager(),
-		"dlg1");
+		addCounterDialogFragment.show(this.getActivity()
+				.getSupportFragmentManager(), "mAddCounterDialogFragment");
 		return true;
 	}
 }

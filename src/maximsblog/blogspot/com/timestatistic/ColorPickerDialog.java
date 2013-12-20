@@ -240,6 +240,10 @@ public class ColorPickerDialog extends Dialog implements android.view.View.OnCli
 		mInitialColor = initialColor;
 	}
 
+	public int getColor() {
+		return mColorPickerView.getColor();
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
