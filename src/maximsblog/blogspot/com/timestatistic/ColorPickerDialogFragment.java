@@ -1,6 +1,5 @@
 package maximsblog.blogspot.com.timestatistic;
 
-import maximsblog.blogspot.com.timestatistic.AreYouSureResetAllDialog.ResetAllDialog;
 import maximsblog.blogspot.com.timestatistic.ColorPickerDialog.OnColorChangedListener;
 import android.app.AlertDialog;
 import android.app.Dialog;

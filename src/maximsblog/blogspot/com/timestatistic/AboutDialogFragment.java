@@ -20,7 +20,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class AboutDialog extends DialogFragment {
+public class AboutDialogFragment extends DialogFragment {
 	
 	
 	@Override

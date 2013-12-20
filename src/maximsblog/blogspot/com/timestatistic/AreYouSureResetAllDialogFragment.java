@@ -7,7 +7,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
-public class AreYouSureResetAllDialog extends DialogFragment {
+public class AreYouSureResetAllDialogFragment extends DialogFragment {
 	
 	private ResetAllDialog mListener;
 	public interface ResetAllDialog {
@@ -26,13 +26,13 @@ public class AreYouSureResetAllDialog extends DialogFragment {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     // do nothing (will close dialog)
-                	AreYouSureResetAllDialog.this.dismiss();
+                	AreYouSureResetAllDialogFragment.this.dismiss();
                 }
             })
             .setPositiveButton(android.R.string.yes,  new OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                	AreYouSureResetAllDialog.this.dismiss();
+                	AreYouSureResetAllDialogFragment.this.dismiss();
                 	mListener.onResetAllDialog();
                 }
             })

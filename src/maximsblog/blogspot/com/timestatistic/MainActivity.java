@@ -6,7 +6,7 @@ import java.util.Random;
 
 import maximsblog.blogspot.com.timestatistic.CounterEditorDialogFragment.ICounterEditorDialog;
 import maximsblog.blogspot.com.timestatistic.CounterEditorDialogFragment.Status;
-import maximsblog.blogspot.com.timestatistic.AreYouSureResetAllDialog.ResetAllDialog;
+import maximsblog.blogspot.com.timestatistic.AreYouSureResetAllDialogFragment.ResetAllDialog;
 import maximsblog.blogspot.com.timestatistic.MainActivity.MainFragments;
 import maximsblog.blogspot.com.timestatistic.MainActivity.PagesAdapter;
 import maximsblog.blogspot.com.timestatistic.SplitRecordDialogFragment.ISplitRecordDialog;
@@ -72,7 +72,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			CounterEditorDialogFragment counterEditorDialogFragment = (CounterEditorDialogFragment) fm.findFragmentByTag("mCounterEditorDialogFragment");
 			if(counterEditorDialogFragment!=null)
 				counterEditorDialogFragment.setCounterDialogListener(this);
-			AreYouSureResetAllDialog areYouSureResetAllDialog = (AreYouSureResetAllDialog) fm.findFragmentByTag("mAreYouSureResetAllDialog");
+			AreYouSureResetAllDialogFragment areYouSureResetAllDialog = (AreYouSureResetAllDialogFragment) fm.findFragmentByTag("mAreYouSureResetAllDialog");
 			if(areYouSureResetAllDialog!=null)
 				areYouSureResetAllDialog.setResetAllDialogListener(this);
 		}
@@ -142,13 +142,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 			break;
 		case R.id.item_reset_all:
 			ft = getSupportFragmentManager().beginTransaction();
-			AreYouSureResetAllDialog areYouSureResetAllDialog = new AreYouSureResetAllDialog();
+			AreYouSureResetAllDialogFragment areYouSureResetAllDialog = new AreYouSureResetAllDialogFragment();
 			areYouSureResetAllDialog.setResetAllDialogListener(this);
 			areYouSureResetAllDialog.show(ft, "mAreYouSureResetAllDialog");
 			break;
 		case R.id.item_about:
 			ft = getSupportFragmentManager().beginTransaction();
-			AboutDialog aboutFragment = new AboutDialog();
+			AboutDialogFragment aboutFragment = new AboutDialogFragment();
 			aboutFragment.show(ft, "aboutDialog");
 			break;
 		case R.id.action_settings:
