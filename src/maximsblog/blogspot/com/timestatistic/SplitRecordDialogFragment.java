@@ -177,7 +177,7 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 
 		mAfterText = (TextView) v.findViewById(R.id.after_period_value);
 		mBeforeText = (TextView) v.findViewById(R.id.before_period_value);
-		if (mOriginalStart + mOriginalLenght < mCurrentStart + mCurrentLenght)
+		if (mOriginalStart + mOriginalLenght < mCurrentStart + mCurrentLenght && mCurrentLenght != 0)
 			mAfterLayout.setVisibility(View.VISIBLE);
 		else if (mCurrentLenght == 0
 				|| mOriginalStart + mOriginalLenght == mCurrentStart
@@ -185,7 +185,7 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 			mAfterLayout.setVisibility(View.GONE);
 		else
 			mAfterLayout.setVisibility(View.VISIBLE);
-		if (mCurrentStart > mOriginalStart)
+		if(mCurrentStart > mOriginalStart)
 			mBeforeLayout.setVisibility(View.VISIBLE);
 		else
 			mBeforeLayout.setVisibility(View.GONE);
@@ -256,7 +256,7 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 				mFormatterDateTime.format(mCalendar.getTime()));
 		sb.append(" - ");
 		mCalendar.setTimeInMillis(mCurrentStart);
-		sb.append(mCurrentStartDateTime.getText());
+		sb.append(mFormatterDateTime.format(mCalendar.getTime()));
 		mBeforeText.setText(sb.toString());
 	}
 
@@ -326,7 +326,7 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 			cv.clear();
 		}
 
-		if (mOriginalLenght + mOriginalStart != mCurrentStart + mCurrentLenght) {
+		if (mOriginalLenght + mOriginalStart != mCurrentStart + mCurrentLenght && mCurrentLenght !=0) {
 			c.moveToPosition(mAfterCounter.getSelectedItemPosition());
 			cv.put(RecordsDbHelper.TIMERSID, c.getInt(4));
 			cv.put(RecordsDbHelper.STARTTIME, mCurrentStart + mCurrentLenght);
@@ -339,11 +339,12 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 					RecordsDbHelper.CONTENT_URI_TIMES, cv);
 			cv.clear();
 			if (mOriginalLenght == 0) {
+				c.moveToPosition(mAfterCounter.getSelectedItemPosition());
 				cv.put(RecordsDbHelper.ISRUNNING, 1);
 				getActivity().getContentResolver().update(
 						RecordsDbHelper.CONTENT_URI_TIMERS, cv,
 						RecordsDbHelper.ID + " = ?",
-						new String[] { String.valueOf(c.getInt(1)) });
+						new String[] { String.valueOf(c.getInt(4)) });
 				cv.clear();
 			}
 		}
@@ -430,7 +431,10 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 		switch (result) {
 		case 0:
 			if (id == R.id.current_startdatetime) {
-				mCurrentLenght = mOriginalStart + mOriginalLenght
+				if(mOriginalLenght == 0)
+					mCurrentLenght = 0;
+				else
+					mCurrentLenght = mOriginalStart + mOriginalLenght
 						- mCurrentStart;
 			}
 			break;
@@ -439,7 +443,10 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 				mCurrentStart = mOriginalStart;
 				mCurrentLenght = mOriginalLenght;
 			} else {
-				mCurrentLenght = mOriginalStart + mOriginalLenght
+				if(mOriginalLenght == 0)
+					mCurrentLenght = 0;
+				else
+					mCurrentLenght = mOriginalStart + mOriginalLenght
 						- mCurrentStart;
 			}
 			Toast.makeText(getActivity(), getString(R.string.more_max),
