@@ -16,12 +16,11 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.support.v4.widget.SimpleCursorAdapter;
 
 public class TimeRecordsFragment extends Fragment implements
-		LoaderCallbacks<Cursor>, MainFragments, OnItemLongClickListener {
+		LoaderCallbacks<Cursor>, MainFragments, OnItemClickListener {
 	public static TimeRecordsFragment newInstance() {
 
 		return new TimeRecordsFragment();
@@ -50,7 +49,7 @@ public class TimeRecordsFragment extends Fragment implements
 				R.layout.fragment_time_records, container, false);
 		mList = (ListView) layout.findViewById(R.id.listView1);
 		mList.setAdapter(mAdapter);
-		mList.setOnItemLongClickListener(this);
+		mList.setOnItemClickListener(this);
 		return layout;
 	}
 
@@ -79,9 +78,9 @@ public class TimeRecordsFragment extends Fragment implements
 		loadermanager.restartLoader(1, null, this);
 	}
 
+
 	@Override
-	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2,
-			long arg3) {
+	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		Cursor cursor = mAdapter.getCursor();
 		int idtimer = cursor.getInt(0);
 		int idRecord = cursor.getInt(5);
@@ -92,7 +91,6 @@ public class TimeRecordsFragment extends Fragment implements
 		mSplitRecordDialog.setValues(idtimer, idRecord, start, lenght);
 		mSplitRecordDialog.show(this.getActivity().getSupportFragmentManager(),
 		"mSplitRecordDialog");
-		return false;
 	}
 
 }

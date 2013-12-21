@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.view.WindowManager.LayoutParams;
 import android.webkit.WebChromeClient.CustomViewCallback;
 import android.widget.Button;
@@ -396,6 +397,7 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 			}
 			CustomDateTimePicker customDateTimePicker = new CustomDateTimePicker(
 					getActivity(), this, t);
+			customDateTimePicker.requestWindowFeature(Window.FEATURE_NO_TITLE);
 			return customDateTimePicker;
 		}
 
