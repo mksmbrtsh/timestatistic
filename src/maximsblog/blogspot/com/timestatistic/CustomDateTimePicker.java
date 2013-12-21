@@ -50,6 +50,9 @@ public class CustomDateTimePicker extends Dialog implements OnClickListener {
 		calendar_date = Calendar.getInstance();
 		calendar_date.setTimeInMillis(date);
 	}
+	
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -61,6 +64,15 @@ public class CustomDateTimePicker extends Dialog implements OnClickListener {
 		selectedHour = calendar_date.get(Calendar.HOUR_OF_DAY);
 		selectedMinute = calendar_date.get(Calendar.MINUTE);
 
+		
+		btn_setTime.performClick();
+	}
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+		// Android TimePicker hour field disappears after orientation change
+		// fix from http://stackoverflow.com/questions/2170497/android-timepicker-hour-field-disappears-after-orientation-change
 		timePicker.setIs24HourView(is24HourView);
 		timePicker.setCurrentHour(selectedHour);
 		timePicker.setCurrentMinute(selectedMinute);
@@ -76,9 +88,7 @@ public class CustomDateTimePicker extends Dialog implements OnClickListener {
 				selectedMinute = minute;
 			}
 		});
-		btn_setTime.performClick();
-	}
-	
+	};
 
 	public View getDateTimePickerLayout() {
 		LinearLayout.LayoutParams linear_match_wrap = new LinearLayout.LayoutParams(

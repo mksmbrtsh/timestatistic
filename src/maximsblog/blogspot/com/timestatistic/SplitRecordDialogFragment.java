@@ -104,8 +104,9 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 			CustomDateTimePickerFragment customDateTimePickerFragment = (CustomDateTimePickerFragment) getActivity()
 					.getSupportFragmentManager()
 					.findFragmentByTag("timePicker");
-			if (customDateTimePickerFragment != null)
+			if (customDateTimePickerFragment != null){
 				customDateTimePickerFragment.setDateChange(this);
+			}
 		} else {
 			mOriginalPosition = -1;
 			mCurrentPosition = -1;
