@@ -11,12 +11,14 @@
         android:id="@+id/item_reset_all"
         android:orderInCategory="2"
         android:showAsAction="ifRoom"
+        android:icon="@drawable/reset_all_dark"
         android:title="@string/reset_all">
     </item>
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="3"
         android:showAsAction="never"
+        android:icon="@drawable/abs__ic_menu_moreoverflow_holo_dark"
         android:title="@string/action_settings"/>
     <item
         android:id="@+id/item_about"
