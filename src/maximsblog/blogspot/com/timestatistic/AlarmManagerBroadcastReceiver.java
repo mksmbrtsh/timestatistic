@@ -54,7 +54,7 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
  					context.getApplicationContext(), 0, intent1,
  					Intent.FLAG_ACTIVITY_CLEAR_TASK);
  			NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
- 					context).setSmallIcon(R.drawable.ic_notif1).setLights(Color.RED, 500, 500);
+ 					context).setSmallIcon(R.drawable.ic_notification).setLights(Color.RED, 500, 500);
  			Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             if(alarmSound == null){
                 alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);

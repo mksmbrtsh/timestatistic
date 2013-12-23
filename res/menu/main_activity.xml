@@ -4,14 +4,14 @@
         android:id="@+id/item_add"
         android:showAsAction="always"
         android:orderInCategory="1"
-        android:icon="@drawable/abs__ic_menu_add_normal_holo_dark"
+        android:icon="@drawable/ic_action_add_dark"
         android:title="@string/add">
     </item>
     <item
         android:id="@+id/item_reset_all"
         android:orderInCategory="2"
         android:showAsAction="ifRoom"
-        android:icon="@drawable/reset_all_dark"
+        android:icon="@drawable/ic_action_reset_all_dark"
         android:title="@string/reset_all">
     </item>
     <item
@@ -23,7 +23,7 @@
     <item
         android:id="@+id/item_about"
         android:orderInCategory="4"
-        android:icon="@drawable/ic_action_about"
+        android:icon="@drawable/ic_action_about_dark"
         android:showAsAction="never"
         android:title="@string/about">
     </item>
