@@ -90,7 +90,13 @@ public class DiagramFragment extends Fragment implements
 	@Override
 	public void onResume() {
 		super.onResume();
-		
+		if (mChartView == null) {
+			ViewGroup layout = (ViewGroup) mLayout.findViewById(R.id.chart);
+			mChartView = ChartFactory.getPieChartView(this.getActivity(),
+					mSeries, mRenderer);
+			layout.addView(mChartView, new LayoutParams(
+					LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		}
 		loadermanager.initLoader(1, null, this);
 	}
 

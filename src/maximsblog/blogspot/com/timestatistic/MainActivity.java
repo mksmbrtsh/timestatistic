@@ -6,9 +6,10 @@ import java.util.Random;
 
 import maximsblog.blogspot.com.timestatistic.CounterEditorDialogFragment.ICounterEditorDialog;
 import maximsblog.blogspot.com.timestatistic.CounterEditorDialogFragment.Status;
-import maximsblog.blogspot.com.timestatistic.AreYouSureResetAllDialog.ResetAllDialog;
+import maximsblog.blogspot.com.timestatistic.AreYouSureResetAllDialogFragment.ResetAllDialog;
 import maximsblog.blogspot.com.timestatistic.MainActivity.MainFragments;
 import maximsblog.blogspot.com.timestatistic.MainActivity.PagesAdapter;
+import maximsblog.blogspot.com.timestatistic.SplitRecordDialogFragment.ISplitRecordDialog;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.viewpagerindicator.TabPageIndicator;
@@ -37,9 +38,8 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 public class MainActivity extends SherlockFragmentActivity implements
-		ResetAllDialog, ICounterEditorDialog, OnPageChangeListener {
-
-	public CounterEditorDialogFragment mAddCounterDialogFragment;
+		ResetAllDialog, ICounterEditorDialog, OnPageChangeListener,
+		ISplitRecordDialog {
 
 	private String[] mTitles;
 	private PagesAdapter adapter;
@@ -61,9 +61,21 @@ public class MainActivity extends SherlockFragmentActivity implements
 		TitlePageIndicator indicator = (TitlePageIndicator) findViewById(R.id.indicator);
 		indicator.setViewPager(pager);
 		indicator.setOnPageChangeListener(this);
-		mAddCounterDialogFragment = new CounterEditorDialogFragment();
-		mAddCounterDialogFragment.setCounterDialogListener(this);
+		if (savedInstanceState == null) {
 
+		} else {
+			FragmentManager fm = getSupportFragmentManager();
+			SplitRecordDialogFragment splitRecordDialog = (SplitRecordDialogFragment) fm
+					.findFragmentByTag("mSplitRecordDialog");
+			if(splitRecordDialog != null)
+				splitRecordDialog.setCounterDialogListener(this);
+			CounterEditorDialogFragment counterEditorDialogFragment = (CounterEditorDialogFragment) fm.findFragmentByTag("mCounterEditorDialogFragment");
+			if(counterEditorDialogFragment!=null)
+				counterEditorDialogFragment.setCounterDialogListener(this);
+			AreYouSureResetAllDialogFragment areYouSureResetAllDialog = (AreYouSureResetAllDialogFragment) fm.findFragmentByTag("mAreYouSureResetAllDialog");
+			if(areYouSureResetAllDialog!=null)
+				areYouSureResetAllDialog.setResetAllDialogListener(this);
+		}
 	}
 
 	public Fragment findFragmentByPosition(int position) {
@@ -84,7 +96,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			if (position == 0) {
 				CountersFragment fg = CountersFragment.newInstance();
 				f = fg;
-			} else if(position == 1) {
+			} else if (position == 1) {
 				TimeRecordsFragment fg = TimeRecordsFragment.newInstance();
 				f = fg;
 			} else {
@@ -117,27 +129,26 @@ public class MainActivity extends SherlockFragmentActivity implements
 		FragmentTransaction ft;
 		switch (item.getItemId()) {
 		case R.id.item_add:
-			mAddCounterDialogFragment.setIdCounter(-1);
-			mAddCounterDialogFragment.setName("");
+			CounterEditorDialogFragment counterEditorDialogFragment = new CounterEditorDialogFragment();
+			counterEditorDialogFragment.setIdCounter(-1);
+			counterEditorDialogFragment.setCounterDialogListener(this);
+			counterEditorDialogFragment.setName("");
 			Random rnd = new Random();
 			int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256),
 					rnd.nextInt(256));
-			mAddCounterDialogFragment.setColor(color);
-			mAddCounterDialogFragment.show(this.getSupportFragmentManager(),
-					"dlg1");
+			counterEditorDialogFragment.setColor(color);
+			counterEditorDialogFragment.show(this.getSupportFragmentManager(),
+					"mCounterEditorDialogFragment");
 			break;
-		case R.id.item_reset_all: 
-			ft = getSupportFragmentManager()
-					.beginTransaction();
-			AreYouSureResetAllDialog newFragment = new AreYouSureResetAllDialog();
-			newFragment.setResetAllDialogListener(this);
-			newFragment.show(ft, "dialog");
-			
+		case R.id.item_reset_all:
+			ft = getSupportFragmentManager().beginTransaction();
+			AreYouSureResetAllDialogFragment areYouSureResetAllDialog = new AreYouSureResetAllDialogFragment();
+			areYouSureResetAllDialog.setResetAllDialogListener(this);
+			areYouSureResetAllDialog.show(ft, "mAreYouSureResetAllDialog");
 			break;
 		case R.id.item_about:
-			ft = getSupportFragmentManager()
-					.beginTransaction();
-			AboutDialog aboutFragment = new AboutDialog();
+			ft = getSupportFragmentManager().beginTransaction();
+			AboutDialogFragment aboutFragment = new AboutDialogFragment();
 			aboutFragment.show(ft, "aboutDialog");
 			break;
 		case R.id.action_settings:
@@ -212,8 +223,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onPageSelected(int position) {
-		if (position == 2)
+		if (position == 2 || position == 1)
 			((MainFragments) findFragmentByPosition(position)).onReload();
+	}
+
+	@Override
+	public void onFinishDialog() {
+		reloadFragments();
 	}
 
 }

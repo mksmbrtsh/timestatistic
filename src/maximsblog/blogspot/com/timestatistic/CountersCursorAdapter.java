@@ -15,14 +15,9 @@ import android.widget.TextView;
 
 public class CountersCursorAdapter extends SimpleCursorAdapter {
 
-	private String mRunning;
-	private String mStopped;
-
 	public CountersCursorAdapter(Context context, int layout, Cursor c,
 			String[] from, int[] to, int flags) {
 		super(context, layout, c, from, to, flags);
-		mRunning = context.getString(R.string.running);
-		mStopped = context.getString(R.string.stopped);
 	}
 
 	@Override
@@ -32,23 +27,23 @@ public class CountersCursorAdapter extends SimpleCursorAdapter {
 		int intColor = cursor.getInt(7);
 		view.findViewById(R.id.linearLayout).setBackgroundColor(intColor);
 		TextView t = (TextView) view.findViewById(R.id.current);
+		intColor = ~0xFFFFFF | (0xFFFFFF & ~intColor);
+		t.setTextColor(intColor);
 		if (isRunning) {
 				long start = cursor.getLong(3);
 				long now = new Date().getTime();
 				long lenght = now - start +  cursor.getLong(2);
+
 				setTime(t, lenght);
-				t = (TextView) view.findViewById(R.id.running);
-				t.setText(mRunning);
-				t.setTextColor(Color.GREEN);
+				view.findViewById(R.id.selectorLayout).setVisibility(View.VISIBLE);
 				
 		} else {
 			long lenght = cursor.getLong(2);
 			setTime(t, lenght);
-			t = (TextView) view.findViewById(R.id.running);
-			t.setText(mStopped);
-			t.setTextColor(Color.RED);
+			view.findViewById(R.id.selectorLayout).setVisibility(View.GONE);
 		}
 		t = (TextView) view.findViewById(R.id.name);
+		t.setTextColor(intColor);
 	}
 	
 	private void setTime(TextView t, long time)
@@ -67,7 +62,7 @@ public class CountersCursorAdapter extends SimpleCursorAdapter {
 		{
 			s = String.format("%s\n%02d:%02d:%02d",getTimeString("day", day), hours, minutes, seconds);
 		} else
-			s = String.format("\n%02d:%02d:%02d", hours, minutes, seconds);
+			s = String.format("%02d:%02d:%02d", hours, minutes, seconds);
 		t.setText(s);
 	}
 	

@@ -1,33 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="maximsblog.blogspot.com.timestatistic"
-    android:versionCode="7"
-    android:versionName="1.0.11" >
+    android:versionCode="18"
+    android:versionName="1.0.14" >
 
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="17" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+<uses-permission android:name="android.permission.VIBRATE" />
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.Sherlock" >
+        android:theme="@style/Theme.Sherlock" android:name="app" android:debuggable="false">
         <activity
             android:name="maximsblog.blogspot.com.timestatistic.MainActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <provider android:name="RecordsDbHelper"
+
+        <provider
+            android:name="RecordsDbHelper"
             android:authorities="maximsblogspot.com.timestatistic.providers.db" >
-            
         </provider>
-        <activity android:name="SettingsActivity"></activity>
+
+        <receiver android:name="AlarmManagerBroadcastReceiver" >
+        </receiver>
+        <activity android:name="SettingsActivity" >
+        </activity>
+        <activity android:name="FileDialog"></activity>
     </application>
 
 </manifest>

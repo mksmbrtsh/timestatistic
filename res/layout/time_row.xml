@@ -6,7 +6,7 @@
     android:gravity="center" >
 
     <LinearLayout
-        android:id="@+id/LinearLayout01"
+        android:id="@+id/before_record"
         android:layout_width="12dip"
         android:layout_height="12dip"
         android:orientation="horizontal" >

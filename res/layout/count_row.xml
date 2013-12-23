@@ -1,92 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="170dp"
-    android:descendantFocusability="blocksDescendants" >
+    android:layout_width="100dp"
+    android:layout_height="100dp"
+    android:padding="2dp">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/selectorLayout"
-        android:layout_width="fill_parent"
-        android:layout_height="165dp"
-        android:layout_margin="2dip"
-        android:background="@drawable/abs__ab_bottom_solid_inverse_holo"
-        android:descendantFocusability="blocksDescendants"
+        android:layout_width="95dp"
+        android:layout_height="95dp"
+        android:layout_centerInParent="true"
+        android:background="@color/default_underline_indicator_selected_color"
+        android:gravity="center"
         android:orientation="vertical" >
+    </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical" >
+        
+         <TextView
+             android:id="@+id/current"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_margin="4dip"
+             android:gravity="center"
+             android:text="@+id/textSwitcher1"
+             android:textSize="18sp"
+             android:textStyle="bold" />
+         
         <TextView
-            android:id="@+id/running"
+            android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
             android:layout_margin="4dip"
-            android:gravity="right"
-            android:text="Остановлен" />
-
-        <ImageButton
-            android:id="@+id/imageButton1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/backLayout"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/abs__list_selector_holo_dark"
-            android:descendantFocusability="blocksDescendants"
-            android:focusable="false"
-            android:src="@drawable/abs__ic_menu_moreoverflow_normal_holo_dark" />
-
-        <RelativeLayout
-            android:id="@+id/backLayout"
-            android:layout_width="match_parent"
-            android:layout_height="105dp"
-            android:background="@android:drawable/btn_default"
-            android:descendantFocusability="blocksDescendants"
-            android:orientation="vertical" >
-
-            <LinearLayout
-                android:id="@+id/linearLayout"
-                android:layout_width="10dp"
-                android:layout_height="165dp"
-                android:gravity="center"
-                android:orientation="vertical" >
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignRight="@+id/current"
-                android:layout_margin="4dip"
-                android:layout_toRightOf="@id/linearLayout"
-                android:ellipsize="end"
-                android:gravity="left"
-                android:maxLines="3"
-                android:text="TextView"
-                android:textColor="@color/abs__primary_text_disable_only_holo_light"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/current"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/linearLayout"
-                android:layout_alignParentLeft="false"
-                android:layout_alignParentRight="true"
-                android:layout_alignWithParentIfMissing="false"
-                android:layout_below="@id/name"
-                android:layout_centerInParent="false"
-                android:layout_margin="1dip"
-                android:layout_toRightOf="@id/linearLayout"
-                android:gravity="bottom|center"
-                android:text="@+id/textSwitcher1"
-                android:textColor="@color/abs__primary_text_holo_light"
-                android:textSize="16sp"
-                android:textStyle="normal"
-                android:typeface="serif" />
-
-        </RelativeLayout>
-
-    </RelativeLayout>
+            android:gravity="center"
+            android:text="TextView"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:textSize="16sp"
+            android:textStyle="italic" />
+   
+    </LinearLayout>
 
 </RelativeLayout>

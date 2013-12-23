@@ -25,31 +25,33 @@
         <requestFocus />
     </EditText>
 
-    <Button
-        android:id="@+id/cancel"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/name_editor"
-        android:text="@android:string/cancel" />
+        android:layout_below="@id/name_editor" >
 
-    <Button
-        android:id="@+id/ok"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/cancel"
-        android:layout_alignBottom="@+id/cancel"
-        android:layout_alignParentRight="true"
-        android:text="@android:string/ok" />
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@android:string/cancel" />
 
-    <Button
-        android:id="@+id/del"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/ok"
-        android:layout_alignBottom="@+id/ok"
-        android:layout_toLeftOf="@+id/ok"
-        android:text="@string/del" />
+        <Button
+            android:id="@+id/del"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/del" />
+
+        <Button
+            android:id="@+id/ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@android:string/ok" />
+
+    </LinearLayout>
 
     <ImageButton
         android:id="@+id/color_imageButton"

@@ -30,50 +30,57 @@ public class TimesCursorAdapter extends SimpleCursorAdapter {
 		public TextView lenght;
 		public View LinearLayout01;
 	}
-	
+
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
 		super.bindView(view, context, cursor);
 		ViewHolder holder;
-		if(view.getTag() == null){
+		if (view.getTag() == null) {
 			holder = new ViewHolder();
 			holder.start = (TextView) view.findViewById(R.id.start);
 			holder.stop = (TextView) view.findViewById(R.id.stop);
 			holder.lenght = (TextView) view.findViewById(R.id.lenght);
-			holder.LinearLayout01 =  view.findViewById(R.id.LinearLayout01);
+			holder.LinearLayout01 = view.findViewById(R.id.before_record);
 			view.setTag(holder);
 		} else {
 			holder = (ViewHolder) view.getTag();
 		}
-		
+
 		Date d = new Date(cursor.getLong(2));
 		holder.start.setText(mSimpleDateFormat.format(d));
-		d = new Date(cursor.getLong(1) + cursor.getLong(2));
-		holder.stop.setText(mSimpleDateFormat.format(d));
+		if(cursor.getLong(1)==0)
+			holder.stop.setText("");
+		else {
+			d = new Date(cursor.getLong(1) + cursor.getLong(2));
+			holder.stop.setText(mSimpleDateFormat.format(d));
+		}
 		setTime(holder.lenght, cursor.getLong(1));
 		holder.LinearLayout01.setBackgroundColor(cursor.getInt(4));
 	}
-	
-	private void setTime(TextView t, long time)
-	{
-		int day;
-		int hours;
-		int minutes;
-		int seconds;
-		day = (int) (time / (24 * 60 * 60 * 1000));
-		hours = (int) (time / (60 * 60 * 1000)) - day * 24;
-		minutes = (int) (time / (60 * 1000)) - day * 24 * 60 - 60* hours;
-		seconds = (int) (time / 1000) - day * 24 * 60 * 60 - 60 * 60
-				* hours - 60 * minutes;
-		String s = new String();
-		if(day>0)
-		{
-			s = String.format("%s\n%02d:%02d:%02d",getTimeString("day", day), hours, minutes, seconds);
-		} else
-			s = String.format("%02d:%02d:%02d", hours, minutes, seconds);
-		t.setText(s);
+
+	private void setTime(TextView t, long time) {
+		if (time == 0) {
+			t.setText("");
+		} else {
+			int day;
+			int hours;
+			int minutes;
+			int seconds;
+			day = (int) (time / (24 * 60 * 60 * 1000));
+			hours = (int) (time / (60 * 60 * 1000)) - day * 24;
+			minutes = (int) (time / (60 * 1000)) - day * 24 * 60 - 60 * hours;
+			seconds = (int) (time / 1000) - day * 24 * 60 * 60 - 60 * 60
+					* hours - 60 * minutes;
+			String s = new String();
+			if (day > 0) {
+				s = String.format("%s\n%02d:%02d:%02d",
+						getTimeString("day", day), hours, minutes, seconds);
+			} else
+				s = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+			t.setText(s);
+		}
 	}
-	
+
 	private String getTimeString(String res, int l) {
 		StringBuilder s = new StringBuilder();
 		s.append(l);
@@ -90,6 +97,5 @@ public class TimesCursorAdapter extends SimpleCursorAdapter {
 					res + "s", "string", mContext.getPackageName())));
 		return s.toString();
 	}
-	
 
 }

@@ -2,6 +2,7 @@ package maximsblog.blogspot.com.timestatistic;
 
 import maximsblog.blogspot.com.timestatistic.ColorPickerDialog.OnColorChangedListener;
 import maximsblog.blogspot.com.timestatistic.ColorPickerDialogFragment.ColorCounterDialog;
+import maximsblog.blogspot.com.timestatistic.SplitRecordDialogFragment.CustomDateTimePickerFragment;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -26,6 +27,37 @@ public class CounterEditorDialogFragment extends DialogFragment implements
 	private boolean mIsRunning;
 	private ImageButton mColorButton;
 	private int mColor;
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if (savedInstanceState != null) {
+			mIsRunning = savedInstanceState.getBoolean("mIsRunning");
+			mId = savedInstanceState.getInt("mId");
+			mColor = savedInstanceState.getInt("mColor");
+			mName = savedInstanceState.getString("mName");
+		}
+		ColorPickerDialogFragment mColorPickerDialogFragment = (ColorPickerDialogFragment) getActivity()
+				.getSupportFragmentManager()
+				.findFragmentByTag("mColorPickerDialogFragment");
+		if (mColorPickerDialogFragment != null) {
+			mColorPickerDialogFragment.setColorCounterDialogListener(this);
+			mColorPickerDialogFragment.setColor(mColor);
+			
+		}
+
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		outState.putBoolean("mIsRunning", mIsRunning);
+		outState.putInt("mId", mId);
+		outState.putInt("mColor", mColor);
+		outState.putString("mName", mNameEditor.getText().toString());
+		super.onSaveInstanceState(outState);
+	}
+
+	
 	
 	public enum Status {
 		ADD,
@@ -81,7 +113,7 @@ public class CounterEditorDialogFragment extends DialogFragment implements
 			mDelButton.setVisibility(View.VISIBLE);
 			getDialog().setTitle(R.string.edit_counter_dialog);
 		} else {  
-			mDelButton.setVisibility(View.GONE);
+			mDelButton.setVisibility(View.INVISIBLE);
 			getDialog().setTitle(R.string.add_counter_dialog);
 		}
 		super.onResume();
@@ -98,7 +130,7 @@ public class CounterEditorDialogFragment extends DialogFragment implements
 			mColorPickerDialogFragment.setColorCounterDialogListener(this);
 			mColorPickerDialogFragment.setColor(mColor);
 			mColorPickerDialogFragment.show(getActivity().getSupportFragmentManager(),
-					"dlg2");
+					"mColorPickerDialogFragment");
 			return;
 		}
 		dismiss();

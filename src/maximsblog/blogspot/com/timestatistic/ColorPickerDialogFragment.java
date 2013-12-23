@@ -1,6 +1,5 @@
 package maximsblog.blogspot.com.timestatistic;
 
-import maximsblog.blogspot.com.timestatistic.AreYouSureResetAllDialog.ResetAllDialog;
 import maximsblog.blogspot.com.timestatistic.ColorPickerDialog.OnColorChangedListener;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -18,6 +17,23 @@ public class ColorPickerDialogFragment extends DialogFragment implements OnColor
 	
 	private ColorCounterDialog mListener;
 	private int mColor;
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if (savedInstanceState != null) {
+			mColor = savedInstanceState.getInt("mColor");
+		}
+
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		outState.putInt("mColor", ((ColorPickerDialog)getDialog()).getColor());
+		super.onSaveInstanceState(outState);
+	}
+	
+	
 	
 	public interface ColorCounterDialog {
 		void colorCounterChanged(int newcolor);

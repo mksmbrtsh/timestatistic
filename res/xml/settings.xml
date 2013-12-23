@@ -4,7 +4,7 @@
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="visible_notif"
-        android:title="@string/visible_notif" />
+        android:title="@string/visible_notif" android:summaryOn="@string/visible_notif_mode" android:summaryOff="@string/visible_notif_umode"/>
     <PreferenceScreen android:title="@string/exim">
         <Preference android:title="@string/Export" android:key="export"/>
         <Preference android:key="import" android:title="@string/Import"/>
