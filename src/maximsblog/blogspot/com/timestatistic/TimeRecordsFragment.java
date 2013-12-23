@@ -11,8 +11,10 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.AdapterView.OnItemClickListener;
@@ -20,7 +22,7 @@ import android.widget.ListView;
 import android.support.v4.widget.SimpleCursorAdapter;
 
 public class TimeRecordsFragment extends Fragment implements
-		LoaderCallbacks<Cursor>, MainFragments, OnItemClickListener {
+		LoaderCallbacks<Cursor>, MainFragments, OnItemClickListener, OnItemLongClickListener {
 	public static TimeRecordsFragment newInstance() {
 
 		return new TimeRecordsFragment();
@@ -38,7 +40,7 @@ public class TimeRecordsFragment extends Fragment implements
 		int[] uiBindTo = { R.id.name, R.id.start, R.id.lenght };
 
 		mAdapter = new TimesCursorAdapter(this.getActivity(),
-				R.layout.time_row, null, uiBindFrom, uiBindTo, 0);
+				R.layout.time_row, null, uiBindFrom, uiBindTo, 0, ListView.CHOICE_MODE_NONE);
 		loadermanager.initLoader(1, null, this);
 	}
 
@@ -50,6 +52,7 @@ public class TimeRecordsFragment extends Fragment implements
 		mList = (ListView) layout.findViewById(R.id.listView1);
 		mList.setAdapter(mAdapter);
 		mList.setOnItemClickListener(this);
+		mList.setOnItemLongClickListener(this);
 		return layout;
 	}
 
@@ -91,6 +94,16 @@ public class TimeRecordsFragment extends Fragment implements
 		mSplitRecordDialog.setValues(idtimer, idRecord, start, lenght);
 		mSplitRecordDialog.show(this.getActivity().getSupportFragmentManager(),
 		"mSplitRecordDialog");
+	}
+	
+	@Override
+	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2,
+			long arg3) {
+		((TimesCursorAdapter)mList.getAdapter()).setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+		mList.invalidateViews();
+		//CheckedTextView chkTxt = (CheckedTextView) v.findViewById(R.id.CheckedTextView1); 
+	    //chkTxt.toggle(); 
+		return true;
 	}
 
 }
