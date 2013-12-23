@@ -11,7 +11,7 @@
     <item
         android:id="@+id/item_reset_all"
         android:orderInCategory="2"
-        android:showAsAction="ifRoom"
+        android:showAsAction="always"
         android:icon="@drawable/ic_action_reset_all_dark"
         
         android:title="@string/reset_all">
