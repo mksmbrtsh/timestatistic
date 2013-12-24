@@ -1,6 +1,8 @@
 package maximsblog.blogspot.com.timestatistic;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import maximsblog.blogspot.com.timestatistic.MainActivity.MainFragments;
 import maximsblog.blogspot.com.timestatistic.TimesCursorAdapter.ITimes;
@@ -177,7 +179,40 @@ public class TimeRecordsFragment extends Fragment implements
 	@Override
 	public void onClick(View v) {
 		if(v.getId() == R.id.ok){
+			Cursor times = getActivity().getContentResolver().query(
+					RecordsDbHelper.CONTENT_URI_ALLTIMES, null, null, null, null);
+			long start = Long.MAX_VALUE;
+			long lenght = 0;
+			long clenght = -1;
+			boolean nowCounter = false;
+			int iDtimer = -1;
+			ArrayList<Integer> idrecords = new ArrayList<Integer>();
+			HashMap<Integer, Boolean> selected = mAdapter.getSelected();
+			for(Entry<Integer, Boolean> iterable_element : selected.entrySet()) {
+				if(!iterable_element.getValue())
+					continue;
+				times.moveToPosition(iterable_element.getKey());
+				if(times.getLong(2) < start)
+					start = times.getLong(2);
+				if(clenght < times.getLong(1)) {
+					clenght = times.getLong(1);
+					iDtimer = times.getInt(0);
+				}
+				lenght += times.getLong(1);
+				idrecords.add(times.getInt(5));
+				if(times.getLong(1) == 0){
+					nowCounter = true;
+					iDtimer = times.getInt(5);
+				}
+				
+			}
 			
+			
+			UnionRecordDialogFragment unionRecordDialog = new UnionRecordDialogFragment();
+			unionRecordDialog.setDialogListener((MainActivity) getActivity());
+			unionRecordDialog.setValues(mAdapter.getSelected(), start, lenght, nowCounter, iDtimer, idrecords);
+			unionRecordDialog.show(this.getActivity()
+					.getSupportFragmentManager(), "mUnionRecordDialog");
 		} else {
 			mAdapter.setSelectedPosition(TimesCursorAdapter.NORMAL_MODE);
 			mSelected.clear();

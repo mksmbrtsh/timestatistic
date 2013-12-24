@@ -180,7 +180,7 @@ public class TimesCursorAdapter extends SimpleCursorAdapter {
 		mSelected.put(position, true);
 		if(position + 1  < mCursor.getCount())
 			mSelected.put(position + 1, false);
-		if(position - 1 > 0)
+		if(position - 1 >= 0)
 			mSelected.put(position - 1, false);
 	}
 	public void setSelectedPosition(int position) {

@@ -39,7 +39,7 @@ import android.widget.Spinner;
 
 public class SplitRecordDialogFragment extends DialogFragment implements
 		OnClickListener, IdateChange {
-	private ISplitRecordDialog mListener;
+	private IRecordDialog mListener;
 
 	private Spinner mCurrentCounter;
 	private Spinner mAfterCounter;
@@ -76,11 +76,8 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 
 	private int mAfterPosition;
 
-	public interface ISplitRecordDialog {
-		void onFinishDialog();
-	}
 
-	public void setCounterDialogListener(ISplitRecordDialog listener) {
+	public void setCounterDialogListener(IRecordDialog listener) {
 		mListener = listener;
 	}
 
@@ -282,7 +279,7 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 					|| mOriginalLenght + mOriginalStart != mCurrentStart
 							+ mCurrentLenght)
 				editRecord();
-			mListener.onFinishDialog();
+			mListener.onRefreshFragmentsValue();
 			dismiss();
 		} else if (id == R.id.cancel) {
 			dismiss();
