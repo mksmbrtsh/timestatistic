@@ -204,7 +204,7 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 		super.onResume();
 		Cursor newtimers = getActivity().getContentResolver().query(
 				RecordsDbHelper.CONTENT_URI_TIMES, null, null, null, null);
-		if (mOriginalPosition != -1)
+		if (mOriginalPosition == -1)
 			for (int i1 = 0, cnt1 = newtimers.getCount(); i1 < cnt1; i1++) {
 				newtimers.moveToPosition(i1);
 				if (newtimers.getInt(4) == mIDtimer) {
