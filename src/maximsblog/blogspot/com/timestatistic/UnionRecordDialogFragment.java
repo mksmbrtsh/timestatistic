@@ -166,13 +166,11 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 		getActivity().getContentResolver().insert(
 				RecordsDbHelper.CONTENT_URI_TIMES, cv);
 
-		for (Entry<Integer, Boolean> iterable_element : mSelected.entrySet()) {
-			if (!iterable_element.getValue())
-				continue;
+		for (Integer iterable_element : mIdrecords) {
 			getActivity().getContentResolver().delete(
 					RecordsDbHelper.CONTENT_URI_TIMES,
 					RecordsDbHelper.ID2 + "=?",
-					new String[] { String.valueOf(iterable_element.getKey()) });
+					new String[] { String.valueOf(iterable_element) });
 		}
 	}
 
