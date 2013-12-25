@@ -90,7 +90,7 @@ public class TimesCursorAdapter extends SimpleCursorAdapter {
 						mSelected.put(position, true);
 						if(position + 1  < mCursor.getCount() && mSelected.get(position + 1) == null )
 							mSelected.put(position + 1, false);
-						if(position - 1 > 0 && mSelected.get(position - 1) == null)
+						if(position - 1 >= 0 && mSelected.get(position - 1) == null)
 							mSelected.put(position - 1, false);
 						mListener.onTimeRecordChange();
 					} else {

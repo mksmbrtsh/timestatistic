@@ -1,6 +1,7 @@
 package maximsblog.blogspot.com.timestatistic;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -58,7 +59,8 @@ public class TimeRecordsFragment extends Fragment implements
 		loadermanager.initLoader(1, null, this);
 		if (savedInstanceState != null) {
 			mChoiceUnionMode = savedInstanceState.getInt("mChoiceUnionMode");
-			mSelected = (HashMap<Integer, Boolean>)savedInstanceState.getSerializable("mSelected");
+			mSelected = (HashMap<Integer, Boolean>) savedInstanceState
+					.getSerializable("mSelected");
 		} else {
 			mSelected = new HashMap<Integer, Boolean>();
 			mChoiceUnionMode = TimesCursorAdapter.NORMAL_MODE;
@@ -84,7 +86,8 @@ public class TimeRecordsFragment extends Fragment implements
 		mUnionPanel = layout.findViewById(R.id.union_panel);
 		mUnionPanel.setVisibility(View.GONE);
 		Button mUnionButton = (Button) mUnionPanel.findViewById(R.id.ok);
-		Button mCancelUnionButton = (Button) mUnionPanel.findViewById(R.id.cancel);
+		Button mCancelUnionButton = (Button) mUnionPanel
+				.findViewById(R.id.cancel);
 		mUnionButton.setOnClickListener(this);
 		mCancelUnionButton.setOnClickListener(this);
 		return layout;
@@ -102,9 +105,14 @@ public class TimeRecordsFragment extends Fragment implements
 	public void onLoadFinished(Loader<Cursor> arg0, Cursor cursor) {
 		if (mAdapter != null && cursor != null) {
 			mAdapter.swapCursor(cursor); // swap the new cursor in.
+			
+			if (!mSelected.isEmpty() && Collections.max(mSelected.keySet()) >= cursor.getCount()) {
+				mChoiceUnionMode = TimesCursorAdapter.NORMAL_MODE;
+				mSelected.clear();
+			}
 			mAdapter.setSelectedPosition(mChoiceUnionMode);
 			mAdapter.setSelected(mSelected);
-			if(mChoiceUnionMode != TimesCursorAdapter.NORMAL_MODE)
+			if (mChoiceUnionMode != TimesCursorAdapter.NORMAL_MODE)
 				mUnionPanel.setVisibility(View.VISIBLE);
 		}
 	}
@@ -141,9 +149,11 @@ public class TimeRecordsFragment extends Fragment implements
 	public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
 			int position, long arg3) {
 		mSelected.clear();
+		mChoiceUnionMode = position;
 		mAdapter.setSelected(mSelected);
-		((TimesCursorAdapter) mList.getAdapter()).setChoiceUnionMode(position);
-		
+		((TimesCursorAdapter) mList.getAdapter())
+				.setChoiceUnionMode(mChoiceUnionMode);
+
 		mList.invalidateViews();
 		slideVisibleBotton(mUnionPanel, View.VISIBLE);
 		return true;
@@ -152,23 +162,23 @@ public class TimeRecordsFragment extends Fragment implements
 	@Override
 	public void onTimeRecordChange() {
 		mList.invalidateViews();
-		if(mAdapter.getChoiceUnionMode() == TimesCursorAdapter.NORMAL_MODE){
-			slideVisibleBotton(mUnionPanel, View.GONE);
+		if (mAdapter.getChoiceUnionMode() == TimesCursorAdapter.NORMAL_MODE) {
+			setNormalMode();
 		}
 	}
 
 	public void slideVisibleBotton(View view, int visible) {
 		if (visible == View.VISIBLE) {
-			TranslateAnimation animate = new TranslateAnimation(0,
-					0, view.getHeight(), 0 );
+			TranslateAnimation animate = new TranslateAnimation(0, 0,
+					view.getHeight(), 0);
 			animate.setDuration(500);
 			animate.setFillAfter(true);
 			view.startAnimation(animate);
 			view.setVisibility(View.VISIBLE);
-			
+
 		} else {
-			TranslateAnimation animate = new TranslateAnimation(0,
-					0, 0, view.getHeight());
+			TranslateAnimation animate = new TranslateAnimation(0, 0, 0,
+					view.getHeight());
 			animate.setDuration(500);
 			animate.setFillAfter(true);
 			view.startAnimation(animate);
@@ -178,9 +188,10 @@ public class TimeRecordsFragment extends Fragment implements
 
 	@Override
 	public void onClick(View v) {
-		if(v.getId() == R.id.ok){
+		if (v.getId() == R.id.ok) {
 			Cursor times = getActivity().getContentResolver().query(
-					RecordsDbHelper.CONTENT_URI_ALLTIMES, null, null, null, null);
+					RecordsDbHelper.CONTENT_URI_ALLTIMES, null, null, null,
+					null);
 			long start = Long.MAX_VALUE;
 			long lenght = 0;
 			long clenght = -1;
@@ -188,37 +199,41 @@ public class TimeRecordsFragment extends Fragment implements
 			int iDtimer = -1;
 			ArrayList<Integer> idrecords = new ArrayList<Integer>();
 			HashMap<Integer, Boolean> selected = mAdapter.getSelected();
-			for(Entry<Integer, Boolean> iterable_element : selected.entrySet()) {
-				if(!iterable_element.getValue())
+			for (Entry<Integer, Boolean> iterable_element : selected.entrySet()) {
+				if (!iterable_element.getValue())
 					continue;
 				times.moveToPosition(iterable_element.getKey());
-				if(times.getLong(2) < start)
+				if (times.getLong(2) < start)
 					start = times.getLong(2);
-				if(clenght < times.getLong(1)) {
+				if (clenght < times.getLong(1)) {
 					clenght = times.getLong(1);
 					iDtimer = times.getInt(0);
 				}
 				lenght += times.getLong(1);
 				idrecords.add(times.getInt(5));
-				if(times.getLong(1) == 0){
+				if (times.getLong(1) == 0) {
 					nowCounter = true;
 					iDtimer = times.getInt(5);
 				}
-				
+
 			}
-			
-			
+
 			UnionRecordDialogFragment unionRecordDialog = new UnionRecordDialogFragment();
 			unionRecordDialog.setDialogListener((MainActivity) getActivity());
-			unionRecordDialog.setValues(mAdapter.getSelected(), start, lenght, nowCounter, iDtimer, idrecords);
+			unionRecordDialog.setValues(mAdapter.getSelected(), start, lenght,
+					nowCounter, iDtimer, idrecords);
 			unionRecordDialog.show(this.getActivity()
 					.getSupportFragmentManager(), "mUnionRecordDialog");
 		} else {
-			mAdapter.setSelectedPosition(TimesCursorAdapter.NORMAL_MODE);
-			mSelected.clear();
-			slideVisibleBotton(mUnionPanel, View.GONE);
+			setNormalMode();
 		}
 	}
 
+	private void setNormalMode() {
+		mAdapter.setSelectedPosition(mChoiceUnionMode = TimesCursorAdapter.NORMAL_MODE);
+		mSelected.clear();
+		mAdapter.setSelected(mSelected);
+		slideVisibleBotton(mUnionPanel, View.GONE);
+	}
 
 }

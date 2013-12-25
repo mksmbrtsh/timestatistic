@@ -28,7 +28,7 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 		OnClickListener {
 	private IRecordDialog mListener;
 	private Spinner mCurrentCounter;
-	
+
 	private HashMap<Integer, Boolean> mSelected;
 
 	// values
@@ -41,13 +41,11 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 
 	private Calendar mCalendar = Calendar.getInstance();
 	private SimpleCursorAdapter mCurrentCounterAdapter;
-	
+
 	DateFormat mFormatterDateTime = DateFormat.getDateTimeInstance(
 			DateFormat.SHORT, DateFormat.SHORT);
 
 	private TextView mUnionDateTimeInterval;
-
-	
 
 	public void setDialogListener(MainActivity mainActivity) {
 		mListener = mainActivity;
@@ -62,7 +60,8 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 			mLenght = savedInstanceState.getLong("mLenght");
 			mIDtimer = savedInstanceState.getInt("mIDtimer");
 			mNowCounter = savedInstanceState.getBoolean("mNowCounter");
-			mIdrecords = (ArrayList<Integer>) savedInstanceState.getSerializable("mIdrecords");
+			mIdrecords = (ArrayList<Integer>) savedInstanceState
+					.getSerializable("mIdrecords");
 			mCurrentPosition = savedInstanceState.getInt("mCurrentPosition");
 		} else {
 			mCurrentPosition = -1;
@@ -72,7 +71,7 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
-		//values
+		// values
 		outState.putLong("mStart", mStart);
 		outState.putLong("mLenght", mLenght);
 		outState.putInt("mIDtimer", mIDtimer);
@@ -90,7 +89,7 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 		v.findViewById(R.id.cancel).setOnClickListener(this);
 
 		mCurrentCounter = (Spinner) v.findViewById(R.id.current_counter);
-		
+
 		String[] from = { RecordsDbHelper.NAME };
 		int[] to = { android.R.id.text1 };
 
@@ -99,7 +98,7 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 		mCurrentCounterAdapter
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		mCurrentCounter.setAdapter(mCurrentCounterAdapter);
-		mUnionDateTimeInterval = (TextView)v.findViewById(R.id.textView1);
+		mUnionDateTimeInterval = (TextView) v.findViewById(R.id.textView1);
 		return v;
 	}
 
@@ -108,8 +107,7 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 		super.onResume();
 		Cursor timers = getActivity().getContentResolver().query(
 				RecordsDbHelper.CONTENT_URI_TIMES, null, null, null, null);
-		((SimpleCursorAdapter) mCurrentCounter.getAdapter())
-				.swapCursor(timers);
+		((SimpleCursorAdapter) mCurrentCounter.getAdapter()).swapCursor(timers);
 		if (mCurrentPosition == -1)
 			for (int i1 = 0, cnt1 = timers.getCount(); i1 < cnt1; i1++) {
 				timers.moveToPosition(i1);
@@ -130,16 +128,12 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 		if (!mNowCounter) {
 			mCalendar.setTimeInMillis(mStart + mLenght);
 			stopString = mFormatterDateTime.format(mCalendar.getTime());
-			
+
 		} else {
 			stopString = getString(R.string.now);
 		}
 		mUnionDateTimeInterval.setText(startString + " - " + stopString);
 	}
-
-	
-
-
 
 	public void onClick(View v) {
 		int id = v.getId();
@@ -149,11 +143,37 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 			dismiss();
 		} else if (id == R.id.cancel) {
 			dismiss();
-		} 
+		}
 	}
 
 	private void editRecord() {
-		
+
+		Cursor c = ((SimpleCursorAdapter) mCurrentCounter.getAdapter())
+				.getCursor();
+		c.moveToPosition(mCurrentCounter.getSelectedItemPosition());
+		ContentValues cv = new ContentValues();
+		if (mNowCounter) {
+			cv.put(RecordsDbHelper.ISRUNNING, 1);
+			getActivity().getContentResolver().update(
+					RecordsDbHelper.CONTENT_URI_TIMERS, cv,
+					RecordsDbHelper.ID + " = ?",
+					new String[] { String.valueOf(c.getInt(4)) });
+			cv.clear();
+		} else
+			cv.put(RecordsDbHelper.LENGHT, mLenght);
+		cv.put(RecordsDbHelper.TIMERSID, c.getInt(4));
+		cv.put(RecordsDbHelper.STARTTIME, mStart);
+		getActivity().getContentResolver().insert(
+				RecordsDbHelper.CONTENT_URI_TIMES, cv);
+
+		for (Entry<Integer, Boolean> iterable_element : mSelected.entrySet()) {
+			if (!iterable_element.getValue())
+				continue;
+			getActivity().getContentResolver().delete(
+					RecordsDbHelper.CONTENT_URI_TIMES,
+					RecordsDbHelper.ID2 + "=?",
+					new String[] { String.valueOf(iterable_element.getKey()) });
+		}
 	}
 
 	public void onDismiss(DialogInterface dialog) {
@@ -163,7 +183,6 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 	public void onCancel(DialogInterface dialog) {
 		super.onCancel(dialog);
 	}
-
 
 	public void setValues(HashMap<Integer, Boolean> selected, long start,
 			long lenght, boolean nowCounter, int iDtimer,
