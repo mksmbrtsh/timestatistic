@@ -25,6 +25,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.AdapterView.OnItemClickListener;
@@ -142,6 +143,10 @@ public class TimeRecordsFragment extends Fragment implements
 			mSplitRecordDialog.setValues(idtimer, idRecord, start, lenght);
 			mSplitRecordDialog.show(this.getActivity()
 					.getSupportFragmentManager(), "mSplitRecordDialog");
+		} else {
+			CheckBox check = (CheckBox)arg1.findViewById(R.id.check);
+			if(check.getVisibility() == View.VISIBLE)
+				check.toggle();
 		}
 	}
 
