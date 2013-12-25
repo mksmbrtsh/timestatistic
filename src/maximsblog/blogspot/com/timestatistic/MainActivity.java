@@ -9,7 +9,6 @@ import maximsblog.blogspot.com.timestatistic.CounterEditorDialogFragment.Status;
 import maximsblog.blogspot.com.timestatistic.AreYouSureResetAllDialogFragment.ResetAllDialog;
 import maximsblog.blogspot.com.timestatistic.MainActivity.MainFragments;
 import maximsblog.blogspot.com.timestatistic.MainActivity.PagesAdapter;
-import maximsblog.blogspot.com.timestatistic.SplitRecordDialogFragment.ISplitRecordDialog;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.viewpagerindicator.TabPageIndicator;
@@ -39,7 +38,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 public class MainActivity extends SherlockFragmentActivity implements
 		ResetAllDialog, ICounterEditorDialog, OnPageChangeListener,
-		ISplitRecordDialog {
+		IRecordDialog {
 
 	private String[] mTitles;
 	private PagesAdapter adapter;
@@ -75,6 +74,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 			AreYouSureResetAllDialogFragment areYouSureResetAllDialog = (AreYouSureResetAllDialogFragment) fm.findFragmentByTag("mAreYouSureResetAllDialog");
 			if(areYouSureResetAllDialog!=null)
 				areYouSureResetAllDialog.setResetAllDialogListener(this);
+			UnionRecordDialogFragment unionRecordDialogFragment = (UnionRecordDialogFragment) fm.findFragmentByTag("mUnionRecordDialog");
+			if(unionRecordDialogFragment!=null)
+				unionRecordDialogFragment.setDialogListener(this);
 		}
 	}
 
@@ -206,7 +208,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	private void reloadFragments() {
 		((MainFragments) findFragmentByPosition(0)).onReload();
-		((MainFragments) findFragmentByPosition(1)).onReload();
+		TimeRecordsFragment timeRecordsFragment = (TimeRecordsFragment) ((MainFragments) findFragmentByPosition(1));
+		timeRecordsFragment.setNormalMode();
+		timeRecordsFragment.onReload();
 	}
 
 	@Override
@@ -227,8 +231,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 			((MainFragments) findFragmentByPosition(position)).onReload();
 	}
 
+
 	@Override
-	public void onFinishDialog() {
+	public void onRefreshFragmentsValue() {
 		reloadFragments();
 	}
 
