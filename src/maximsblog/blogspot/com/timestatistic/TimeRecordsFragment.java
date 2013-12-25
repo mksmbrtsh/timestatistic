@@ -229,7 +229,7 @@ public class TimeRecordsFragment extends Fragment implements
 		}
 	}
 
-	private void setNormalMode() {
+	public void setNormalMode() {
 		mAdapter.setSelectedPosition(mChoiceUnionMode = TimesCursorAdapter.NORMAL_MODE);
 		mSelected.clear();
 		mAdapter.setSelected(mSelected);

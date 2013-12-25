@@ -208,7 +208,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	private void reloadFragments() {
 		((MainFragments) findFragmentByPosition(0)).onReload();
-		((MainFragments) findFragmentByPosition(1)).onReload();
+		TimeRecordsFragment timeRecordsFragment = (TimeRecordsFragment) ((MainFragments) findFragmentByPosition(1));
+		timeRecordsFragment.setNormalMode();
+		timeRecordsFragment.onReload();
 	}
 
 	@Override
