@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.app.NotificationCompat;
@@ -142,6 +143,9 @@ public final class CountersFragment extends Fragment implements
 		loadermanager.restartLoader(1, null, this);
 		SettingsActivity.visibleNotif(getActivity(), cursor.getLong(3),
 				cursor.getLong(2), cursor.getString(5));
+
+		TimeRecordsFragment timeRecordsFragment = (TimeRecordsFragment) ((MainActivity)getActivity()).findFragmentByPosition(1);
+		timeRecordsFragment.setNormalMode();
 	}
 
 	public final void timerAlert() {
