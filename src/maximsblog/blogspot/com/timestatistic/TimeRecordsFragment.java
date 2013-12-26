@@ -195,9 +195,9 @@ public class TimeRecordsFragment extends Fragment implements
 			int position, long arg3) {
 		mAdapter.getSelected().clear();
 		mAdapter.setChoiceUnionMode(position);
-		onTimeRecordChange();
-		slideVisibleBotton(mUnionPanel, View.VISIBLE);
 		
+		slideVisibleBotton(mUnionPanel, View.VISIBLE);
+		onTimeRecordChange();
 		return true;
 	}
 
@@ -215,10 +215,10 @@ public class TimeRecordsFragment extends Fragment implements
 						TranslateAnimation animate = new TranslateAnimation(
 								check.getWidth(), 0, 0, 0);
 						animate.setDuration(1400);
-						animate.setFillAfter(true);
+						animate.setFillAfter(false);
 						check.startAnimation(animate);
-						check.setVisibility(View.VISIBLE);
 						check.setChecked(mSelected.get(firstPosition + i1));
+						check.setVisibility(View.VISIBLE);
 					}
 			} else if(check.getVisibility() == View.VISIBLE) {
 				TranslateAnimation animate = new TranslateAnimation(0
@@ -226,8 +226,8 @@ public class TimeRecordsFragment extends Fragment implements
 				animate.setDuration(1400);
 				animate.setFillAfter(false);
 				check.startAnimation(animate);
-				check.setVisibility(View.INVISIBLE);
 				check.setChecked(false);
+				check.setVisibility(View.INVISIBLE);
 			}
 		}
 		if (mAdapter.getChoiceUnionMode() == TimesCursorAdapter.NORMAL_MODE) {

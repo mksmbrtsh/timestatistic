@@ -52,7 +52,7 @@ public class TimesCursorAdapter extends SimpleCursorAdapter {
 		public View LinearLayout01;
 		public CheckBox check;
 	}
-	
+
 	@Override
 	public void bindView(View view, Context context, final Cursor cursor) {
 		super.bindView(view, context, cursor);
@@ -81,20 +81,22 @@ public class TimesCursorAdapter extends SimpleCursorAdapter {
 		setTime(holder.lenght, cursor.getLong(1));
 		if (mSelectedPosition != -1) {
 			if (mSelected.get(position) != null) {
-				holder.check.setVisibility(View.VISIBLE);
 				holder.check.setChecked(mSelected.get(position));
+				holder.check.setVisibility(View.VISIBLE);
 			} else {
-				if (holder.check.getAnimation() == null) {
-					holder.check.setVisibility(View.INVISIBLE);	
-				} else if(holder.check.getAnimation().hasEnded())
-					holder.check.setAnimation(null);
 				holder.check.setChecked(false);
+				if (holder.check.getAnimation() == null) {
+					holder.check.setVisibility(View.INVISIBLE);
+				} else if (holder.check.getAnimation().hasEnded())
+					holder.check.setAnimation(null);
 			}
 		} else {
 			if (holder.check.getAnimation() == null) {
-				holder.check.setVisibility(View.INVISIBLE);
 				holder.check.setChecked(false);
-			} //else if(holder.check.getAnimation().hasStarted() && holder.check.getAnimation().hasEnded())
+				holder.check.setVisibility(View.INVISIBLE);
+				
+			} else if(holder.check.getAnimation().hasStarted() &&
+				 holder.check.getAnimation().hasEnded())
 				holder.check.clearAnimation();
 		}
 		holder.LinearLayout01.setBackgroundColor(cursor.getInt(4));
