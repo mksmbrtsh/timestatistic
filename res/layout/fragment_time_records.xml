@@ -65,6 +65,7 @@
         android:layout_marginTop="2dp"
         android:layout_weight="1"
         android:scrollingCache="true"
+        android:layout_weight="1"
         android:verticalSpacing="2dp"
         tools:listitem="@android:layout/simple_list_item_2" >
 

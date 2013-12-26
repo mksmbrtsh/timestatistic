@@ -25,25 +25,23 @@ import android.widget.TextView;
 public class TimesCursorAdapter extends SimpleCursorAdapter {
 
 	private SimpleDateFormat mSimpleDateFormat;
-	private ITimes mListener;
+	// private ITimes mListener;
 	private Drawable mIndicator;
-	private HashMap<Integer, Boolean> mSelected = new HashMap<Integer, Boolean>();
+	private HashMap<Integer, Boolean> mSelected;
 	private int mSelectedPosition;
 	public static final int NORMAL_MODE = -1;
 
 	public TimesCursorAdapter(Context context, int layout, Cursor c,
-			String[] from, int[] to, int flags, ITimes listener) {
+			String[] from, int[] to, int flags) {
 		super(context, layout, c, from, to, flags);
 		mSimpleDateFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
-		mListener = listener;
 
 		int[] attrs = { android.R.attr.listChoiceIndicatorMultiple };
 		TypedArray ta = context.getTheme().obtainStyledAttributes(attrs);
 		mIndicator = ta.getDrawable(0);
 	}
-	
-	public interface ITimes
-	{
+
+	public interface ITimes {
 		void onTimeRecordChange();
 	}
 
@@ -54,7 +52,7 @@ public class TimesCursorAdapter extends SimpleCursorAdapter {
 		public View LinearLayout01;
 		public CheckBox check;
 	}
-
+	
 	@Override
 	public void bindView(View view, Context context, final Cursor cursor) {
 		super.bindView(view, context, cursor);
@@ -81,57 +79,24 @@ public class TimesCursorAdapter extends SimpleCursorAdapter {
 			holder.stop.setText(mSimpleDateFormat.format(d));
 		}
 		setTime(holder.lenght, cursor.getLong(1));
-		if (mSelectedPosition !=-1) {
-			holder.check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-				@Override
-				public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-					if (isChecked) {
-						mSelected.put(position, true);
-						if(position + 1  < mCursor.getCount() && mSelected.get(position + 1) == null )
-							mSelected.put(position + 1, false);
-						if(position - 1 >= 0 && mSelected.get(position - 1) == null)
-							mSelected.put(position - 1, false);
-						mListener.onTimeRecordChange();
-					} else {
-						
-						if(position == mSelectedPosition) {
-							mSelectedPosition = NORMAL_MODE;
-							mSelected.clear();
-							mListener.onTimeRecordChange();
-							return;
-						}
-						mSelected.put(position, false);
-						if(position > mSelectedPosition){
-							HashMap<Integer, Boolean> newSelected = new HashMap<Integer, Boolean>();
-							for(Entry<Integer, Boolean> iterable_element : mSelected.entrySet()) {
-								if(iterable_element.getKey() <= position)
-									newSelected.put(iterable_element.getKey(), iterable_element.getValue());
-							}
-							mSelected = newSelected;
-							mListener.onTimeRecordChange();
-						}
-						if(position < mSelectedPosition){
-							HashMap<Integer, Boolean> newSelected = new HashMap<Integer, Boolean>();
-							for(Entry<Integer, Boolean> iterable_element : mSelected.entrySet()) {
-								if(iterable_element.getKey() >= position)
-									newSelected.put(iterable_element.getKey(), iterable_element.getValue());
-							}
-							mSelected = newSelected;
-							mListener.onTimeRecordChange();
-						}
-					}
-				}
-
-			});
-			if(mSelected.get(position) != null) {
+		if (mSelectedPosition != -1) {
+			if (mSelected.get(position) != null) {
 				holder.check.setVisibility(View.VISIBLE);
 				holder.check.setChecked(mSelected.get(position));
+			} else {
+				if (holder.check.getAnimation() == null) {
+					holder.check.setVisibility(View.INVISIBLE);	
+				} else if(holder.check.getAnimation().hasEnded())
+					holder.check.setAnimation(null);
+				holder.check.setChecked(false);
 			}
-			else
-				holder.check.setVisibility(View.GONE);
-		} else
-			holder.check.setVisibility(View.GONE);
+		} else {
+			if (holder.check.getAnimation() == null) {
+				holder.check.setVisibility(View.INVISIBLE);
+				holder.check.setChecked(false);
+			} //else if(holder.check.getAnimation().hasStarted() && holder.check.getAnimation().hasEnded())
+				holder.check.clearAnimation();
+		}
 		holder.LinearLayout01.setBackgroundColor(cursor.getInt(4));
 	}
 
@@ -178,22 +143,24 @@ public class TimesCursorAdapter extends SimpleCursorAdapter {
 	public void setChoiceUnionMode(int position) {
 		mSelectedPosition = position;
 		mSelected.put(position, true);
-		if(position + 1  < mCursor.getCount())
+		if (position + 1 < mCursor.getCount())
 			mSelected.put(position + 1, false);
-		if(position - 1 >= 0)
+		if (position - 1 >= 0)
 			mSelected.put(position - 1, false);
 	}
+
 	public void setSelectedPosition(int position) {
 		mSelectedPosition = position;
 	}
-	
+
 	public int getChoiceUnionMode() {
 		return mSelectedPosition;
 	}
-	
+
 	public HashMap<Integer, Boolean> getSelected() {
 		return mSelected;
 	}
+
 	public void setSelected(HashMap<Integer, Boolean> selected) {
 		mSelected = selected;
 	}
