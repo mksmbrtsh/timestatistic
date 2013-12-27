@@ -162,6 +162,7 @@ public class TimeRecordsFragment extends Fragment implements
 					if(position == mAdapter.getChoiceUnionMode()) {
 						mAdapter.setChoiceUnionMode(TimesCursorAdapter.NORMAL_MODE);
 						mAdapter.getSelected().clear();
+						mUnionPanel.setVisibility(View.GONE);
 						onTimeRecordChange();
 						return;
 					}
