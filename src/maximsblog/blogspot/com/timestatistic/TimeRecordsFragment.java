@@ -23,6 +23,7 @@ import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.AbsListView.RecyclerListener;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -86,6 +87,7 @@ public class TimeRecordsFragment extends Fragment implements
 		mList.setAdapter(mAdapter);
 		mList.setOnItemClickListener(this);
 		mList.setOnItemLongClickListener(this);
+
 		mUnionPanel = layout.findViewById(R.id.union_panel);
 		mUnionPanel.setVisibility(View.GONE);
 		Button mUnionButton = (Button) mUnionPanel.findViewById(R.id.ok);
@@ -196,65 +198,16 @@ public class TimeRecordsFragment extends Fragment implements
 		mAdapter.getSelected().clear();
 		mAdapter.setChoiceUnionMode(position);
 		
-		slideVisibleBotton(mUnionPanel, View.VISIBLE);
+		mUnionPanel.setVisibility(View.VISIBLE);
 		onTimeRecordChange();
 		return true;
 	}
 
 	public void onTimeRecordChange() {
-		HashMap<Integer, Boolean> mSelected = mAdapter.getSelected();
-		
-		int firstPosition = mList.getFirstVisiblePosition()
-				- mList.getHeaderViewsCount();
+		mList.invalidateViews();
+	}
 
-		for (int i1 = 0, cnt1 = mList.getChildCount(); i1 < cnt1; i1++) {
-			View wantedView = mList.getChildAt(i1);
-			CheckBox check = (CheckBox) wantedView.findViewById(R.id.check);
-			if (mSelected.get(firstPosition + i1) != null) {
-					if (check.getVisibility() == View.INVISIBLE) {
-						TranslateAnimation animate = new TranslateAnimation(
-								check.getWidth(), 0, 0, 0);
-						animate.setDuration(1400);
-						animate.setFillAfter(false);
-						check.startAnimation(animate);
-						check.setChecked(mSelected.get(firstPosition + i1));
-						check.setVisibility(View.VISIBLE);
-					}
-			} else if(check.getVisibility() == View.VISIBLE) {
-				TranslateAnimation animate = new TranslateAnimation(0
-						,check.getWidth(), 0, 0);
-				animate.setDuration(1400);
-				animate.setFillAfter(false);
-				check.startAnimation(animate);
-				check.setChecked(false);
-				check.setVisibility(View.INVISIBLE);
-			}
-		}
-		if (mAdapter.getChoiceUnionMode() == TimesCursorAdapter.NORMAL_MODE) {
-			mAdapter.getSelected().clear();
-			slideVisibleBotton(mUnionPanel, View.GONE);
-		}
 	
-	}
-
-	public void slideVisibleBotton(View view, int visible) {
-		if (visible == View.VISIBLE) {
-			TranslateAnimation animate = new TranslateAnimation(0, 0,
-					view.getHeight(), 0);
-			animate.setDuration(400);
-			animate.setFillAfter(true);
-			view.startAnimation(animate);
-			view.setVisibility(View.VISIBLE);
-
-		} else {
-			TranslateAnimation animate = new TranslateAnimation(0, 0, 0,
-					view.getHeight());
-			animate.setDuration(400);
-			animate.setFillAfter(false);
-			view.startAnimation(animate);
-			view.setVisibility(View.GONE);
-		}
-	}
 
 	@Override
 	public void onClick(View v) {
@@ -304,7 +257,7 @@ public class TimeRecordsFragment extends Fragment implements
 	public void setNormalMode() {
 		mAdapter.setSelectedPosition(TimesCursorAdapter.NORMAL_MODE);
 		mAdapter.getSelected().clear();
-		slideVisibleBotton(mUnionPanel, View.GONE);
+		mUnionPanel.setVisibility(View.GONE);
 	}
 
 }

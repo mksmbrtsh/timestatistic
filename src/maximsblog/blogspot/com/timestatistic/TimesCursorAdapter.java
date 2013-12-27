@@ -45,14 +45,14 @@ public class TimesCursorAdapter extends SimpleCursorAdapter {
 		void onTimeRecordChange();
 	}
 
-	private static class ViewHolder {
+	public static class ViewHolder {
 		public TextView start;
 		public TextView stop;
 		public TextView lenght;
 		public View LinearLayout01;
 		public CheckBox check;
 	}
-
+	
 	@Override
 	public void bindView(View view, Context context, final Cursor cursor) {
 		super.bindView(view, context, cursor);
@@ -85,19 +85,11 @@ public class TimesCursorAdapter extends SimpleCursorAdapter {
 				holder.check.setVisibility(View.VISIBLE);
 			} else {
 				holder.check.setChecked(false);
-				if (holder.check.getAnimation() == null) {
 					holder.check.setVisibility(View.INVISIBLE);
-				} else if (holder.check.getAnimation().hasEnded())
-					holder.check.setAnimation(null);
 			}
 		} else {
-			if (holder.check.getAnimation() == null) {
 				holder.check.setChecked(false);
 				holder.check.setVisibility(View.INVISIBLE);
-				
-			} else if(holder.check.getAnimation().hasStarted() &&
-				 holder.check.getAnimation().hasEnded())
-				holder.check.clearAnimation();
 		}
 		holder.LinearLayout01.setBackgroundColor(cursor.getInt(4));
 	}
