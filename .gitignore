@@ -19,5 +19,6 @@ local.properties
 .classpath
 .project
 .properties
+.settings
 project.properties
 lint.xml
