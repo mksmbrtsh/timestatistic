@@ -148,8 +148,9 @@ public class OpenHelper extends SQLiteOpenHelper {
 		} else {
 			db.execSQL(DROP_TABLE_TIMERS);
 			db.execSQL(DROP_TABLE_TIMES);
+			onCreate(db);
 		}
-		onCreate(db);
+		
 	}
 
 }
