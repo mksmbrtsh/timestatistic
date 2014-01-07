@@ -51,6 +51,7 @@ public class RecordsDbHelper extends ContentProvider {
 	public final static String TIMERSID = OpenHelper.TIMERSID;
 	public final static String STARTTIME = OpenHelper.STARTTIME;
 	public final static String LENGHT = OpenHelper.LENGHT;
+	public final static String INTERVAL = OpenHelper.INTERVAL;
 
 	
 	private static HashMap<String, String> timersProjectionMap;
@@ -172,6 +173,7 @@ public class RecordsDbHelper extends ContentProvider {
 			cv.put(RecordsDbHelper.ISRUNNING, 0);
 			mDB.update(table, cv, RecordsDbHelper.ISRUNNING + "=?",
 					new String[] { String.valueOf(1) });
+			
 			break;
 		case TIMES:
 			table = TABLE_TIMES;
@@ -211,7 +213,7 @@ public class RecordsDbHelper extends ContentProvider {
 					"MAX(" + RecordsDbHelper.STARTTIME + ") AS"
 							+ RecordsDbHelper.STARTTIME, RecordsDbHelper.ID,
 					RecordsDbHelper.NAME, RecordsDbHelper.ISRUNNING,
-					RecordsDbHelper.COLOR }, selection,
+					RecordsDbHelper.COLOR, INTERVAL }, selection,
 					RecordsDbHelper.TIMERSID, null, null, null);
 			c = mDB.rawQuery(e, selectionArgs);
 			c.setNotificationUri(getContext().getContentResolver(), uri);
@@ -230,7 +232,7 @@ public class RecordsDbHelper extends ContentProvider {
 							+ RecordsDbHelper.LENGHT,
 					"MAX(" + RecordsDbHelper.STARTTIME + ") AS"
 							+ RecordsDbHelper.STARTTIME, RecordsDbHelper.NAME,
-					RecordsDbHelper.ISRUNNING, RecordsDbHelper.COLOR },
+					RecordsDbHelper.ISRUNNING, RecordsDbHelper.COLOR, INTERVAL },
 					selection, RecordsDbHelper.TIMERSID, null, null, null);
 			c = mDB.rawQuery(s, selectionArgs);
 			c.setNotificationUri(getContext().getContentResolver(), uri);
@@ -244,7 +246,7 @@ public class RecordsDbHelper extends ContentProvider {
 					RecordsDbHelper.LENGHT,
 					RecordsDbHelper.STARTTIME,
 					RecordsDbHelper.NAME,
-					RecordsDbHelper.COLOR, RecordsDbHelper.ID2 },
+					RecordsDbHelper.COLOR, RecordsDbHelper.ID2, INTERVAL },
 					selection, null, null, RecordsDbHelper.STARTTIME + " DESC", null);
 			c = mDB.rawQuery(s, selectionArgs);
 			c.setNotificationUri(getContext().getContentResolver(), uri);

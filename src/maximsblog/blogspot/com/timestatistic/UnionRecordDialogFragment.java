@@ -159,6 +159,7 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 					RecordsDbHelper.ID + " = ?",
 					new String[] { String.valueOf(c.getInt(4)) });
 			cv.clear();
+			app.loadRunningCounterAlarm(getActivity().getApplicationContext());
 		} else
 			cv.put(RecordsDbHelper.LENGHT, mLenght);
 		cv.put(RecordsDbHelper.TIMERSID, c.getInt(4));

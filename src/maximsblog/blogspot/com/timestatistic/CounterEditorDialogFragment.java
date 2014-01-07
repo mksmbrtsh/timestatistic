@@ -21,12 +21,14 @@ public class CounterEditorDialogFragment extends DialogFragment implements
 		OnClickListener, ColorCounterDialog {
 	private EditText mNameEditor;
 	private String mName;
+	private long mInterval;
 	private ICounterEditorDialog mListener;
 	private int mId;
 	private Button mDelButton;
 	private boolean mIsRunning;
 	private ImageButton mColorButton;
 	private int mColor;
+	private EditText mIntervalEditor;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,7 @@ public class CounterEditorDialogFragment extends DialogFragment implements
 			mId = savedInstanceState.getInt("mId");
 			mColor = savedInstanceState.getInt("mColor");
 			mName = savedInstanceState.getString("mName");
+			mInterval = savedInstanceState.getLong("mInterval");
 		}
 		ColorPickerDialogFragment mColorPickerDialogFragment = (ColorPickerDialogFragment) getActivity()
 				.getSupportFragmentManager()
@@ -54,6 +57,7 @@ public class CounterEditorDialogFragment extends DialogFragment implements
 		outState.putInt("mId", mId);
 		outState.putInt("mColor", mColor);
 		outState.putString("mName", mNameEditor.getText().toString());
+		outState.putLong("mInterval", Long.valueOf(mIntervalEditor.getText().toString()));
 		super.onSaveInstanceState(outState);
 	}
 
@@ -66,7 +70,7 @@ public class CounterEditorDialogFragment extends DialogFragment implements
 	}
 	
 	public interface ICounterEditorDialog {
-		void onFinishDialog(String inputText, int id, Status status, boolean isRunning, int color);
+		void onFinishDialog(String inputText, int id, Status status, boolean isRunning, int color, long interval);
 	}
 
 	public void setCounterDialogListener(ICounterEditorDialog listener) {
@@ -100,6 +104,7 @@ public class CounterEditorDialogFragment extends DialogFragment implements
 		mColorButton.setOnClickListener(this);
 		mNameEditor = (EditText) v.findViewById(R.id.name_editor);
 		mNameEditor.requestFocus();
+		mIntervalEditor = (EditText)v.findViewById(R.id.interval_editor);
 		
 		getDialog().getWindow().setSoftInputMode(
 				LayoutParams.SOFT_INPUT_STATE_VISIBLE);
@@ -109,6 +114,7 @@ public class CounterEditorDialogFragment extends DialogFragment implements
 	@Override
 	public void onResume() {
 		mNameEditor.setText(mName);
+		mIntervalEditor.setText(String.valueOf(mInterval));
 		if(mId!=-1 && mId != 1){
 			mDelButton.setVisibility(View.VISIBLE);
 			getDialog().setTitle(R.string.edit_counter_dialog);
@@ -122,9 +128,9 @@ public class CounterEditorDialogFragment extends DialogFragment implements
 	public void onClick(View v) {
 		int id = v.getId(); 
 		if (id == R.id.ok) {
-			mListener.onFinishDialog(mNameEditor.getText().toString(), mId,mId != -1 ? Status.EDIT : Status.ADD, mIsRunning, mColor);
+			mListener.onFinishDialog(mNameEditor.getText().toString(), mId,mId != -1 ? Status.EDIT : Status.ADD, mIsRunning, mColor, Long.valueOf(mIntervalEditor.getText().toString()));
 		} else if (id == R.id.del) {
-			mListener.onFinishDialog(mNameEditor.getText().toString(), mId, Status.DEL, mIsRunning, mColor);
+			mListener.onFinishDialog(mNameEditor.getText().toString(), mId, Status.DEL, mIsRunning, mColor, Long.valueOf(mIntervalEditor.getText().toString()));
 		} else if (id == R.id.color_imageButton) {
 			ColorPickerDialogFragment mColorPickerDialogFragment = new ColorPickerDialogFragment();
 			mColorPickerDialogFragment.setColorCounterDialogListener(this);
@@ -148,5 +154,9 @@ public class CounterEditorDialogFragment extends DialogFragment implements
 	@Override
 	public void colorCounterChanged(int newcolor) {
 		mColor = newcolor;
+	}
+
+	public void setInterval(long interval) {
+		mInterval = interval;
 	}
 }

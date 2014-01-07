@@ -140,6 +140,7 @@ public final class CountersFragment extends Fragment implements
 				RecordsDbHelper.CONTENT_URI_TIMERS, cv,
 				RecordsDbHelper.ID + " = ?",
 				new String[] { String.valueOf(counterId) });
+		app.loadRunningCounterAlarm(getActivity().getApplicationContext());
 		loadermanager.restartLoader(1, null, this);
 		SettingsActivity.visibleNotif(getActivity(), cursor.getLong(3),
 				cursor.getLong(2), cursor.getString(5));
@@ -205,12 +206,14 @@ public final class CountersFragment extends Fragment implements
 		String name = cursor.getString(5);
 		boolean isRunning = cursor.getInt(6) == 1;
 		int color = cursor.getInt(7);
+		long interval = cursor.getLong(8);
 		CounterEditorDialogFragment counterEditorDialogFragment = new CounterEditorDialogFragment();
 		counterEditorDialogFragment
 				.setCounterDialogListener((MainActivity) getActivity());
 		counterEditorDialogFragment.setIdCounter(id);
 		counterEditorDialogFragment.setName(name);
 		counterEditorDialogFragment.setColor(color);
+		counterEditorDialogFragment.setInterval(interval);
 		counterEditorDialogFragment.setIsRunning(isRunning);
 		counterEditorDialogFragment.show(this.getActivity()
 				.getSupportFragmentManager(), "mCounterEditorDialogFragment");

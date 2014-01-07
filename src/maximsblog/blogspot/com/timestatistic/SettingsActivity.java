@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 
 import android.app.Activity;
@@ -38,6 +37,8 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 		addPreferencesFromResource(R.xml.settings);
 		Preference p = findPreference("visible_notif");
 		p.setOnPreferenceChangeListener(this);
+		p = findPreference("alarm");
+		p.setOnPreferenceChangeListener(this);
 		p = findPreference("export");
 		p.setOnPreferenceClickListener(this);
 		p = findPreference("import");
@@ -46,26 +47,34 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 
 	@Override
 	public boolean onPreferenceChange(Preference preference, Object newValue) {
-		Cursor c = getContentResolver().query(
-				RecordsDbHelper.CONTENT_URI_TIMES,
-				new String[] { RecordsDbHelper.ID, RecordsDbHelper.NAME,
-						RecordsDbHelper.ISRUNNING },
-				RecordsDbHelper.ISRUNNING + "='1'", null, null);
-		c.moveToFirst();
-
-		if ((Boolean) newValue) {
-			visibleNotif(this,c.getLong(3), c.getLong(2), c.getString(5), true);
-			app.alarm.SetAlarm(getApplicationContext());
+		if (preference.getKey().equals("alarm")) {
+			if ((Boolean) newValue) {
+				app.setRunningCounterAlarmSettings(getApplicationContext());
+			} else {
+				app.delAlarm(getApplicationContext());
+			}
 		} else {
-			visibleNotif(this,c.getLong(3), c.getLong(2), c.getString(5), false);
-			app.alarm.CancelAlarm(getApplicationContext());
+			Cursor c = getContentResolver().query(
+					RecordsDbHelper.CONTENT_URI_TIMES,
+					new String[] { RecordsDbHelper.ID, RecordsDbHelper.NAME,
+							RecordsDbHelper.ISRUNNING },
+					RecordsDbHelper.ISRUNNING + "='1'", null, null);
+			c.moveToFirst();
+
+			if ((Boolean) newValue) {
+				visibleNotif(this, c.getLong(3), c.getLong(2), c.getString(5),
+						true);
+			} else {
+				visibleNotif(this, c.getLong(3), c.getLong(2), c.getString(5),
+						false);
+			}
+			c.close();
 		}
-		c.close();
 		return true;
 	}
 
-	public static void visibleNotif(Context context, long start, long lenght, String name,
-			boolean visible) {
+	public static void visibleNotif(Context context, long start, long lenght,
+			String name, boolean visible) {
 		NotificationManager mNotificationManager = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
 		mNotificationManager.cancel(100);
@@ -76,23 +85,25 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 					Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
 					context).setSmallIcon(R.drawable.ic_notification)
-					.setContentTitle(name).setOngoing(false).setWhen(new Date().getTime() - lenght)
+					.setContentTitle(name).setOngoing(false)
+					.setWhen(new Date().getTime() - lenght)
 					.setAutoCancel(false).setUsesChronometer(true);
 
 			Notification n = mBuilder.build();
 			n.contentIntent = contentIntent;
 			n.when = new Date().getTime() - lenght;
-			
+
 			n.flags = Notification.FLAG_ONGOING_EVENT;
 			mNotificationManager.notify(100, n);
-		} 
+		}
 	}
 
-	public static void visibleNotif(Context context, long start, long lenght, String string) {
+	public static void visibleNotif(Context context, long start, long lenght,
+			String string) {
 		boolean visible = PreferenceManager.getDefaultSharedPreferences(
 				context.getApplicationContext()).getBoolean("visible_notif",
 				false);
-		visibleNotif(context, start,lenght, string, visible);
+		visibleNotif(context, start, lenght, string, visible);
 	}
 
 	@Override
@@ -100,31 +111,36 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 		if (preference.getKey().equals("export")) {
 			OpenHelper o = new OpenHelper(getApplicationContext());
 			String d = "";
-			SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy");			
+			SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy");
 			try {
-				o.exportDatabase(getFilesDir(),  d = getExternalFilesDir(null)
-						.getAbsolutePath() + File.separator + "timestat"+sdf.format(new Date())+".db");
+				o.exportDatabase(
+						getFilesDir(),
+						d = getExternalFilesDir(null).getAbsolutePath()
+								+ File.separator + "timestat"
+								+ sdf.format(new Date()) + ".db");
 
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			o.close();
-			if(d.length() >0)
-				d = getString(R.string.exportok) +":\n" + d;
+			if (d.length() > 0)
+				d = getString(R.string.exportok) + ":\n" + d;
 			else
 				d = getString(R.string.exportfail);
-			Toast.makeText(getApplicationContext(), d, Toast.LENGTH_LONG).show();
-			
+			Toast.makeText(getApplicationContext(), d, Toast.LENGTH_LONG)
+					.show();
+
 		} else {
 			Intent intent = new Intent(this, FileDialog.class);
-			intent.putExtra(FileDialog.FORMAT_FILTER, new String[] { ".db", ".sqlite"});
+			intent.putExtra(FileDialog.FORMAT_FILTER, new String[] { ".db",
+					".sqlite" });
 			intent.putExtra(FileDialog.SELECTION_MODE, SelectionMode.MODE_OPEN);
 			startActivityForResult(intent, OPENDB);
 		}
-		
+
 		return false;
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (data != null && requestCode == OPENDB && resultCode == RESULT_OK) {
@@ -137,8 +153,10 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 				e.printStackTrace();
 			}
 			o.close();
-			Toast.makeText(getApplicationContext(), getString(R.string.importok), Toast.LENGTH_LONG).show();
-			getContentResolver().notifyChange(RecordsDbHelper.CONTENT_URI_TIMES, null);
+			Toast.makeText(getApplicationContext(),
+					getString(R.string.importok), Toast.LENGTH_LONG).show();
+			getContentResolver().notifyChange(
+					RecordsDbHelper.CONTENT_URI_TIMES, null);
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}

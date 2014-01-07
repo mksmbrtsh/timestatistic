@@ -26,27 +26,18 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
 	 final public static String NAME = "name";
      @Override
      public void onReceive(Context context, Intent intent) {
-              PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+      PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
       PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "YOUR TAG");
       //Acquire the lock
       wl.acquire();
-
-      //You can do the processing here update the widget/remote views.
       Bundle extras = intent.getExtras();
-      StringBuilder msgStr = new StringBuilder();
-      
-      if(extras != null && extras.getBoolean(ONE_TIME, Boolean.FALSE)){
-              msgStr.append("One time Timer : ");
-      }
-      Format formatter = new SimpleDateFormat("hh:mm:ss a");
-      msgStr.append(formatter.format(new Date()));
-      visibleNotif(context);
-      
+      String name = extras.getString("name");
+      visibleNotif(context, name);
       //Release the lock
       wl.release();
      }
      
-     public static void visibleNotif(Context context) {
+     public static void visibleNotif(Context context, String name) {
  		NotificationManager mNotificationManager = (NotificationManager) context
  				.getSystemService(Context.NOTIFICATION_SERVICE);
  			final Intent intent1 = new Intent(context, MainActivity.class);
@@ -64,7 +55,7 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
             }
             mBuilder.setSound(alarmSound);
             Format formatter = new SimpleDateFormat("HH:mm");
- 			Notification n = mBuilder.setContentTitle(context.getString(R.string.notif)).setContentText(formatter.format(new Date())).build();
+ 			Notification n = mBuilder.setContentTitle(name!=null ? name : context.getString(R.string.notif)).setContentText(formatter.format(new Date())).build();
  			n.contentIntent = contentIntent;
  			n.flags = Notification.FLAG_AUTO_CANCEL;
  			mNotificationManager.notify(101 , n);
@@ -75,14 +66,14 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
      
      
      
-     public void SetAlarm(Context context)
+     public void SetAlarm(Context context, String name, long l)
  {
      AlarmManager am=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
      Intent intent = new Intent(context, AlarmManagerBroadcastReceiver.class);
      intent.putExtra(ONE_TIME, Boolean.FALSE);
+     intent.putExtra(NAME, name);
      PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
-     //After after 15 minute
-     am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 *60 *15  , pi); 
+     am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), l  , pi); 
  }
 
  public void CancelAlarm(Context context)
@@ -92,12 +83,12 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
      AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
      alarmManager.cancel(sender);
  }
- public void setOnetimeTimer(Context context){
+/* public void setOnetimeTimer(Context context){
          AlarmManager am=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
      Intent intent = new Intent(context, AlarmManagerBroadcastReceiver.class);
      intent.putExtra(ONE_TIME, Boolean.TRUE);
      PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
      am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pi);
- }
+ }*/
 
 }

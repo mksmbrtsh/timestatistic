@@ -135,6 +135,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			counterEditorDialogFragment.setIdCounter(-1);
 			counterEditorDialogFragment.setCounterDialogListener(this);
 			counterEditorDialogFragment.setName("");
+			counterEditorDialogFragment.setInterval(900000);
 			Random rnd = new Random();
 			int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256),
 					rnd.nextInt(256));
@@ -171,11 +172,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onFinishDialog(String inputText, int id, Status status,
-			boolean isRunning, int color) {
+			boolean isRunning, int color, long interval) {
 		if (status == Status.ADD) {
 			ContentValues cv = new ContentValues();
 			cv.put(RecordsDbHelper.NAME, inputText);
 			cv.put(RecordsDbHelper.COLOR, color);
+			cv.put(RecordsDbHelper.INTERVAL, interval);
 			Uri row = getContentResolver().insert(
 					RecordsDbHelper.CONTENT_URI_TIMERS, cv);
 			int iDcounters = Integer.valueOf(row.getLastPathSegment());
@@ -187,6 +189,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			ContentValues cv = new ContentValues();
 			cv.put(RecordsDbHelper.NAME, inputText);
 			cv.put(RecordsDbHelper.COLOR, color);
+			cv.put(RecordsDbHelper.INTERVAL, interval);
 			getContentResolver().update(
 					RecordsDbHelper.CONTENT_URI_RENAMECOUNTER, cv,
 					RecordsDbHelper.ID + "=?",
@@ -199,6 +202,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 				getContentResolver().update(RecordsDbHelper.CONTENT_URI_TIMERS,
 						cv, RecordsDbHelper.ID + " = ?",
 						new String[] { String.valueOf(1) });
+				app.loadRunningCounterAlarm(getApplicationContext());
 			}
 			getContentResolver().delete(RecordsDbHelper.CONTENT_URI_TIMERS,
 					null, new String[] { String.valueOf(id) });
