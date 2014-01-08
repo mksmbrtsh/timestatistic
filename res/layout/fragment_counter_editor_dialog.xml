@@ -33,14 +33,39 @@
     android:layout_below="@+id/name_editor"
     android:text="@string/interval" />
 
+<EditText
+    android:id="@+id/interval_hours_editor"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    android:layout_below="@+id/textView2"
+    android:gravity="center"
+    android:maxLength="5"
+    android:inputType="numberDecimal"
+    android:singleLine="true" >
+
+    </EditText>
+
+<TextView
+    android:id="@+id/textView3"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_above="@+id/panel"
+    android:layout_below="@+id/textView2"
+    android:layout_toRightOf="@+id/interval_hours_editor"
+    android:gravity="center"
+    android:text=":"
+    android:textSize="16sp" />
+
  <EditText
-     android:id="@+id/interval_editor"
-     android:layout_width="match_parent"
+     android:id="@+id/interval_minutes_editor"
+     android:layout_width="wrap_content"
      android:layout_height="wrap_content"
-     android:layout_alignParentLeft="true"
      android:layout_below="@+id/textView2"
-     android:layout_toLeftOf="@+id/color_imageButton"
-     android:ems="10" >
+     android:layout_toRightOf="@+id/textView3"
+     android:gravity="center"
+     android:inputType="numberDecimal"
+     android:singleLine="true" >
 
     </EditText>
     
@@ -48,7 +73,7 @@
         android:id="@+id/panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/interval_editor" >
+        android:layout_below="@+id/interval_minutes_editor" >
 
         <Button
             android:id="@+id/cancel"
