@@ -143,7 +143,7 @@ public class OpenHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		if (newVersion == 2) {
+		if (oldVersion == 1 && newVersion == 2) {
 			db.execSQL("ALTER TABLE " + TABLE_TIMERS + " ADD COLUMN " + INTERVAL + " INTEGER DEFAULT 900000");
 		} else {
 			db.execSQL(DROP_TABLE_TIMERS);
