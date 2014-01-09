@@ -16,6 +16,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -122,7 +123,15 @@ public class CounterEditorDialogFragment extends DialogFragment implements
 		mColorButton = (ImageButton) v.findViewById(R.id.color_imageButton);
 		mColorButton.setOnClickListener(this);
 		mNameEditor = (EditText) v.findViewById(R.id.name_editor);
-		mNameEditor.requestFocus();
+		
+		Handler  mHandler = new Handler();;
+		mHandler.post(new Runnable() {
+		    public void run() {
+		    	mNameEditor.clearFocus();
+		    	mNameEditor.requestFocus();		    	
+		        
+		    }
+		});
 		mIntervalHoursEditor = (EditText) v
 				.findViewById(R.id.interval_hours_editor);
 		mIntervalHoursEditor

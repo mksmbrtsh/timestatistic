@@ -19,6 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/textView1"
+        android:selectAllOnFocus="true"
         android:layout_toLeftOf="@+id/color_imageButton"
         android:ems="10" >
 
@@ -41,6 +42,7 @@
     android:layout_below="@+id/textView2"
     android:gravity="center"
     android:maxLength="5"
+    android:selectAllOnFocus="true"
     android:inputType="numberDecimal"
     android:singleLine="true" >
 
@@ -64,6 +66,7 @@
      android:layout_below="@+id/textView2"
      android:layout_toRightOf="@+id/textView3"
      android:gravity="center"
+     android:selectAllOnFocus="true"
      android:inputType="numberDecimal"
      android:singleLine="true" >
 
