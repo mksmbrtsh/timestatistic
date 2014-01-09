@@ -194,6 +194,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 					RecordsDbHelper.CONTENT_URI_RENAMECOUNTER, cv,
 					RecordsDbHelper.ID + "=?",
 					new String[] { String.valueOf(id) });
+			app.loadRunningCounterAlarm(getApplicationContext());
 			reloadFragments();
 		} else if (status == Status.DEL) {
 			if (isRunning) {
