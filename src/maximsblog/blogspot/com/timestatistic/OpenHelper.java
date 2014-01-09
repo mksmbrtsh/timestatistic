@@ -33,7 +33,7 @@ public class OpenHelper extends SQLiteOpenHelper {
 
 	final String CREATE_TABLE_TIMERS = "CREATE TABLE " + TABLE_TIMERS + "( "
 			+ ID + " INTEGER PRIMARY KEY autoincrement, " + NAME + " TEXT, "
-			+ COLOR + " INTEGER, " + ISRUNNING + " INTEGER DEFAULT 0, "+INTERVAL+" INTEGER )";
+			+ COLOR + " INTEGER, " + ISRUNNING + " INTEGER DEFAULT 0, "+INTERVAL+" INTEGER DEFAULT 900000 )";
 
 	final String CREATE_TABLE_TIMES = "CREATE TABLE " + TABLE_TIMES + "( "
 			+ ID2 + " INTEGER PRIMARY KEY autoincrement, " + TIMERSID
