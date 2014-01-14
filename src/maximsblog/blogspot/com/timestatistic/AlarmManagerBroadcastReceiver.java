@@ -87,6 +87,9 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
 	}
 
 	public void CancelAlarm(Context context) {
+		NotificationManager mNotificationManager = (NotificationManager) context
+				.getSystemService(Context.NOTIFICATION_SERVICE);
+		mNotificationManager.cancel(101);
 		Intent intent = new Intent(context, AlarmManagerBroadcastReceiver.class);
 		PendingIntent sender = PendingIntent
 				.getBroadcast(context, 0, intent, 0);
