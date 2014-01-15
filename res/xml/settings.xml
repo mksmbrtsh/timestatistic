@@ -14,9 +14,11 @@
     <PreferenceScreen android:title="@string/exim" >
         <Preference
             android:key="export"
+            android:icon="@drawable/ic_export_db"
             android:title="@string/Export" />
         <Preference
             android:key="import"
+            android:icon="@drawable/ic_import_db"
             android:title="@string/Import" />
     </PreferenceScreen>
 
