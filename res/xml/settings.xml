@@ -4,9 +4,11 @@
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="visible_notif"
+        android:icon="@drawable/ic_status_bar"
         android:title="@string/visible_notif" />
     <CheckBoxPreference
         android:key="alarm"
+        android:icon="@drawable/ic_setalarm"
         android:summaryOff="@string/alarm_notif_umode"
         android:summaryOn="@string/alarm_notif_mode"
         android:title="@string/alarm_notif" />

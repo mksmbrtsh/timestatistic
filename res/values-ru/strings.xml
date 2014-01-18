@@ -25,7 +25,7 @@
     <string name="end_time">Конец</string>
     <string name="name">Название</string>
     <string name="lenght">Всего</string>
-    <string name="visible_notif">Отображение значка в трее</string>
+    <string name="visible_notif">Закрепить значок в трее</string>
     <string name="alarm_notif">Оповещение</string>
     <string name="alarm_notif_mode">устройство будет оповещать вас</string>
     <string name="alarm_notif_umode">вы сами следите за временем и переключаете счетчики</string>
