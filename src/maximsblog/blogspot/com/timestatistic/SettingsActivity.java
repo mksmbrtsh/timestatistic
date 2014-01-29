@@ -29,6 +29,14 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 		OnPreferenceChangeListener, OnPreferenceClickListener {
 
 	private static final int OPENDB = 1;
+	
+	public static final String STARTTIMEFILTER = "starttimefilter";
+	public static final class STARTTIMEFILTERS
+	{
+		public static final int ALLTIME = 0;
+		public static final int TODAY = 1;
+		public static final int WEEK = 2;
+	}
 
 	/** Called when the activity is first created. */
 	@Override

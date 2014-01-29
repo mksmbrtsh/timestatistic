@@ -77,6 +77,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 			UnionRecordDialogFragment unionRecordDialogFragment = (UnionRecordDialogFragment) fm.findFragmentByTag("mUnionRecordDialog");
 			if(unionRecordDialogFragment!=null)
 				unionRecordDialogFragment.setDialogListener(this);
+			StartDateSetDialogFragment startDateSetDialogFragment = (StartDateSetDialogFragment) fm.findFragmentByTag("mStartDateSetDialogFragment");
+			if(startDateSetDialogFragment!=null)
+				startDateSetDialogFragment.setDialogListener(this);
 		}
 	}
 
@@ -130,6 +133,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		FragmentTransaction ft;
 		switch (item.getItemId()) {
+		case R.id.item_starts:
+			StartDateSetDialogFragment startDateSetDialogFragment = new StartDateSetDialogFragment();
+			startDateSetDialogFragment.setDialogListener(this);
+			startDateSetDialogFragment.show(this.getSupportFragmentManager(),
+					"mStartDateSetDialogFragment");
+			break;
 		case R.id.item_add:
 			CounterEditorDialogFragment counterEditorDialogFragment = new CounterEditorDialogFragment();
 			counterEditorDialogFragment.setIdCounter(-1);

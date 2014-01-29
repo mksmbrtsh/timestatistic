@@ -1,6 +1,8 @@
 package maximsblog.blogspot.com.timestatistic;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -81,8 +83,9 @@ public final class CountersFragment extends Fragment implements
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
+		String[] selectionArgs = new String[] { String.valueOf(app.getStartDate(getActivity()))};
 		CursorLoader loader = new CursorLoader(this.getActivity(),
-				RecordsDbHelper.CONTENT_URI_TIMES, null, null, null, null);
+				RecordsDbHelper.CONTENT_URI_TIMES, null, null, selectionArgs, null);
 		return loader;
 	}
 
@@ -145,7 +148,8 @@ public final class CountersFragment extends Fragment implements
 		SettingsActivity.visibleNotif(getActivity(), cursor.getLong(3),
 				cursor.getLong(2), cursor.getString(5));
 
-		TimeRecordsFragment timeRecordsFragment = (TimeRecordsFragment) ((MainActivity)getActivity()).findFragmentByPosition(1);
+		TimeRecordsFragment timeRecordsFragment = (TimeRecordsFragment) ((MainActivity) getActivity())
+				.findFragmentByPosition(1);
 		timeRecordsFragment.setNormalMode();
 	}
 
@@ -197,7 +201,6 @@ public final class CountersFragment extends Fragment implements
 		loadermanager.restartLoader(1, null, this);
 	}
 
-	
 	@Override
 	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2,
 			long arg3) {

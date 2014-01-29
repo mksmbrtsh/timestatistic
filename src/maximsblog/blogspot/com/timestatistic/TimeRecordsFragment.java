@@ -47,8 +47,6 @@ public class TimeRecordsFragment extends Fragment implements
 	private ListView mList;
 	private TimesCursorAdapter mAdapter;
 	private View mUnionPanel;
-	//private int mChoiceUnionMode;
-	//private HashMap<Integer, Boolean> mSelected;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -100,9 +98,10 @@ public class TimeRecordsFragment extends Fragment implements
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
+		String[] selectionArgs = new String[] { String.valueOf(app.getStartDate(getActivity()))};
 		CursorLoader loader = new CursorLoader(this.getActivity(),
 				RecordsDbHelper.CONTENT_URI_ALLTIMES, null,
-				RecordsDbHelper.STARTTIME + " IS NOT NULL ", null, null);
+				RecordsDbHelper.STARTTIME + " IS NOT NULL ", selectionArgs, null);
 		return loader;
 	}
 
