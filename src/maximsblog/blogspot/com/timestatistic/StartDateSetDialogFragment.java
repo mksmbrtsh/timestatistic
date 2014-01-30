@@ -19,7 +19,7 @@ public class StartDateSetDialogFragment extends DialogFragment {
 	}
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-    	String[] items = new String[] {"За все время", "За сегодня", "За неделю"}; 
+    	String[] items = getResources().getStringArray(R.array.StartFilters); 
     	int checkedItem = PreferenceManager.getDefaultSharedPreferences(StartDateSetDialogFragment.this.getActivity()).getInt(SettingsActivity.STARTTIMEFILTER, 0);
         return new AlertDialog.Builder(getActivity())
             .setTitle(R.string.startdateset).setSingleChoiceItems(items, checkedItem, new OnClickListener() {
