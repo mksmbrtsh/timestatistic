@@ -20,7 +20,7 @@ public class StartDateSetDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
     	String[] items = getResources().getStringArray(R.array.StartFilters); 
-    	int checkedItem = PreferenceManager.getDefaultSharedPreferences(StartDateSetDialogFragment.this.getActivity()).getInt(SettingsActivity.STARTTIMEFILTER, 0);
+    	int checkedItem = PreferenceManager.getDefaultSharedPreferences(StartDateSetDialogFragment.this.getActivity()).getInt(SettingsActivity.STARTTIMEFILTER, 4);
         return new AlertDialog.Builder(getActivity())
             .setTitle(R.string.startdateset).setSingleChoiceItems(items, checkedItem, new OnClickListener() {
 				
