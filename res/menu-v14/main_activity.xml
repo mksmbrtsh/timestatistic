@@ -4,7 +4,7 @@
         android:id="@+id/item_starts"
         android:showAsAction="always"
         android:orderInCategory="1"
-        android:title="start">
+        android:title="@string/start">
     </item>
     <item
         android:id="@+id/item_add"

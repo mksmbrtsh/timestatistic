@@ -57,4 +57,5 @@
         <item>За год</item>
         <item>За всё время</item>
     </string-array>
+    <string name="start">Начало</string>
 </resources>
