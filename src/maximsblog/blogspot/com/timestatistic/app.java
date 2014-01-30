@@ -36,13 +36,11 @@ public class app extends Application {
 	
 	public static long getStartDate(Context context) {
 		int checkedItem = PreferenceManager.getDefaultSharedPreferences(
-				context).getInt(SettingsActivity.STARTTIMEFILTER, 0);
+				context).getInt(SettingsActivity.STARTTIMEFILTER, 4);
 		Calendar calendar = Calendar.getInstance();
 		long result;
 		switch (checkedItem) {
-		case SettingsActivity.STARTTIMEFILTERS.ALLTIME:
-			result = 0;
-			break;
+		
 		case SettingsActivity.STARTTIMEFILTERS.TODAY:
 			calendar.set(Calendar.MILLISECOND, 0);
 			calendar.set(Calendar.SECOND, 0);
@@ -74,6 +72,9 @@ public class app extends Application {
 			calendar.set(Calendar.DAY_OF_MONTH, 1);
 			calendar.set(Calendar.MONTH, 0);
 			result = calendar.getTimeInMillis();
+			break;
+		case SettingsActivity.STARTTIMEFILTERS.ALLTIME:
+			result = 0;
 			break;
 		default:
 			result = 0;

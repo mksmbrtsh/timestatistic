@@ -51,10 +51,10 @@
     <string name="interval">Интервал напоминания</string>
     <string name="startdateset">Показать данные</string>
     <string-array name="StartFilters">
-        <item>За всё время</item>
         <item>За сегодня</item>
         <item>За неделю</item>
         <item>За месяц</item>
         <item>За год</item>
+        <item>За всё время</item>
     </string-array>
 </resources>

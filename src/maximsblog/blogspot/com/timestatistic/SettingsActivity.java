@@ -33,12 +33,11 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 	public static final String STARTTIMEFILTER = "starttimefilter";
 	public static final class STARTTIMEFILTERS
 	{
-		public static final int ALLTIME = 0;
-		public static final int TODAY = 1;
-		public static final int WEEK = 2;
-		public static final int MOUNTH = 3;
-		public static final int YEAR = 4;
-		
+		public static final int TODAY = 0;
+		public static final int WEEK = 1;
+		public static final int MOUNTH = 2;
+		public static final int YEAR = 3;
+		public static final int ALLTIME = 4;
 	}
 
 	/** Called when the activity is first created. */

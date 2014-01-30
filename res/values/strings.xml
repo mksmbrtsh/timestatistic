@@ -51,10 +51,10 @@
     <string name="interval">Remember interval</string>
     <string name="startdateset">Start time filter</string>
     <string-array name="StartFilters">
-        <item>All time</item>
         <item>Today</item>
         <item>Week</item>
         <item>Mounth</item>
         <item>Year</item>
+        <item>All time</item>
     </string-array>
 </resources>
