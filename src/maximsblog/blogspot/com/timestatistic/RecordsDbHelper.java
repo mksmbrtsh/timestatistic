@@ -204,7 +204,7 @@ public class RecordsDbHelper extends ContentProvider {
 			break;
 		case TIMES: {
 			String start;
-			if(selectionArgs!=null)
+			if(selectionArgs!=null && selection == null)
 				start = selectionArgs[0];
 			else 
 				start = "0";
@@ -220,7 +220,7 @@ public class RecordsDbHelper extends ContentProvider {
 					RecordsDbHelper.NAME, RecordsDbHelper.ISRUNNING,
 					RecordsDbHelper.COLOR, INTERVAL }, selection,
 					RecordsDbHelper.TIMERSID, null, null, null);
-			c = mDB.rawQuery(e, null);
+			c = mDB.rawQuery(e, !(selectionArgs!=null && selection == null) ? selectionArgs : null );
 			c.setNotificationUri(getContext().getContentResolver(), uri);
 			return c;
 		}
