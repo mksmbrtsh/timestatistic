@@ -49,4 +49,6 @@
     <string name="more_max">Больше даты конца записи</string>
     <string name="now">Сейчас</string>
     <string name="interval">Интервал напоминания</string>
+    <string name="help">Помощь</string>
+    <string name="union">Объединить</string>
 </resources>
