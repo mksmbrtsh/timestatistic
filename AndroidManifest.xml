@@ -36,6 +36,8 @@
         <activity android:name="SettingsActivity" >
         </activity>
         <activity android:name="FileDialog"></activity>
+        <activity android:name="HelpActivity"></activity>
+        <activity android:name="TopicActivity"></activity>
     </application>
 
 </manifest>
