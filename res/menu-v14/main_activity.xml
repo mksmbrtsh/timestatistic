@@ -4,6 +4,7 @@
         android:id="@+id/item_starts"
         android:showAsAction="always"
         android:orderInCategory="1"
+        android:icon="@drawable/ic_startdatefilter"
         android:title="@string/start">
     </item>
     <item
