@@ -60,11 +60,12 @@ public class DiagramFragment extends Fragment implements
 		super.onCreate(savedInstanceState);
 		mRenderer.setZoomButtonsVisible(false);
 		mRenderer.setStartAngle(180);
-		mRenderer.setDisplayValues(true);
+		mRenderer.setDisplayValues(false);
 		mRenderer.setInScroll(false);
 		mRenderer.setClickEnabled(false);
 		mRenderer.setPanEnabled(false);
 		mRenderer.setZoomEnabled(false);
+		mRenderer.setShowLabels(true);
 		DisplayMetrics metrics = getActivity().getResources()
 				.getDisplayMetrics();
 		float val = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,

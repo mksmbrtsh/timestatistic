@@ -6,7 +6,7 @@
     <string name="add_counter_dialog">Add new counter</string>
     <string name="edit_counter_dialog">Edit counter</string>
     <string name="add">Add</string>
-    <string name="about">About program</string>
+    <string name="about">About</string>
     <string name="reset_all">Reset all counters</string>
     <string name="are_you_sure">You are sure?</string>
     <string-array name="TitlePages">
@@ -49,4 +49,6 @@
     <string name="more_max">More stop data of record</string>
     <string name="now">Now</string>
     <string name="interval">Remember interval</string>
+    <string name="help">Help</string>
+    <string name="union">Union</string>
 </resources>

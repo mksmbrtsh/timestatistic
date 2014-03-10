@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="no_help_available">There is no help available at this time.</string>
+    <string name="about_help_topics">Help is available for each section of this app.</string>
+    <string name="help_page_intro_html">Application for personal time statistic.</string>
+    <string name="help_text_section1">General</string>
+    <string name="topic_section1">
+<![CDATA[
+      <p>Main screen application have 3 tabs: counters, records and diagrams.</p>
+      <p><img src="hlp_main_act">
+      </p>
+      <p>
+      On the counter, you can create, edit and delete counters.<b> Counter is the action </b>.
+      When you create or edit, you can to specify the name and color of the tile counter.
+      Deleting counter leads to the removal of all records relating to him, be careful.      By default, works <b> Idle </ b> the counter, it will switch to it, if you click on the working counter.
+      That is, it is used for excluding downtime, &#34;unnecessary&#34; time and so on.
+      </p>
+      ]]>
+    </string>
+    <string name="help_text_section2">Edit records</string>
+    <string name="topic_section2">
+<![CDATA[
+		<h1>General</h1>
+      <p> The app leads "pass-through statistic", i.e., accounting of all your time.
+It can not be stopped as it is impossible to stop time, so it is sometimes necessary to edit the record.</p>
+		<p> I came up with two ways to edit of records, the first - a partition of records, the second - the combination of records.
+		You can send me your ideas about how to edit records, always happy to discuss!</p>
+		<h1>A partition of records </h1>
+		<p> A partition occurs on the &#34;Records&#34;, just click on the edited record and dialogue will open. </p>
+		<p><img src="hlp_cutting_rec"></p>
+		<p> The dialogue is possible to change the name to record and edit the start time (tstart) and end time (tstop).
+		Start record can only move forward (t1 more tstart), then before the edited record will be one more, with a start time, as in the original recording (tstart) and end time, equal to the new start time (t1).
+		In addition, the end of the recording, you can only move back (t2 is less than tstop), then after the edited record will be one more, with a start time equal to this new value (t2) and end time equal to the original (tstop). For example:
+		</p>
+        <p><img src="hlp_edit_rec"></p>
+      <h1>Combination of records.</h1>
+      <p> In order to combine records, you must activate the combining using the a long press on the first record:</p>
+      <p><img src="hlp_union_rec"></p>
+      <p> After that, the records appear right checkboxes allow you to select consecutive records to combine. 
+      Upon completion of selection and clicking on &#34;Combine&#34; to open a dialog where you can specify a name for the new record, the defaul it will fit most of the selected records:</p>
+      <p><img src="hlp_union_dlg"></p>
+      <h1>Delete counters</h1>
+      <p> In addition to editing of records, you can delete the counter, which is not used or is not needed.
+      But please note that it will be impossible to restore back the recording.</p>
+      <h1>Edite data base</h1>
+      <p> Besides the possibilities of this program, records can be edited directly in the database.
+      It has sqlite format and simple structure. Structure is described in the relevant section.</p>
+       ]]>
+    </string>
+    <string name="help_text_section3">Structure of database</string>
+    <string name="topic_section3">
+<![CDATA[
+	  <h1>General</h1>
+      <p> 
+The application works with a database <b>timestat.db</b>. Usually it is located in the phone&#39;s memory:
+      </p>
+      <p>Path:/data/data/maximsblog.blogspot.com.timestatistic/databases
+      </p>
+      <p> If your phone has a root-access, you can edit the database on this (or similar) way. 
+      Otherwise, you can export the database, then edit it and import it back.
+      Personally, I use this program SQLite Editor.</p>
+      <h1>Tables and fields</h1>
+      <p> While the application is using two tables:</p>
+      <p>timers</p>
+      <p>times</p>
+      <h2>timers</h2>
+      <p> The table &#34;timers&#34; are attributes counters. Description of column is: id - the identifier of the counter; name - his name; color - color; isrunning - 1, if run and 0 if stop (<b> Attention! </ b> can be started only one counter, that can only be one unit, otherwise the program will fall); interval - Time in milliseconds between reminders</p>
+      <h2>times</h2>
+      <p> This table stores the the records themselves. Description of columns: _idt - record identifier; timerid - counter identifier (it matches the value of the _id table timers); start - the start time, in milliseconds, class java DateTime; length - the length of records in milliseconds.</p>
+      <h1>Export and import data base</h1>
+      <p> In the settings, you can create your backup and recovery. Backup is saved in the memory card.</p>
+      <p>Path: memory card/Android/data/maximsblog.blogspot.com.timestatistic/files</p>
+      <p> When you import a file created with the name timestat, goes on a number as DD/MM/YYYY and expansion .db. This is a normal file sqlite, so for some editors need to change it to .sqlite.</p>
+      <p> When you import dialog opens select the database. </p>
+       ]]>
+    </string>
+</resources>

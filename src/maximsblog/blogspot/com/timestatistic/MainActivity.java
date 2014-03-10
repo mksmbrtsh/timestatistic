@@ -66,16 +66,19 @@ public class MainActivity extends SherlockFragmentActivity implements
 			FragmentManager fm = getSupportFragmentManager();
 			SplitRecordDialogFragment splitRecordDialog = (SplitRecordDialogFragment) fm
 					.findFragmentByTag("mSplitRecordDialog");
-			if(splitRecordDialog != null)
+			if (splitRecordDialog != null)
 				splitRecordDialog.setCounterDialogListener(this);
-			CounterEditorDialogFragment counterEditorDialogFragment = (CounterEditorDialogFragment) fm.findFragmentByTag("mCounterEditorDialogFragment");
-			if(counterEditorDialogFragment!=null)
+			CounterEditorDialogFragment counterEditorDialogFragment = (CounterEditorDialogFragment) fm
+					.findFragmentByTag("mCounterEditorDialogFragment");
+			if (counterEditorDialogFragment != null)
 				counterEditorDialogFragment.setCounterDialogListener(this);
-			AreYouSureResetAllDialogFragment areYouSureResetAllDialog = (AreYouSureResetAllDialogFragment) fm.findFragmentByTag("mAreYouSureResetAllDialog");
-			if(areYouSureResetAllDialog!=null)
+			AreYouSureResetAllDialogFragment areYouSureResetAllDialog = (AreYouSureResetAllDialogFragment) fm
+					.findFragmentByTag("mAreYouSureResetAllDialog");
+			if (areYouSureResetAllDialog != null)
 				areYouSureResetAllDialog.setResetAllDialogListener(this);
-			UnionRecordDialogFragment unionRecordDialogFragment = (UnionRecordDialogFragment) fm.findFragmentByTag("mUnionRecordDialog");
-			if(unionRecordDialogFragment!=null)
+			UnionRecordDialogFragment unionRecordDialogFragment = (UnionRecordDialogFragment) fm
+					.findFragmentByTag("mUnionRecordDialog");
+			if (unionRecordDialogFragment != null)
 				unionRecordDialogFragment.setDialogListener(this);
 		}
 	}
@@ -154,9 +157,16 @@ public class MainActivity extends SherlockFragmentActivity implements
 			AboutDialogFragment aboutFragment = new AboutDialogFragment();
 			aboutFragment.show(ft, "aboutDialog");
 			break;
-		case R.id.action_settings:
+		case R.id.action_settings: {
 			Intent i = new Intent(this, SettingsActivity.class);
 			startActivity(i);
+		}
+			break;
+		case R.id.item_help: {
+			Intent i = new Intent(this, HelpActivity.class);
+			startActivity(i);
+		}
+			break;
 		default:
 			break;
 		}
@@ -235,7 +245,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 		if (position == 2 || position == 1)
 			((MainFragments) findFragmentByPosition(position)).onReload();
 	}
-
 
 	@Override
 	public void onRefreshFragmentsValue() {
