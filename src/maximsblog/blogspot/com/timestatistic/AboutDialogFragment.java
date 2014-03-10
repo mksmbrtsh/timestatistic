@@ -34,8 +34,9 @@ public class AboutDialogFragment extends DialogFragment {
 		
 		try {
 			String nameversion = getString(R.string.version) + ": " + getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
-			getDialog().setTitle(getString(R.string.app_name) + " " + nameversion);
-			
+			getDialog().setTitle(getString(R.string.app_name));
+			TextView v = (TextView)view.findViewById(R.id.version);
+			v.setText(nameversion);
 		} catch (NameNotFoundException e) {
 
 		}

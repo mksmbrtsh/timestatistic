@@ -20,7 +20,7 @@
     <string name="days">days</string>
     <string name="change_color">Select color for background</string>
     <string name="version">version</string>
-    <string name="about_text">Idea: <a href="mailto:ruslan.popov@gmail.com">Ruslan Popov</a>\n\nIcon design: Sergey Barkov (superbarok) \n\nDeveloper: <a href="mailto:mksmbtrsh@gmail.com">Maksim Bartosh</a>\n\nOther my apps on <a href="https://play.google.com/store/search?q=maksim+bartosh&amp;c=apps">GooglePlay</a>\n\n<a href="mailto:mksmbtrsh@gmail.com">Send me report</a></string>
+    <string name="about_text">Idea: <a href="mailto:ruslan.popov@gmail.com">Ruslan Popov</a>\n\nLaunch icon design: Sergey Barkov (superbarok)\n\nMenu icon design: Anna Bartosh\n\nDeveloper: <a href="mailto:mksmbtrsh@gmail.com">Maksim Bartosh</a>\n\nOther my apps on <a href="https://play.google.com/store/search?q=maksim+bartosh&amp;c=apps">GooglePlay</a>\n\n<a href="mailto:mksmbtrsh@gmail.com">Send me report</a></string>
     <string name="start_time">Start</string>
     <string name="end_time">Stop</string>
     <string name="name">Name</string>
