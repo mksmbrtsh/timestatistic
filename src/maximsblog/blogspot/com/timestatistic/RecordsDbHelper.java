@@ -213,12 +213,13 @@ public class RecordsDbHelper extends ContentProvider {
 					+ TIMERSID, new String[] {
 					RecordsDbHelper.ID2 + " AS " + RecordsDbHelper.ID,
 					RecordsDbHelper.TIMERSID,
-					"SUM(CASE WHEN " + RecordsDbHelper.STARTTIME +" >= '" + start + "' THEN "+ RecordsDbHelper.LENGHT + " ELSE '0' END ) AS "
+					"SUM("+RecordsDbHelper.LENGHT +" ) AS "
 							+ RecordsDbHelper.LENGHT,
 					"MAX(" + RecordsDbHelper.STARTTIME + ") AS "
 							+ RecordsDbHelper.STARTTIME, RecordsDbHelper.ID,
 					RecordsDbHelper.NAME, RecordsDbHelper.ISRUNNING,
-					RecordsDbHelper.COLOR, INTERVAL }, selection,
+					RecordsDbHelper.COLOR, INTERVAL, "("+ RecordsDbHelper.LENGHT + ") AS "
+							+ "min"}, selection,
 					RecordsDbHelper.TIMERSID, null, null, null);
 			c = mDB.rawQuery(e, !(selectionArgs!=null && selection == null) ? selectionArgs : null );
 			c.setNotificationUri(getContext().getContentResolver(), uri);

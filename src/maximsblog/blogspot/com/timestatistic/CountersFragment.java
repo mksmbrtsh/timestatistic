@@ -49,6 +49,7 @@ public final class CountersFragment extends Fragment implements
 	private CountersCursorAdapter mAdapter;
 	private LoaderManager loadermanager;
 	private GridView mList;
+	private long mStartdate;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -56,9 +57,9 @@ public final class CountersFragment extends Fragment implements
 		loadermanager = getLoaderManager();
 		String[] uiBindFrom = { RecordsDbHelper.LENGHT, RecordsDbHelper.NAME };
 		int[] uiBindTo = { R.id.current, R.id.name };
-
+		mStartdate = app.getStartDate(getActivity());
 		mAdapter = new CountersCursorAdapter(this.getActivity(),
-				R.layout.count_row, null, uiBindFrom, uiBindTo, 0);
+				R.layout.count_row, null, uiBindFrom, uiBindTo, 0, mStartdate);
 		loadermanager.initLoader(1, null, this);
 	}
 
@@ -83,7 +84,8 @@ public final class CountersFragment extends Fragment implements
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
-		String[] selectionArgs = new String[] { String.valueOf(app.getStartDate(getActivity()))};
+		
+		String[] selectionArgs = new String[] { String.valueOf(mStartdate)};
 		CursorLoader loader = new CursorLoader(this.getActivity(),
 				RecordsDbHelper.CONTENT_URI_TIMES, null, null, selectionArgs, null);
 		return loader;
@@ -198,6 +200,8 @@ public final class CountersFragment extends Fragment implements
 
 	@Override
 	public void onReload() {
+		mStartdate = app.getStartDate(getActivity());
+		mAdapter.setStartDate(mStartdate);
 		loadermanager.restartLoader(1, null, this);
 	}
 

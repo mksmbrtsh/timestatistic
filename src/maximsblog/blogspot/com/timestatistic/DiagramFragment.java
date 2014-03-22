@@ -129,6 +129,9 @@ public class DiagramFragment extends Fragment implements
 			long id = cursor.getLong(0);
 			long t = cursor.getLong(2);
 			long start = cursor.getLong(3);
+			long startdate = app.getStartDate(getActivity());
+			if(start < startdate)
+				start = startdate;
 			String s = cursor.getString(5);
 			nvalues.add(s);
 			boolean isRunning = cursor.getInt(6) == 1;
