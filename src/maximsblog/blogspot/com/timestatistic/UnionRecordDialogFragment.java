@@ -160,8 +160,10 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 					new String[] { String.valueOf(c.getInt(4)) });
 			cv.clear();
 			app.loadRunningCounterAlarm(getActivity().getApplicationContext());
-		} else
+		} else {
 			cv.put(RecordsDbHelper.LENGHT, mLenght);
+			cv.put(RecordsDbHelper.ENDTIME, mStart + mLenght);
+		}
 		cv.put(RecordsDbHelper.TIMERSID, c.getInt(4));
 		cv.put(RecordsDbHelper.STARTTIME, mStart);
 		getActivity().getContentResolver().insert(

@@ -45,8 +45,8 @@ public class CountersCursorAdapter extends SimpleCursorAdapter {
 		} else {
 			long lenght = cursor.getLong(2);
 			long start = cursor.getLong(3);
-			long last_l = cursor.getLong(9);
-			if(mStartdate>0){
+			/*long end = cursor.getLong(9);
+			/*if(mStartdate>0){
 				if(start > mStartdate){
 					lenght = start + last_l - mStartdate;
 				} else
@@ -54,7 +54,7 @@ public class CountersCursorAdapter extends SimpleCursorAdapter {
 					lenght = start + last_l - mStartdate;
 				} else
 					lenght = 0;
-			}
+			}*/
 			setTime(t, lenght);
 			view.findViewById(R.id.selectorLayout).setVisibility(View.GONE);
 		}

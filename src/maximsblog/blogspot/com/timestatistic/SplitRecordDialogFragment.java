@@ -310,7 +310,7 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 		cv.put(RecordsDbHelper.TIMERSID, c.getInt(4));
 		cv.put(RecordsDbHelper.STARTTIME, mCurrentStart);
 		cv.put(RecordsDbHelper.LENGHT, mCurrentLenght);
-
+		cv.put(RecordsDbHelper.ENDTIME, mCurrentStart + mCurrentLenght);
 		getActivity().getContentResolver().update(
 				RecordsDbHelper.CONTENT_URI_TIMES, cv,
 				RecordsDbHelper.ID2 + "=?",
@@ -321,6 +321,7 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 			cv.put(RecordsDbHelper.TIMERSID, c.getInt(4));
 			cv.put(RecordsDbHelper.STARTTIME, mOriginalStart);
 			cv.put(RecordsDbHelper.LENGHT, mCurrentStart - mOriginalStart);
+			cv.put(RecordsDbHelper.ENDTIME, mCurrentStart);
 			getActivity().getContentResolver().insert(
 					RecordsDbHelper.CONTENT_URI_TIMES, cv);
 			cv.clear();
@@ -331,11 +332,16 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 			c.moveToPosition(mAfterCounter.getSelectedItemPosition());
 			cv.put(RecordsDbHelper.TIMERSID, c.getInt(4));
 			cv.put(RecordsDbHelper.STARTTIME, mCurrentStart + mCurrentLenght);
-			if (mOriginalLenght != 0)
+			if (mOriginalLenght != 0) {
 				cv.put(RecordsDbHelper.LENGHT, mOriginalStart + mOriginalLenght
 						- (mCurrentStart + mCurrentLenght));
-			else
+				cv.put(RecordsDbHelper.ENDTIME, mCurrentStart + mCurrentLenght + (mOriginalStart + mOriginalLenght
+						- (mCurrentStart + mCurrentLenght)));
+			}
+			else {
 				cv.put(RecordsDbHelper.LENGHT, 0);
+				//cv.put(RecordsDbHelper.ENDTIME, 0);
+			}
 			getActivity().getContentResolver().insert(
 					RecordsDbHelper.CONTENT_URI_TIMES, cv);
 			cv.clear();

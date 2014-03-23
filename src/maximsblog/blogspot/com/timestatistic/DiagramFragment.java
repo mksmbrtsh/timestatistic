@@ -67,8 +67,8 @@ public class DiagramFragment extends Fragment implements
 		mRenderer.setZoomEnabled(false);
 		DisplayMetrics metrics = getActivity().getResources()
 				.getDisplayMetrics();
-		float val = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
-				15, metrics);
+		float val = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 15,
+				metrics);
 		mRenderer.setLegendTextSize(val);
 		mRenderer.setLabelsTextSize(val);
 	}
@@ -111,9 +111,11 @@ public class DiagramFragment extends Fragment implements
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
-		String[] selectionArgs = new String[] { String.valueOf(app.getStartDate(getActivity()))};
+		String[] selectionArgs = new String[] { String.valueOf(app
+				.getStartDate(getActivity())) };
 		CursorLoader loader = new CursorLoader(this.getActivity(),
-				RecordsDbHelper.CONTENT_URI_TIMES, null, null, selectionArgs, null);
+				RecordsDbHelper.CONTENT_URI_TIMES, null, null, selectionArgs,
+				null);
 		return loader;
 	}
 
@@ -130,44 +132,51 @@ public class DiagramFragment extends Fragment implements
 			long t = cursor.getLong(2);
 			long start = cursor.getLong(3);
 			long startdate = app.getStartDate(getActivity());
-			if(start < startdate)
+			if (start < startdate)
 				start = startdate;
 			String s = cursor.getString(5);
-			nvalues.add(s);
+
 			boolean isRunning = cursor.getInt(6) == 1;
 			Double sum = 0.0;
-			values.add(sum = (double) (isRunning ? t + new Date().getTime() - start : t));
-			
+			sum = (double) (isRunning ? t + new Date().getTime() - start : t);
+
 			SimpleSeriesRenderer renderer = new SimpleSeriesRenderer();
 			int color = cursor.getInt(7);
 			renderer.setColor(color);
 			NumberFormat nf = NumberFormat.getPercentInstance();
 			nf.setMaximumFractionDigits(1);
 			renderer.setChartValuesFormat(nf);
-			mRenderer.addSeriesRenderer(renderer);
-			
+			if (sum != 0.0) {
+				nvalues.add(s);
+				values.add(sum);
+				mRenderer.addSeriesRenderer(renderer);
+			}
 			while (cursor.moveToNext()) {
 				id = cursor.getLong(0);
 				t = cursor.getLong(2);
 				start = cursor.getLong(3);
 				s = cursor.getString(5);
-				nvalues.add(s);
+				
 				isRunning = cursor.getInt(6) == 1;
-				double v =(double) (isRunning ? t + new Date().getTime() - start : t);
+				double v = (double) (isRunning ? t + new Date().getTime()
+						- start : t);
 				sum += v;
-				values.add(v);
+				
 				renderer = new SimpleSeriesRenderer();
 				color = cursor.getInt(7);
 				renderer.setColor(color);
 				renderer.setChartValuesFormat(nf);
-				mRenderer.addSeriesRenderer(renderer);
+				if (v != 0.0) {
+					nvalues.add(s);
+					values.add(v);
+					mRenderer.addSeriesRenderer(renderer);
+				}
 			}
-			for(int i1 = 0,cnt1=values.size();i1<cnt1;i1++)
-			{
-				mSeries.add(nvalues.get(i1),  values.get(i1) / sum);
+			for (int i1 = 0, cnt1 = values.size(); i1 < cnt1; i1++) {
+
+				mSeries.add(nvalues.get(i1), values.get(i1) / sum);
 			}
-			
-			
+
 			if (mChartView != null) {
 				mChartView.repaint();
 			}

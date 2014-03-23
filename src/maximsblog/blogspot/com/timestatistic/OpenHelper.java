@@ -141,6 +141,7 @@ public class OpenHelper extends SQLiteOpenHelper {
 		cv = new ContentValues();
 		cv.put(TIMERSID, l);
 		cv.put(STARTTIME, now.getTime());
+		cv.put(ENDTIME, 0);
 		db.insert(TABLE_TIMES, null, cv);
 	}
 

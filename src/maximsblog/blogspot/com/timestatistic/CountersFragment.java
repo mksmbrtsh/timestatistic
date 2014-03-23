@@ -106,6 +106,7 @@ public final class CountersFragment extends Fragment implements
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 			long arg3) {
+		// running counter
 		ContentValues cv = new ContentValues();
 		long now = new Date().getTime();
 		Cursor c = getActivity().getContentResolver().query(
@@ -119,9 +120,11 @@ public final class CountersFragment extends Fragment implements
 		int timeId = c.getInt(0);
 		long start = c.getLong(3);
 		c.close();
+		// set value to running counter
 		long lenght = now - start;
 		cv = new ContentValues();
 		cv.put(RecordsDbHelper.LENGHT, lenght);
+		cv.put(RecordsDbHelper.ENDTIME, start + lenght);
 		getActivity().getContentResolver().update(
 				RecordsDbHelper.CONTENT_URI_TIMES, cv,
 				RecordsDbHelper.ID2 + "=?",
@@ -131,6 +134,7 @@ public final class CountersFragment extends Fragment implements
 		boolean isRunning = cursor.getInt(6) == 1;
 		int counterId;
 		if (isRunning) {
+			// if click to running counter, then switch to idle-counter
 			counterId = 1;
 		} else {
 			counterId = cursor.getInt(4);
