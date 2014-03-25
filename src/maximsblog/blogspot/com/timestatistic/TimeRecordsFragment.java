@@ -47,6 +47,7 @@ public class TimeRecordsFragment extends Fragment implements
 	private ListView mList;
 	private TimesCursorAdapter mAdapter;
 	private View mUnionPanel;
+	private long mStartdate;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -55,9 +56,9 @@ public class TimeRecordsFragment extends Fragment implements
 		String[] uiBindFrom = { RecordsDbHelper.NAME,
 				RecordsDbHelper.STARTTIME, RecordsDbHelper.LENGHT };
 		int[] uiBindTo = { R.id.name, R.id.start, R.id.lenght };
-
+		mStartdate = app.getStartDate(getActivity());
 		mAdapter = new TimesCursorAdapter(this.getActivity(),
-				R.layout.time_row, null, uiBindFrom, uiBindTo, 0);
+				R.layout.time_row, null, uiBindFrom, uiBindTo, 0, mStartdate);
 		loadermanager.initLoader(1, null, this);
 		if (savedInstanceState != null) {
 			mAdapter.setSelectedPosition(savedInstanceState.getInt("mChoiceUnionMode"));
@@ -128,6 +129,8 @@ public class TimeRecordsFragment extends Fragment implements
 
 	@Override
 	public void onReload() {
+		mStartdate = app.getStartDate(getActivity());
+		mAdapter.setStartDate(mStartdate);
 		loadermanager.restartLoader(1, null, this);
 	}
 

@@ -29,13 +29,14 @@ public class TimesCursorAdapter extends SimpleCursorAdapter {
 	private Drawable mIndicator;
 	private HashMap<Integer, Boolean> mSelected;
 	private int mSelectedPosition;
+	private long mStartdate;
 	public static final int NORMAL_MODE = -1;
 
 	public TimesCursorAdapter(Context context, int layout, Cursor c,
-			String[] from, int[] to, int flags) {
+			String[] from, int[] to, int flags, long startdate) {
 		super(context, layout, c, from, to, flags);
 		mSimpleDateFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
-
+		mStartdate = startdate;
 		int[] attrs = { android.R.attr.listChoiceIndicatorMultiple };
 		TypedArray ta = context.getTheme().obtainStyledAttributes(attrs);
 		mIndicator = ta.getDrawable(0);
@@ -69,8 +70,11 @@ public class TimesCursorAdapter extends SimpleCursorAdapter {
 		} else {
 			holder = (ViewHolder) view.getTag();
 		}
-
-		Date d = new Date(cursor.getLong(2));
+		long start = cursor.getLong(2);
+		long stop = cursor.getLong(7);
+		if(stop >= mStartdate && start< mStartdate)
+			start = mStartdate;
+		Date d = new Date(start);
 		holder.start.setText(mSimpleDateFormat.format(d));
 		if (cursor.getLong(1) == 0)
 			holder.stop.setText("");
@@ -78,7 +82,7 @@ public class TimesCursorAdapter extends SimpleCursorAdapter {
 			d = new Date(cursor.getLong(1) + cursor.getLong(2));
 			holder.stop.setText(mSimpleDateFormat.format(d));
 		}
-		setTime(holder.lenght, cursor.getLong(1));
+		setTime(holder.lenght, stop - start > 0 ? stop - start : 0);
 		if (mSelectedPosition != -1) {
 			if (mSelected.get(position) != null) {
 				holder.check.setChecked(mSelected.get(position));
@@ -158,4 +162,9 @@ public class TimesCursorAdapter extends SimpleCursorAdapter {
 	public void setSelected(HashMap<Integer, Boolean> selected) {
 		mSelected = selected;
 	}
+
+	public void setStartDate(long startdate) {
+		mStartdate = startdate;
+	}
+	
 }
