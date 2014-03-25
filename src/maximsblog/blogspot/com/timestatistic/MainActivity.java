@@ -51,6 +51,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setTitle("");
 		setContentView(R.layout.activity_main);
 		mTitles = getResources().getStringArray(R.array.TitlePages);
 		// prepare ViewPagerIndicator
