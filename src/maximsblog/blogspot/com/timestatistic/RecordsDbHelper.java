@@ -215,7 +215,7 @@ public class RecordsDbHelper extends ContentProvider {
 					+ TIMERSID, new String[] {
 					RecordsDbHelper.ID2 + " AS " + RecordsDbHelper.ID,
 					RecordsDbHelper.TIMERSID,
-					"SUM(CASE WHEN " + RecordsDbHelper.ENDTIME +" >= '" + start + "' THEN "+ RecordsDbHelper.LENGHT + " ELSE '0' END ) AS "
+					"SUM(CASE WHEN " + RecordsDbHelper.ENDTIME +" >= '" + start + "' AND " + RecordsDbHelper.STARTTIME + " >= '" + start + "' THEN "+ RecordsDbHelper.LENGHT + " ELSE CASE WHEN " + RecordsDbHelper.ENDTIME +" >= '" + start +"' THEN " + RecordsDbHelper.ENDTIME +"- '" + start + "' ELSE '0' END END ) AS "
 							+ RecordsDbHelper.LENGHT,
 					"MAX(" + RecordsDbHelper.STARTTIME + ") AS "
 							+ RecordsDbHelper.STARTTIME, RecordsDbHelper.ID,
