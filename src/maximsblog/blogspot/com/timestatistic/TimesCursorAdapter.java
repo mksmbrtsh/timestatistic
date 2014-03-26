@@ -72,8 +72,7 @@ public class TimesCursorAdapter extends SimpleCursorAdapter {
 		}
 		long start = cursor.getLong(2);
 		long stop = cursor.getLong(7);
-		if(stop >= mStartdate && start< mStartdate)
-			start = mStartdate;
+		
 		Date d = new Date(start);
 		holder.start.setText(mSimpleDateFormat.format(d));
 		if (cursor.getLong(1) == 0)
@@ -82,7 +81,7 @@ public class TimesCursorAdapter extends SimpleCursorAdapter {
 			d = new Date(cursor.getLong(1) + cursor.getLong(2));
 			holder.stop.setText(mSimpleDateFormat.format(d));
 		}
-		setTime(holder.lenght, stop - start > 0 ? stop - start : 0);
+		setTime(holder.lenght, stop - start > 0 ? stop - start : new Date().getTime() - start);
 		if (mSelectedPosition != -1) {
 			if (mSelected.get(position) != null) {
 				holder.check.setChecked(mSelected.get(position));
