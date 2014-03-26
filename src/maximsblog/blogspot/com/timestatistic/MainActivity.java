@@ -226,9 +226,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 		TimeRecordsFragment timeRecordsFragment = (TimeRecordsFragment) ((MainFragments) findFragmentByPosition(1));
 		timeRecordsFragment.setNormalMode();
 		timeRecordsFragment.onReload();
-		DiagramFragment dialogFragment = (DiagramFragment) ((MainFragments) findFragmentByPosition(2));
-		if(dialogFragment != null)
-			dialogFragment.onReload();
+		DiagramFragment diagramFragment = (DiagramFragment) ((MainFragments) findFragmentByPosition(2));
+		if(diagramFragment != null)
+			diagramFragment.onReload();
 	}
 
 	@Override

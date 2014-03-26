@@ -142,6 +142,7 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 			mListener.onRefreshFragmentsValue();
 			dismiss();
 		} else if (id == R.id.cancel) {
+			mListener.onRefreshFragmentsValue();
 			dismiss();
 		}
 	}

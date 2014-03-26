@@ -251,8 +251,7 @@ public class TimeRecordsFragment extends Fragment implements
 			unionRecordDialog.show(this.getActivity()
 					.getSupportFragmentManager(), "mUnionRecordDialog");
 		} else {
-			mAdapter.setChoiceUnionMode(TimesCursorAdapter.NORMAL_MODE);
-			mAdapter.getSelected().clear();
+			setNormalMode();
 			onTimeRecordChange();
 		}
 	}
