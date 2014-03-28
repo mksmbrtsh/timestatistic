@@ -4,6 +4,7 @@
         android:id="@+id/item_starts"
         android:showAsAction="always"
         android:orderInCategory="1"
+        android:icon="@drawable/ic_startdatefilter"
         android:title="@string/start">
     </item>
     
@@ -17,8 +18,8 @@
     <item
         android:id="@+id/item_reset_all"
         android:orderInCategory="3"
-        android:showAsAction="ifRoom"
-        android:icon="@drawable/ic_action_reset_all_dark"
+        android:showAsAction="never"
+        android:icon="@drawable/ic_action_reset_all_light"
         
         android:title="@string/reset_all">
     </item>
