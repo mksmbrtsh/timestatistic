@@ -153,31 +153,36 @@ public class OpenHelper extends SQLiteOpenHelper {
 		} else if (oldVersion == 2 && newVersion == 3) {
 			db.execSQL("ALTER TABLE " + TABLE_TIMES + " ADD COLUMN " + ENDTIME
 					+ " INTEGER");
-			Cursor c = db.query(TABLE_TIMES, new String[] {
-					RecordsDbHelper.ID2, RecordsDbHelper.STARTTIME,
-					RecordsDbHelper.LENGHT }, null, null, null, null, null);
-			if (c.moveToFirst()) {
-				ContentValues values = new ContentValues();
-				do {
-					int id = c.getInt(0);
-					long start = c.getLong(1);
-					long l = c.getLong(2);
-					long end = l != 0 ? start + l : 0;
-					values.put(ENDTIME, end);
-					db.update(TABLE_TIMES, values, ID2 + "=?", new String[]{ String.valueOf(id) });
-				} while (c.moveToNext());
-			}
+			calculateEndTime(db);
 		} else if (oldVersion == 1 && newVersion == 3) {
 			db.execSQL("ALTER TABLE " + TABLE_TIMERS + " ADD COLUMN "
 					+ INTERVAL + " INTEGER DEFAULT 900000");
 			db.execSQL("ALTER TABLE " + TABLE_TIMES + " ADD COLUMN " + ENDTIME
 					+ " INTEGER");
+			calculateEndTime(db);
 		} else {
 			db.execSQL(DROP_TABLE_TIMERS);
 			db.execSQL(DROP_TABLE_TIMES);
 			onCreate(db);
 		}
 
+	}
+
+	private void calculateEndTime(SQLiteDatabase db) {
+		Cursor c = db.query(TABLE_TIMES, new String[] {
+				RecordsDbHelper.ID2, RecordsDbHelper.STARTTIME,
+				RecordsDbHelper.LENGHT }, null, null, null, null, null);
+		if (c.moveToFirst()) {
+			ContentValues values = new ContentValues();
+			do {
+				int id = c.getInt(0);
+				long start = c.getLong(1);
+				long l = c.getLong(2);
+				long end = l != 0 ? start + l : 0;
+				values.put(ENDTIME, end);
+				db.update(TABLE_TIMES, values, ID2 + "=?", new String[]{ String.valueOf(id) });
+			} while (c.moveToNext());
+		}
 	}
 
 }
