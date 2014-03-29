@@ -9,13 +9,14 @@ import java.util.Date;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class OpenHelper extends SQLiteOpenHelper {
 
 	final static String DB_NAME = "timestat.db";
-	final static int DB_VER = 2;
+	final static int DB_VER = 3;
 	final static String TABLE_TIMERS = "timers";
 	final static String TABLE_TIMES = "times";
 	public final static String ID = "_id";
@@ -27,18 +28,20 @@ public class OpenHelper extends SQLiteOpenHelper {
 	public final static String TIMERSID = "timerid";
 	public final static String STARTTIME = "start";
 	public final static String LENGHT = "lenght";
+	public final static String ENDTIME = "endtime";
 
 	// public static String DB_FILEPATH =
 	// "/data/data/maximsblog.blogspot.com.timestatistic/databases/database.db";
 
 	final String CREATE_TABLE_TIMERS = "CREATE TABLE " + TABLE_TIMERS + "( "
 			+ ID + " INTEGER PRIMARY KEY autoincrement, " + NAME + " TEXT, "
-			+ COLOR + " INTEGER, " + ISRUNNING + " INTEGER DEFAULT 0, "+INTERVAL+" INTEGER DEFAULT 900000 )";
+			+ COLOR + " INTEGER, " + ISRUNNING + " INTEGER DEFAULT 0, "
+			+ INTERVAL + " INTEGER DEFAULT 900000 )";
 
 	final String CREATE_TABLE_TIMES = "CREATE TABLE " + TABLE_TIMES + "( "
 			+ ID2 + " INTEGER PRIMARY KEY autoincrement, " + TIMERSID
 			+ " INTEGER, " + STARTTIME + " INTEGER, " + LENGHT
-			+ " INTEGER DEFAULT 0 )";
+			+ " INTEGER DEFAULT 0, " + ENDTIME + " INTEGER )";
 
 	final String DROP_TABLE_TIMERS = "DROP TABLE IF EXISTS " + TABLE_TIMERS;
 	final String DROP_TABLE_TIMES = "DROP TABLE IF EXISTS " + TABLE_TIMES;
@@ -138,19 +141,48 @@ public class OpenHelper extends SQLiteOpenHelper {
 		cv = new ContentValues();
 		cv.put(TIMERSID, l);
 		cv.put(STARTTIME, now.getTime());
+		cv.put(ENDTIME, 0);
 		db.insert(TABLE_TIMES, null, cv);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		if (oldVersion == 1 && newVersion == 2) {
-			db.execSQL("ALTER TABLE " + TABLE_TIMERS + " ADD COLUMN " + INTERVAL + " INTEGER DEFAULT 900000");
+			db.execSQL("ALTER TABLE " + TABLE_TIMERS + " ADD COLUMN "
+					+ INTERVAL + " INTEGER DEFAULT 900000");
+		} else if (oldVersion == 2 && newVersion == 3) {
+			db.execSQL("ALTER TABLE " + TABLE_TIMES + " ADD COLUMN " + ENDTIME
+					+ " INTEGER");
+			calculateEndTime(db);
+		} else if (oldVersion == 1 && newVersion == 3) {
+			db.execSQL("ALTER TABLE " + TABLE_TIMERS + " ADD COLUMN "
+					+ INTERVAL + " INTEGER DEFAULT 900000");
+			db.execSQL("ALTER TABLE " + TABLE_TIMES + " ADD COLUMN " + ENDTIME
+					+ " INTEGER");
+			calculateEndTime(db);
 		} else {
 			db.execSQL(DROP_TABLE_TIMERS);
 			db.execSQL(DROP_TABLE_TIMES);
 			onCreate(db);
 		}
-		
+
+	}
+
+	private void calculateEndTime(SQLiteDatabase db) {
+		Cursor c = db.query(TABLE_TIMES, new String[] {
+				RecordsDbHelper.ID2, RecordsDbHelper.STARTTIME,
+				RecordsDbHelper.LENGHT }, null, null, null, null, null);
+		if (c.moveToFirst()) {
+			ContentValues values = new ContentValues();
+			do {
+				int id = c.getInt(0);
+				long start = c.getLong(1);
+				long l = c.getLong(2);
+				long end = l != 0 ? start + l : 0;
+				values.put(ENDTIME, end);
+				db.update(TABLE_TIMES, values, ID2 + "=?", new String[]{ String.valueOf(id) });
+			} while (c.moveToNext());
+		}
 	}
 
 }

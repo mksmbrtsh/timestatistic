@@ -1,8 +1,12 @@
 package maximsblog.blogspot.com.timestatistic;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import maximsblog.blogspot.com.timestatistic.MainActivity.MainFragments;
 
@@ -47,6 +51,7 @@ public final class CountersFragment extends Fragment implements
 	private CountersCursorAdapter mAdapter;
 	private LoaderManager loadermanager;
 	private GridView mList;
+	private long mStartdate;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -54,9 +59,11 @@ public final class CountersFragment extends Fragment implements
 		loadermanager = getLoaderManager();
 		String[] uiBindFrom = { RecordsDbHelper.LENGHT, RecordsDbHelper.NAME };
 		int[] uiBindTo = { R.id.current, R.id.name };
-
+		StartDateOption startDateOption = app.getStartDate(getActivity());
+		mStartdate = startDateOption.startDate;
+		((SherlockFragmentActivity)getActivity()).getSupportActionBar().setTitle(startDateOption.startDateName);
 		mAdapter = new CountersCursorAdapter(this.getActivity(),
-				R.layout.count_row, null, uiBindFrom, uiBindTo, 0);
+				R.layout.count_row, null, uiBindFrom, uiBindTo, 0, mStartdate);
 		loadermanager.initLoader(1, null, this);
 	}
 
@@ -81,8 +88,10 @@ public final class CountersFragment extends Fragment implements
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
+		
+		String[] selectionArgs = new String[] { String.valueOf(mStartdate)};
 		CursorLoader loader = new CursorLoader(this.getActivity(),
-				RecordsDbHelper.CONTENT_URI_TIMES, null, null, null, null);
+				RecordsDbHelper.CONTENT_URI_TIMES, null, null, selectionArgs, null);
 		return loader;
 	}
 
@@ -101,6 +110,7 @@ public final class CountersFragment extends Fragment implements
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 			long arg3) {
+		// running counter
 		ContentValues cv = new ContentValues();
 		long now = new Date().getTime();
 		Cursor c = getActivity().getContentResolver().query(
@@ -114,9 +124,11 @@ public final class CountersFragment extends Fragment implements
 		int timeId = c.getInt(0);
 		long start = c.getLong(3);
 		c.close();
+		// set value to running counter
 		long lenght = now - start;
 		cv = new ContentValues();
 		cv.put(RecordsDbHelper.LENGHT, lenght);
+		cv.put(RecordsDbHelper.ENDTIME, start + lenght);
 		getActivity().getContentResolver().update(
 				RecordsDbHelper.CONTENT_URI_TIMES, cv,
 				RecordsDbHelper.ID2 + "=?",
@@ -126,6 +138,7 @@ public final class CountersFragment extends Fragment implements
 		boolean isRunning = cursor.getInt(6) == 1;
 		int counterId;
 		if (isRunning) {
+			// if click to running counter, then switch to idle-counter
 			counterId = 1;
 		} else {
 			counterId = cursor.getInt(4);
@@ -145,7 +158,8 @@ public final class CountersFragment extends Fragment implements
 		SettingsActivity.visibleNotif(getActivity(), cursor.getLong(3),
 				cursor.getLong(2), cursor.getString(5));
 
-		TimeRecordsFragment timeRecordsFragment = (TimeRecordsFragment) ((MainActivity)getActivity()).findFragmentByPosition(1);
+		TimeRecordsFragment timeRecordsFragment = (TimeRecordsFragment) ((MainActivity) getActivity())
+				.findFragmentByPosition(1);
 		timeRecordsFragment.setNormalMode();
 	}
 
@@ -194,10 +208,13 @@ public final class CountersFragment extends Fragment implements
 
 	@Override
 	public void onReload() {
+		StartDateOption startDateOption = app.getStartDate(getActivity());
+		mStartdate = startDateOption.startDate;
+		((SherlockFragmentActivity)getActivity()).getSupportActionBar().setTitle(startDateOption.startDateName);
+		mAdapter.setStartDate(mStartdate);
 		loadermanager.restartLoader(1, null, this);
 	}
 
-	
 	@Override
 	public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2,
 			long arg3) {

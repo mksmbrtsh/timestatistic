@@ -52,6 +52,8 @@ public class RecordsDbHelper extends ContentProvider {
 	public final static String STARTTIME = OpenHelper.STARTTIME;
 	public final static String LENGHT = OpenHelper.LENGHT;
 	public final static String INTERVAL = OpenHelper.INTERVAL;
+	public final static String ENDTIME = OpenHelper.ENDTIME;
+	
 
 	
 	private static HashMap<String, String> timersProjectionMap;
@@ -202,43 +204,52 @@ public class RecordsDbHelper extends ContentProvider {
 			qb.setProjectionMap(timersProjectionMap);
 			selection = selection + ID + "=" + uri.getLastPathSegment();
 			break;
-		case TIMES:
+		case TIMES: {
+			String start;
+			if(selectionArgs!=null && selection == null)
+				start = selectionArgs[0];
+			else 
+				start = "0";
 			String e = qb.buildQueryString(false, TABLE_TIMERS
 					+ " LEFT OUTER JOIN " + TABLE_TIMES + " ON " + ID + " = "
 					+ TIMERSID, new String[] {
 					RecordsDbHelper.ID2 + " AS " + RecordsDbHelper.ID,
 					RecordsDbHelper.TIMERSID,
-					"SUM(" + RecordsDbHelper.LENGHT + ") AS "
+					"SUM(CASE WHEN " + RecordsDbHelper.ENDTIME +" >= '" + start + "' AND " + RecordsDbHelper.STARTTIME + " >= '" + start + "' THEN "+ RecordsDbHelper.LENGHT + " ELSE CASE WHEN " + RecordsDbHelper.ENDTIME +" >= '" + start +"' THEN " + RecordsDbHelper.ENDTIME +"- '" + start + "' ELSE '0' END END ) AS "
 							+ RecordsDbHelper.LENGHT,
-					"MAX(" + RecordsDbHelper.STARTTIME + ") AS"
+					"MAX(" + RecordsDbHelper.STARTTIME + ") AS "
 							+ RecordsDbHelper.STARTTIME, RecordsDbHelper.ID,
 					RecordsDbHelper.NAME, RecordsDbHelper.ISRUNNING,
 					RecordsDbHelper.COLOR, INTERVAL }, selection,
 					RecordsDbHelper.TIMERSID, null, null, null);
-			c = mDB.rawQuery(e, selectionArgs);
+			c = mDB.rawQuery(e, !(selectionArgs!=null && selection == null) ? selectionArgs : null );
 			c.setNotificationUri(getContext().getContentResolver(), uri);
 			return c;
+		}
 		case TIMES_ID:
 			qb.setTables(TABLE_TIMES);
 			qb.setProjectionMap(timesProjectionMap);
 			selection = selection + ID2 + "=" + uri.getLastPathSegment();
 			break;
 		case SUMTIMES: {
+			String start = selectionArgs[0];
 			String s = qb.buildQueryString(false, TABLE_TIMERS
 					+ " LEFT OUTER JOIN " + TABLE_TIMES + " ON " + ID + " = "
 					+ TIMERSID, new String[] {
 					RecordsDbHelper.TIMERSID,
-					"SUM(" + RecordsDbHelper.LENGHT + ") AS "
+					"SUM(CASE WHEN " + RecordsDbHelper.ENDTIME +" >= '" + start + "' THEN "+ RecordsDbHelper.LENGHT + " ELSE '0' END ) AS "
 							+ RecordsDbHelper.LENGHT,
 					"MAX(" + RecordsDbHelper.STARTTIME + ") AS"
 							+ RecordsDbHelper.STARTTIME, RecordsDbHelper.NAME,
 					RecordsDbHelper.ISRUNNING, RecordsDbHelper.COLOR, INTERVAL },
 					selection, RecordsDbHelper.TIMERSID, null, null, null);
-			c = mDB.rawQuery(s, selectionArgs);
+			c = mDB.rawQuery(s, null);
 			c.setNotificationUri(getContext().getContentResolver(), uri);
 			return c;
 		}
 		case ALLTIMES: {
+			if(selection!=null)
+				selection += " AND (" + RecordsDbHelper.ENDTIME + " >= ? OR " + RecordsDbHelper.ENDTIME + " IS NULL )";
 			String s = qb.buildQueryString(false, TABLE_TIMERS
 					+ " LEFT OUTER JOIN " + TABLE_TIMES + " ON " + ID + " = "
 					+ TIMERSID, new String[] {
@@ -246,7 +257,7 @@ public class RecordsDbHelper extends ContentProvider {
 					RecordsDbHelper.LENGHT,
 					RecordsDbHelper.STARTTIME,
 					RecordsDbHelper.NAME,
-					RecordsDbHelper.COLOR, RecordsDbHelper.ID2, INTERVAL },
+					RecordsDbHelper.COLOR, RecordsDbHelper.ID2, INTERVAL, RecordsDbHelper.ENDTIME },
 					selection, null, null, RecordsDbHelper.STARTTIME + " DESC", null);
 			c = mDB.rawQuery(s, selectionArgs);
 			c.setNotificationUri(getContext().getContentResolver(), uri);

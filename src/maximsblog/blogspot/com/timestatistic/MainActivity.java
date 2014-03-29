@@ -51,6 +51,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setTitle("");
 		setContentView(R.layout.activity_main);
 		mTitles = getResources().getStringArray(R.array.TitlePages);
 		// prepare ViewPagerIndicator
@@ -80,6 +81,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 					.findFragmentByTag("mUnionRecordDialog");
 			if (unionRecordDialogFragment != null)
 				unionRecordDialogFragment.setDialogListener(this);
+			StartDateSetDialogFragment startDateSetDialogFragment = (StartDateSetDialogFragment) fm.findFragmentByTag("mStartDateSetDialogFragment");
+			if(startDateSetDialogFragment!=null)
+				startDateSetDialogFragment.setDialogListener(this);
 		}
 	}
 
@@ -133,6 +137,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		FragmentTransaction ft;
 		switch (item.getItemId()) {
+		case R.id.item_starts:
+			StartDateSetDialogFragment startDateSetDialogFragment = new StartDateSetDialogFragment();
+			startDateSetDialogFragment.setDialogListener(this);
+			startDateSetDialogFragment.show(this.getSupportFragmentManager(),
+					"mStartDateSetDialogFragment");
+			break;
 		case R.id.item_add:
 			CounterEditorDialogFragment counterEditorDialogFragment = new CounterEditorDialogFragment();
 			counterEditorDialogFragment.setIdCounter(-1);
@@ -226,6 +236,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 		TimeRecordsFragment timeRecordsFragment = (TimeRecordsFragment) ((MainFragments) findFragmentByPosition(1));
 		timeRecordsFragment.setNormalMode();
 		timeRecordsFragment.onReload();
+		DiagramFragment diagramFragment = (DiagramFragment) ((MainFragments) findFragmentByPosition(2));
+		if(diagramFragment != null)
+			diagramFragment.onReload();
 	}
 
 	@Override

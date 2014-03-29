@@ -1,5 +1,7 @@
 package maximsblog.blogspot.com.timestatistic;
 
+import java.util.Calendar;
+
 import android.app.Application;
 import android.content.Context;
 import android.database.Cursor;
@@ -30,5 +32,61 @@ public class app extends Application {
 	
 	public static void delAlarm(Context context) {
 		app.alarm.CancelAlarm(context);
+	}
+	
+	
+	
+	public static StartDateOption getStartDate(Context context) {
+		int checkedItem = PreferenceManager.getDefaultSharedPreferences(
+				context).getInt(SettingsActivity.STARTTIMEFILTER, 4);
+		Calendar calendar = Calendar.getInstance();
+		long result;
+		String resultName;
+		String[] startDateNames = context.getResources().getStringArray(R.array.StartFilters);
+		resultName = startDateNames[checkedItem];
+		switch (checkedItem) {
+		
+		case SettingsActivity.STARTTIMEFILTERS.TODAY:
+			calendar.set(Calendar.MILLISECOND, 0);
+			calendar.set(Calendar.SECOND, 0);
+			calendar.set(Calendar.MINUTE, 0);
+			calendar.set(Calendar.HOUR_OF_DAY, 0);
+			result = calendar.getTimeInMillis();
+			break;
+		case SettingsActivity.STARTTIMEFILTERS.WEEK:
+			calendar.set(Calendar.MILLISECOND, 0);
+			calendar.set(Calendar.SECOND, 0);
+			calendar.set(Calendar.MINUTE, 0);
+			calendar.set(Calendar.HOUR_OF_DAY, 0);
+			calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
+			result = calendar.getTimeInMillis();
+			break;
+		case SettingsActivity.STARTTIMEFILTERS.MOUNTH:
+			calendar.set(Calendar.MILLISECOND, 0);
+			calendar.set(Calendar.SECOND, 0);
+			calendar.set(Calendar.MINUTE, 0);
+			calendar.set(Calendar.HOUR_OF_DAY, 0);
+			calendar.set(Calendar.DAY_OF_MONTH, 1);
+			result = calendar.getTimeInMillis();
+			break;
+		case SettingsActivity.STARTTIMEFILTERS.YEAR:
+			calendar.set(Calendar.MILLISECOND, 0);
+			calendar.set(Calendar.SECOND, 0);
+			calendar.set(Calendar.MINUTE, 0);
+			calendar.set(Calendar.HOUR_OF_DAY, 0);
+			calendar.set(Calendar.DAY_OF_MONTH, 1);
+			calendar.set(Calendar.MONTH, 0);
+			result = calendar.getTimeInMillis();
+			break;
+		case SettingsActivity.STARTTIMEFILTERS.ALLTIME:
+			result = 0;
+			break;
+		default:
+			result = 0;
+		}
+		StartDateOption startDateOption = new StartDateOption();
+		startDateOption.startDate = result;
+		startDateOption.startDateName = resultName;
+		return startDateOption;
 	}
 }

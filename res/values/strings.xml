@@ -51,4 +51,13 @@
     <string name="interval">Remember interval</string>
     <string name="help">Help</string>
     <string name="union">Union</string>
+    <string name="startdateset">Since time filter</string>
+    <string-array name="StartFilters">
+        <item>Today</item>
+        <item>Week</item>
+        <item>Mounth</item>
+        <item>Year</item>
+        <item>All time</item>
+    </string-array>
+    <string name="start">Since</string>
 </resources>

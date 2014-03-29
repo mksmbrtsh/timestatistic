@@ -47,8 +47,7 @@ public class TimeRecordsFragment extends Fragment implements
 	private ListView mList;
 	private TimesCursorAdapter mAdapter;
 	private View mUnionPanel;
-	//private int mChoiceUnionMode;
-	//private HashMap<Integer, Boolean> mSelected;
+	private long mStartdate;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -57,9 +56,9 @@ public class TimeRecordsFragment extends Fragment implements
 		String[] uiBindFrom = { RecordsDbHelper.NAME,
 				RecordsDbHelper.STARTTIME, RecordsDbHelper.LENGHT };
 		int[] uiBindTo = { R.id.name, R.id.start, R.id.lenght };
-
+		mStartdate = app.getStartDate(getActivity()).startDate;
 		mAdapter = new TimesCursorAdapter(this.getActivity(),
-				R.layout.time_row, null, uiBindFrom, uiBindTo, 0);
+				R.layout.time_row, null, uiBindFrom, uiBindTo, 0, mStartdate);
 		loadermanager.initLoader(1, null, this);
 		if (savedInstanceState != null) {
 			mAdapter.setSelectedPosition(savedInstanceState.getInt("mChoiceUnionMode"));
@@ -100,9 +99,10 @@ public class TimeRecordsFragment extends Fragment implements
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
+		String[] selectionArgs = new String[] { String.valueOf(app.getStartDate(getActivity()).startDate)};
 		CursorLoader loader = new CursorLoader(this.getActivity(),
 				RecordsDbHelper.CONTENT_URI_ALLTIMES, null,
-				RecordsDbHelper.STARTTIME + " IS NOT NULL ", null, null);
+				RecordsDbHelper.STARTTIME + " IS NOT NULL ", selectionArgs, null);
 		return loader;
 	}
 
@@ -129,6 +129,8 @@ public class TimeRecordsFragment extends Fragment implements
 
 	@Override
 	public void onReload() {
+		mStartdate = app.getStartDate(getActivity()).startDate;
+		mAdapter.setStartDate(mStartdate);
 		loadermanager.restartLoader(1, null, this);
 	}
 
@@ -249,8 +251,7 @@ public class TimeRecordsFragment extends Fragment implements
 			unionRecordDialog.show(this.getActivity()
 					.getSupportFragmentManager(), "mUnionRecordDialog");
 		} else {
-			mAdapter.setChoiceUnionMode(TimesCursorAdapter.NORMAL_MODE);
-			mAdapter.getSelected().clear();
+			setNormalMode();
 			onTimeRecordChange();
 		}
 	}

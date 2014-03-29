@@ -15,9 +15,12 @@ import android.widget.TextView;
 
 public class CountersCursorAdapter extends SimpleCursorAdapter {
 
+	private long mStartdate;
+	
 	public CountersCursorAdapter(Context context, int layout, Cursor c,
-			String[] from, int[] to, int flags) {
+			String[] from, int[] to, int flags, long startdate) {
 		super(context, layout, c, from, to, flags);
+		mStartdate = startdate;
 	}
 
 	@Override
@@ -31,6 +34,8 @@ public class CountersCursorAdapter extends SimpleCursorAdapter {
 		t.setTextColor(intColor);
 		if (isRunning) {
 				long start = cursor.getLong(3);
+				if(start < mStartdate)
+					start = mStartdate;
 				long now = new Date().getTime();
 				long lenght = now - start +  cursor.getLong(2);
 
@@ -39,6 +44,17 @@ public class CountersCursorAdapter extends SimpleCursorAdapter {
 				
 		} else {
 			long lenght = cursor.getLong(2);
+			long start = cursor.getLong(3);
+			/*long end = cursor.getLong(9);
+			/*if(mStartdate>0){
+				if(start > mStartdate){
+					lenght = start + last_l - mStartdate;
+				} else
+				if(start + last_l > mStartdate){
+					lenght = start + last_l - mStartdate;
+				} else
+					lenght = 0;
+			}*/
 			setTime(t, lenght);
 			view.findViewById(R.id.selectorLayout).setVisibility(View.GONE);
 		}
@@ -81,6 +97,10 @@ public class CountersCursorAdapter extends SimpleCursorAdapter {
 			s.append(mContext.getString(mContext.getResources().getIdentifier(
 					res + "s", "string", mContext.getPackageName())));
 		return s.toString();
+	}
+
+	public void setStartDate(long startdate) {
+		mStartdate = startdate;
 	}
 	
 
