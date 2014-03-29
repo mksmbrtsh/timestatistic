@@ -56,7 +56,7 @@ public class TimeRecordsFragment extends Fragment implements
 		String[] uiBindFrom = { RecordsDbHelper.NAME,
 				RecordsDbHelper.STARTTIME, RecordsDbHelper.LENGHT };
 		int[] uiBindTo = { R.id.name, R.id.start, R.id.lenght };
-		mStartdate = app.getStartDate(getActivity());
+		mStartdate = app.getStartDate(getActivity()).startDate;
 		mAdapter = new TimesCursorAdapter(this.getActivity(),
 				R.layout.time_row, null, uiBindFrom, uiBindTo, 0, mStartdate);
 		loadermanager.initLoader(1, null, this);
@@ -99,7 +99,7 @@ public class TimeRecordsFragment extends Fragment implements
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
-		String[] selectionArgs = new String[] { String.valueOf(app.getStartDate(getActivity()))};
+		String[] selectionArgs = new String[] { String.valueOf(app.getStartDate(getActivity()).startDate)};
 		CursorLoader loader = new CursorLoader(this.getActivity(),
 				RecordsDbHelper.CONTENT_URI_ALLTIMES, null,
 				RecordsDbHelper.STARTTIME + " IS NOT NULL ", selectionArgs, null);
@@ -129,7 +129,7 @@ public class TimeRecordsFragment extends Fragment implements
 
 	@Override
 	public void onReload() {
-		mStartdate = app.getStartDate(getActivity());
+		mStartdate = app.getStartDate(getActivity()).startDate;
 		mAdapter.setStartDate(mStartdate);
 		loadermanager.restartLoader(1, null, this);
 	}

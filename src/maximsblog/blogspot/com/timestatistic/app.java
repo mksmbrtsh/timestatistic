@@ -34,11 +34,16 @@ public class app extends Application {
 		app.alarm.CancelAlarm(context);
 	}
 	
-	public static long getStartDate(Context context) {
+	
+	
+	public static StartDateOption getStartDate(Context context) {
 		int checkedItem = PreferenceManager.getDefaultSharedPreferences(
 				context).getInt(SettingsActivity.STARTTIMEFILTER, 4);
 		Calendar calendar = Calendar.getInstance();
 		long result;
+		String resultName;
+		String[] startDateNames = context.getResources().getStringArray(R.array.StartFilters);
+		resultName = startDateNames[checkedItem];
 		switch (checkedItem) {
 		
 		case SettingsActivity.STARTTIMEFILTERS.TODAY:
@@ -79,6 +84,9 @@ public class app extends Application {
 		default:
 			result = 0;
 		}
-		return result;
+		StartDateOption startDateOption = new StartDateOption();
+		startDateOption.startDate = result;
+		startDateOption.startDateName = resultName;
+		return startDateOption;
 	}
 }

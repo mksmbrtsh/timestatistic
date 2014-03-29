@@ -6,6 +6,8 @@ import java.util.EnumSet;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+
 import maximsblog.blogspot.com.timestatistic.MainActivity.MainFragments;
 
 import android.app.NotificationManager;
@@ -57,7 +59,9 @@ public final class CountersFragment extends Fragment implements
 		loadermanager = getLoaderManager();
 		String[] uiBindFrom = { RecordsDbHelper.LENGHT, RecordsDbHelper.NAME };
 		int[] uiBindTo = { R.id.current, R.id.name };
-		mStartdate = app.getStartDate(getActivity());
+		StartDateOption startDateOption = app.getStartDate(getActivity());
+		mStartdate = startDateOption.startDate;
+		((SherlockFragmentActivity)getActivity()).getSupportActionBar().setTitle(startDateOption.startDateName);
 		mAdapter = new CountersCursorAdapter(this.getActivity(),
 				R.layout.count_row, null, uiBindFrom, uiBindTo, 0, mStartdate);
 		loadermanager.initLoader(1, null, this);
@@ -204,7 +208,9 @@ public final class CountersFragment extends Fragment implements
 
 	@Override
 	public void onReload() {
-		mStartdate = app.getStartDate(getActivity());
+		StartDateOption startDateOption = app.getStartDate(getActivity());
+		mStartdate = startDateOption.startDate;
+		((SherlockFragmentActivity)getActivity()).getSupportActionBar().setTitle(startDateOption.startDateName);
 		mAdapter.setStartDate(mStartdate);
 		loadermanager.restartLoader(1, null, this);
 	}

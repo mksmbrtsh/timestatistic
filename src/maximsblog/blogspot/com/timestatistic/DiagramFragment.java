@@ -112,7 +112,7 @@ public class DiagramFragment extends Fragment implements
 	@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
 		String[] selectionArgs = new String[] { String.valueOf(app
-				.getStartDate(getActivity())) };
+				.getStartDate(getActivity()).startDate) };
 		CursorLoader loader = new CursorLoader(this.getActivity(),
 				RecordsDbHelper.CONTENT_URI_TIMES, null, null, selectionArgs,
 				null);
@@ -131,7 +131,7 @@ public class DiagramFragment extends Fragment implements
 			long id = cursor.getLong(0);
 			long t = cursor.getLong(2);
 			long start = cursor.getLong(3);
-			long startdate = app.getStartDate(getActivity());
+			long startdate = app.getStartDate(getActivity()).startDate;
 			if (start < startdate)
 				start = startdate;
 			String s = cursor.getString(5);
