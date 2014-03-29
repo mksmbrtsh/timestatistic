@@ -151,7 +151,7 @@ public class OpenHelper extends SQLiteOpenHelper {
 			db.execSQL("ALTER TABLE " + TABLE_TIMERS + " ADD COLUMN "
 					+ INTERVAL + " INTEGER DEFAULT 900000");
 		} else if (oldVersion == 2 && newVersion == 3) {
-			db.execSQL("ALTER TABLE " + TABLE_TIMES + " ADD COLUMN " + ENDTIME
+ 			db.execSQL("ALTER TABLE " + TABLE_TIMES + " ADD COLUMN " + ENDTIME
 					+ " INTEGER");
 			calculateEndTime(db);
 		} else if (oldVersion == 1 && newVersion == 3) {

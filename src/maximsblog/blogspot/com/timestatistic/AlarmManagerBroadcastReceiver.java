@@ -48,9 +48,9 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
 		final PendingIntent contentIntent = PendingIntent.getActivity(
 				context.getApplicationContext(), 0, intent1,
 				Intent.FLAG_ACTIVITY_CLEAR_TASK);
-		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
-				context).setSmallIcon(R.drawable.ic_notification).setLights(
-				Color.RED, 500, 500);
+		NotificationCompat.Builder mBuilder;
+		mBuilder = new NotificationCompat.Builder(context).setSmallIcon(
+				R.drawable.ic_notification).setLights(Color.RED, 500, 500);
 		Uri alarmSound = RingtoneManager
 				.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 		if (alarmSound == null) {
@@ -81,7 +81,8 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
 		Intent intent = new Intent(context, AlarmManagerBroadcastReceiver.class);
 		intent.putExtra(ONE_TIME, Boolean.FALSE);
 		intent.putExtra(NAME, name);
-		PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent,
+				PendingIntent.FLAG_UPDATE_CURRENT);
 		am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), l,
 				pi);
 	}

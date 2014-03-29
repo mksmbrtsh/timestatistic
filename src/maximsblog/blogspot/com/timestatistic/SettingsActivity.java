@@ -15,6 +15,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.Preference;
@@ -23,6 +24,7 @@ import android.preference.PreferenceManager;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.Builder;
 import android.widget.Toast;
 
 public class SettingsActivity extends SherlockPreferenceActivity implements
@@ -93,7 +95,14 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 			final PendingIntent contentIntent = PendingIntent.getActivity(
 					context.getApplicationContext(), 0, intent1,
 					Intent.FLAG_ACTIVITY_CLEAR_TASK);
-			NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
+			Builder mBuilder;
+			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+				mBuilder = new NotificationCompat.Builder(
+						context).setSmallIcon(R.drawable.ic_notification)
+						.setContentTitle(name).setOngoing(false)
+						.setWhen(new Date().getTime() - lenght)
+						.setAutoCancel(false).setUsesChronometer(true);
+				else mBuilder = new NotificationCompat.Builder(
 					context).setSmallIcon(R.drawable.ic_status_bar_not)
 					.setContentTitle(name).setOngoing(false)
 					.setWhen(new Date().getTime() - lenght)
