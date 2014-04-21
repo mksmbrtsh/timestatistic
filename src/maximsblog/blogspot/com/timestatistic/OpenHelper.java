@@ -16,7 +16,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class OpenHelper extends SQLiteOpenHelper {
 
 	final static String DB_NAME = "timestat.db";
-	final static int DB_VER = 3;
+	final static int DB_VER = 4;
 	final static String TABLE_TIMERS = "timers";
 	final static String TABLE_TIMES = "times";
 	public final static String ID = "_id";
@@ -29,6 +29,7 @@ public class OpenHelper extends SQLiteOpenHelper {
 	public final static String STARTTIME = "start";
 	public final static String LENGHT = "lenght";
 	public final static String ENDTIME = "endtime";
+	public final static String NOTE = "note";
 
 	// public static String DB_FILEPATH =
 	// "/data/data/maximsblog.blogspot.com.timestatistic/databases/database.db";
@@ -41,7 +42,7 @@ public class OpenHelper extends SQLiteOpenHelper {
 	final String CREATE_TABLE_TIMES = "CREATE TABLE " + TABLE_TIMES + "( "
 			+ ID2 + " INTEGER PRIMARY KEY autoincrement, " + TIMERSID
 			+ " INTEGER, " + STARTTIME + " INTEGER, " + LENGHT
-			+ " INTEGER DEFAULT 0, " + ENDTIME + " INTEGER )";
+			+ " INTEGER DEFAULT 0, " + ENDTIME + " INTEGER, " + NOTE + " TEXT )";
 
 	final String DROP_TABLE_TIMERS = "DROP TABLE IF EXISTS " + TABLE_TIMERS;
 	final String DROP_TABLE_TIMES = "DROP TABLE IF EXISTS " + TABLE_TIMES;
@@ -160,6 +161,27 @@ public class OpenHelper extends SQLiteOpenHelper {
 			db.execSQL("ALTER TABLE " + TABLE_TIMES + " ADD COLUMN " + ENDTIME
 					+ " INTEGER");
 			calculateEndTime(db);
+		} else if(newVersion == 4){
+			if(oldVersion == 1) {
+				db.execSQL("ALTER TABLE " + TABLE_TIMERS + " ADD COLUMN "
+						+ INTERVAL + " INTEGER DEFAULT 900000");
+				db.execSQL("ALTER TABLE " + TABLE_TIMES + " ADD COLUMN " + ENDTIME
+						+ " INTEGER");
+				calculateEndTime(db);
+				db.execSQL("ALTER TABLE " + TABLE_TIMES + " ADD COLUMN " + NOTE
+						+ " TEXT");
+			}
+			if(oldVersion == 2) {
+				db.execSQL("ALTER TABLE " + TABLE_TIMES + " ADD COLUMN " + ENDTIME
+						+ " INTEGER");
+				calculateEndTime(db);
+				db.execSQL("ALTER TABLE " + TABLE_TIMES + " ADD COLUMN " + NOTE
+						+ " TEXT");
+			}
+			if(oldVersion == 3) {
+				db.execSQL("ALTER TABLE " + TABLE_TIMES + " ADD COLUMN " + NOTE
+						+ " TEXT");
+			}
 		} else {
 			db.execSQL(DROP_TABLE_TIMERS);
 			db.execSQL(DROP_TABLE_TIMES);
