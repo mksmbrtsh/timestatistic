@@ -52,6 +52,7 @@ public class TimesCursorAdapter extends SimpleCursorAdapter {
 		public TextView lenght;
 		public View LinearLayout01;
 		public CheckBox check;
+		public View note;
 	}
 	
 	@Override
@@ -66,13 +67,17 @@ public class TimesCursorAdapter extends SimpleCursorAdapter {
 			holder.lenght = (TextView) view.findViewById(R.id.lenght);
 			holder.LinearLayout01 = view.findViewById(R.id.before_record);
 			holder.check = (CheckBox) view.findViewById(R.id.check);
+			holder.note = view.findViewById(R.id.note);
 			view.setTag(holder);
 		} else {
 			holder = (ViewHolder) view.getTag();
 		}
 		long start = cursor.getLong(2);
 		long stop = cursor.getLong(7);
-		
+		if(cursor.getString(8)!=null)
+			holder.note.setVisibility(View.VISIBLE);
+		else
+			holder.note.setVisibility(View.GONE);
 		Date d = new Date(start);
 		holder.start.setText(mSimpleDateFormat.format(d));
 		if (cursor.getLong(1) == 0)

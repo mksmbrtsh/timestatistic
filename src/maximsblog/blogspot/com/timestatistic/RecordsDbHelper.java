@@ -53,7 +53,7 @@ public class RecordsDbHelper extends ContentProvider {
 	public final static String LENGHT = OpenHelper.LENGHT;
 	public final static String INTERVAL = OpenHelper.INTERVAL;
 	public final static String ENDTIME = OpenHelper.ENDTIME;
-	
+	public final static String NOTE = OpenHelper.NOTE;
 
 	
 	private static HashMap<String, String> timersProjectionMap;
@@ -220,7 +220,7 @@ public class RecordsDbHelper extends ContentProvider {
 					"MAX(" + RecordsDbHelper.STARTTIME + ") AS "
 							+ RecordsDbHelper.STARTTIME, RecordsDbHelper.ID,
 					RecordsDbHelper.NAME, RecordsDbHelper.ISRUNNING,
-					RecordsDbHelper.COLOR, INTERVAL }, selection,
+					RecordsDbHelper.COLOR, INTERVAL, NOTE }, selection,
 					RecordsDbHelper.TIMERSID, null, null, null);
 			c = mDB.rawQuery(e, !(selectionArgs!=null && selection == null) ? selectionArgs : null );
 			c.setNotificationUri(getContext().getContentResolver(), uri);
@@ -241,7 +241,7 @@ public class RecordsDbHelper extends ContentProvider {
 							+ RecordsDbHelper.LENGHT,
 					"MAX(" + RecordsDbHelper.STARTTIME + ") AS"
 							+ RecordsDbHelper.STARTTIME, RecordsDbHelper.NAME,
-					RecordsDbHelper.ISRUNNING, RecordsDbHelper.COLOR, INTERVAL },
+					RecordsDbHelper.ISRUNNING, RecordsDbHelper.COLOR, INTERVAL, NOTE },
 					selection, RecordsDbHelper.TIMERSID, null, null, null);
 			c = mDB.rawQuery(s, null);
 			c.setNotificationUri(getContext().getContentResolver(), uri);
@@ -257,7 +257,7 @@ public class RecordsDbHelper extends ContentProvider {
 					RecordsDbHelper.LENGHT,
 					RecordsDbHelper.STARTTIME,
 					RecordsDbHelper.NAME,
-					RecordsDbHelper.COLOR, RecordsDbHelper.ID2, INTERVAL, RecordsDbHelper.ENDTIME },
+					RecordsDbHelper.COLOR, RecordsDbHelper.ID2, INTERVAL, RecordsDbHelper.ENDTIME, NOTE },
 					selection, null, null, RecordsDbHelper.STARTTIME + " DESC", null);
 			c = mDB.rawQuery(s, selectionArgs);
 			c.setNotificationUri(getContext().getContentResolver(), uri);
