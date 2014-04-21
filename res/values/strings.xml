@@ -60,4 +60,5 @@
         <item>All time</item>
     </string-array>
     <string name="start">Since</string>
+    <string name="note">Примечание</string>
 </resources>

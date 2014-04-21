@@ -142,10 +142,11 @@ public class TimeRecordsFragment extends Fragment implements
 			int idRecord = cursor.getInt(5);
 			long start = cursor.getLong(2);
 			long lenght = cursor.getLong(1);
+			String note = cursor.getString(8);
 			SplitRecordDialogFragment mSplitRecordDialog = new SplitRecordDialogFragment();
 			mSplitRecordDialog
 					.setCounterDialogListener((MainActivity) getActivity());
-			mSplitRecordDialog.setValues(idtimer, idRecord, start, lenght);
+			mSplitRecordDialog.setValues(idtimer, idRecord, start, lenght, note == null ? "": note);
 			mSplitRecordDialog.show(this.getActivity()
 					.getSupportFragmentManager(), "mSplitRecordDialog");
 		} else {
