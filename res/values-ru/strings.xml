@@ -13,6 +13,7 @@
         <item>Счётчики</item>
         <item>Записи</item>
         <item>Диаграмма</item>
+        <item>Дневник</item>
     </string-array>
     <string name="del">Удалить</string>
     <string name="day1">день</string>

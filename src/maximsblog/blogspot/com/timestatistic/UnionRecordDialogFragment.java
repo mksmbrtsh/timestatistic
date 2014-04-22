@@ -103,7 +103,7 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 		mCurrentCounterAdapter
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		mCurrentCounter.setAdapter(mCurrentCounterAdapter);
-		mUnionDateTimeInterval = (TextView) v.findViewById(R.id.textView1);
+		mUnionDateTimeInterval = (TextView) v.findViewById(R.id.note_text);
 		mCurrentNoteEdit = (EditText)v.findViewById(R.id.current_note);
 		return v;
 	}

@@ -108,8 +108,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 			} else if (position == 1) {
 				TimeRecordsFragment fg = TimeRecordsFragment.newInstance();
 				f = fg;
-			} else {
+			} else if(position == 2){
 				DiagramFragment fg = DiagramFragment.newInstance();
+				f = fg;
+			} else {
+				DiaryFragment fg = DiaryFragment.newInstance();
 				f = fg;
 			}
 			return f;
@@ -239,6 +242,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 		DiagramFragment diagramFragment = (DiagramFragment) ((MainFragments) findFragmentByPosition(2));
 		if(diagramFragment != null)
 			diagramFragment.onReload();
+		DiaryFragment diaryFragment = (DiaryFragment) ((MainFragments) findFragmentByPosition(3));
+		if(diaryFragment != null)
+			diaryFragment.onReload();
 	}
 
 	@Override
@@ -255,7 +261,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onPageSelected(int position) {
-		if (position == 2 || position == 1)
+		if (position == 2 || position == 1 || position == 3)
 			((MainFragments) findFragmentByPosition(position)).onReload();
 	}
 

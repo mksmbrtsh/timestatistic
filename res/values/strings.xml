@@ -13,6 +13,7 @@
         <item>Counters</item>
         <item>Notes</item>
         <item>Diagrama</item>
+        <item>Diary</item>
     </string-array>
     <string name="del">Delete</string>
     <string name="day1">day</string>

@@ -35,18 +35,17 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.support.v4.widget.SimpleCursorAdapter;
 
-public class TimeRecordsFragment extends Fragment implements
+public class DiaryFragment extends Fragment implements
 		LoaderCallbacks<Cursor>, MainFragments, OnItemClickListener,
 		OnItemLongClickListener, OnClickListener {
-	public static TimeRecordsFragment newInstance() {
+	public static DiaryFragment newInstance() {
 
-		return new TimeRecordsFragment();
+		return new DiaryFragment();
 	}
 
 	private LoaderManager loadermanager;
 	private ListView mList;
-	private TimesCursorAdapter mAdapter;
-	private View mUnionPanel;
+	private DiaryCursorAdapter mAdapter;
 	private long mStartdate;
 
 	@Override
@@ -54,11 +53,11 @@ public class TimeRecordsFragment extends Fragment implements
 		super.onCreate(savedInstanceState);
 		loadermanager = getLoaderManager();
 		String[] uiBindFrom = { RecordsDbHelper.NAME,
-				RecordsDbHelper.STARTTIME, RecordsDbHelper.LENGHT };
-		int[] uiBindTo = { R.id.name, R.id.time, R.id.lenght };
+				RecordsDbHelper.STARTTIME, RecordsDbHelper.LENGHT, RecordsDbHelper.NOTE };
+		int[] uiBindTo = { R.id.name, R.id.time, R.id.lenght, R.id.note_text };
 		mStartdate = app.getStartDate(getActivity()).startDate;
-		mAdapter = new TimesCursorAdapter(this.getActivity(),
-				R.layout.time_row, null, uiBindFrom, uiBindTo, 0, mStartdate);
+		mAdapter = new DiaryCursorAdapter(this.getActivity(),
+				R.layout.diary_row, null, uiBindFrom, uiBindTo, 0, mStartdate);
 		loadermanager.initLoader(1, null, this);
 		if (savedInstanceState != null) {
 			mAdapter.setSelectedPosition(savedInstanceState.getInt("mChoiceUnionMode"));
@@ -81,19 +80,10 @@ public class TimeRecordsFragment extends Fragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		LinearLayout layout = (LinearLayout) inflater.inflate(
-				R.layout.fragment_time_records, container, false);
+				R.layout.fragment_diary, container, false);
 		mList = (ListView) layout.findViewById(R.id.listView1);
 		mList.setAdapter(mAdapter);
-		mList.setOnItemClickListener(this);
-		mList.setOnItemLongClickListener(this);
 
-		mUnionPanel = layout.findViewById(R.id.union_panel);
-		mUnionPanel.setVisibility(View.GONE);
-		Button mUnionButton = (Button) mUnionPanel.findViewById(R.id.ok);
-		Button mCancelUnionButton = (Button) mUnionPanel
-				.findViewById(R.id.cancel);
-		mUnionButton.setOnClickListener(this);
-		mCancelUnionButton.setOnClickListener(this);
 		return layout;
 	}
 
@@ -102,7 +92,7 @@ public class TimeRecordsFragment extends Fragment implements
 		String[] selectionArgs = new String[] { String.valueOf(app.getStartDate(getActivity()).startDate)};
 		CursorLoader loader = new CursorLoader(this.getActivity(),
 				RecordsDbHelper.CONTENT_URI_ALLTIMES, null,
-				RecordsDbHelper.STARTTIME + " IS NOT NULL ", selectionArgs, null);
+				RecordsDbHelper.STARTTIME + " IS NOT NULL AND " + RecordsDbHelper.NOTE + " IS NOT NULL", selectionArgs, null);
 		return loader;
 	}
 
@@ -116,8 +106,6 @@ public class TimeRecordsFragment extends Fragment implements
 				mAdapter.setSelectedPosition(TimesCursorAdapter.NORMAL_MODE);
 				mAdapter.getSelected().clear();
 			}
-			if (mAdapter.getChoiceUnionMode() != TimesCursorAdapter.NORMAL_MODE)
-				mUnionPanel.setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -165,7 +153,6 @@ public class TimeRecordsFragment extends Fragment implements
 					if(position == mAdapter.getChoiceUnionMode()) {
 						mAdapter.setChoiceUnionMode(TimesCursorAdapter.NORMAL_MODE);
 						mAdapter.getSelected().clear();
-						mUnionPanel.setVisibility(View.GONE);
 						onTimeRecordChange();
 						return;
 					}
@@ -202,7 +189,6 @@ public class TimeRecordsFragment extends Fragment implements
 		mAdapter.getSelected().clear();
 		mAdapter.setChoiceUnionMode(position);
 		
-		mUnionPanel.setVisibility(View.VISIBLE);
 		onTimeRecordChange();
 		return true;
 	}
@@ -263,7 +249,6 @@ public class TimeRecordsFragment extends Fragment implements
 	public void setNormalMode() {
 		mAdapter.setSelectedPosition(TimesCursorAdapter.NORMAL_MODE);
 		mAdapter.getSelected().clear();
-		mUnionPanel.setVisibility(View.GONE);
 	}
 
 }

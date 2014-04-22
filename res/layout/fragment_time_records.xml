@@ -25,7 +25,7 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/start"
+        android:id="@+id/time"
         android:layout_width="80dip"
         android:layout_height="wrap_content"
         android:layout_margin="4dip"
