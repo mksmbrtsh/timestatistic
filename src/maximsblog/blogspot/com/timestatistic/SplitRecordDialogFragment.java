@@ -328,7 +328,7 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 		cv.put(RecordsDbHelper.STARTTIME, mCurrentStart);
 		cv.put(RecordsDbHelper.LENGHT, mCurrentLenght);
 		cv.put(RecordsDbHelper.ENDTIME, mCurrentStart + mCurrentLenght);
-		String note = mCurrentNoteEdit.getText().toString();
+		String note = mCurrentNoteEdit.getText().toString().trim();;
 		if(note.length() == 0)
 			note = null;
 		cv.put(RecordsDbHelper.NOTE, note);
@@ -343,7 +343,7 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 			cv.put(RecordsDbHelper.STARTTIME, mOriginalStart);
 			cv.put(RecordsDbHelper.LENGHT, mCurrentStart - mOriginalStart);
 			cv.put(RecordsDbHelper.ENDTIME, mCurrentStart);
-			note = mBeforeNoteEdit.getText().toString();
+			note = mBeforeNoteEdit.getText().toString().trim();;
 			if(note.length() == 0)
 				note = null;
 			cv.put(RecordsDbHelper.NOTE, note);
@@ -365,9 +365,8 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 			}
 			else {
 				cv.put(RecordsDbHelper.LENGHT, 0);
-				//cv.put(RecordsDbHelper.ENDTIME, 0);
 			}
-			note = mAfterNoteEdit.getText().toString();
+			note = mAfterNoteEdit.getText().toString().trim();;
 			if(note.length() == 0)
 				note = null;
 			cv.put(RecordsDbHelper.NOTE, note);
