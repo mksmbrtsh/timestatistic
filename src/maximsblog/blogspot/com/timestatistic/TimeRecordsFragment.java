@@ -224,6 +224,7 @@ public class TimeRecordsFragment extends Fragment implements
 			long clenght = -1;
 			boolean nowCounter = false;
 			int iDtimer = -1;
+			String note = null;
 			ArrayList<Integer> idrecords = new ArrayList<Integer>();
 			HashMap<Integer, Boolean> selected = mAdapter.getSelected();
 			for (Entry<Integer, Boolean> iterable_element : selected.entrySet()) {
@@ -235,12 +236,14 @@ public class TimeRecordsFragment extends Fragment implements
 				if (clenght < times.getLong(1)) {
 					clenght = times.getLong(1);
 					iDtimer = times.getInt(0);
+					note = times.getString(8);
 				}
 				lenght += times.getLong(1);
 				idrecords.add(times.getInt(5));
 				if (times.getLong(1) == 0) {
 					nowCounter = true;
 					iDtimer = times.getInt(5);
+					note = times.getString(8);
 				}
 
 			}
@@ -248,7 +251,7 @@ public class TimeRecordsFragment extends Fragment implements
 			UnionRecordDialogFragment unionRecordDialog = new UnionRecordDialogFragment();
 			unionRecordDialog.setDialogListener((MainActivity) getActivity());
 			unionRecordDialog.setValues(mAdapter.getSelected(), start, lenght,
-					nowCounter, iDtimer, idrecords);
+					nowCounter, iDtimer, idrecords, note);
 			unionRecordDialog.show(this.getActivity()
 					.getSupportFragmentManager(), "mUnionRecordDialog");
 		} else {

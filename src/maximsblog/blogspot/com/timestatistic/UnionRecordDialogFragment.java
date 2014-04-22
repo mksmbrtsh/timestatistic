@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,6 +47,8 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 			DateFormat.SHORT, DateFormat.SHORT);
 
 	private TextView mUnionDateTimeInterval;
+	private EditText mCurrentNoteEdit;
+	private String mCurrentNote;
 
 	public void setDialogListener(MainActivity mainActivity) {
 		mListener = mainActivity;
@@ -60,6 +63,7 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 			mLenght = savedInstanceState.getLong("mLenght");
 			mIDtimer = savedInstanceState.getInt("mIDtimer");
 			mNowCounter = savedInstanceState.getBoolean("mNowCounter");
+			mCurrentNote = savedInstanceState.getString("mCurrentNoteEdit");
 			mIdrecords = (ArrayList<Integer>) savedInstanceState
 					.getSerializable("mIdrecords");
 			mCurrentPosition = savedInstanceState.getInt("mCurrentPosition");
@@ -78,6 +82,7 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 		outState.putSerializable("mIdrecords", mIdrecords);
 		outState.putBoolean("mNowCounter", mNowCounter);
 		outState.putInt("mCurrentPosition", mCurrentPosition);
+		outState.putString("mCurrentNoteEdit", mCurrentNoteEdit.getText().toString());
 		super.onSaveInstanceState(outState);
 	};
 
@@ -99,6 +104,7 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		mCurrentCounter.setAdapter(mCurrentCounterAdapter);
 		mUnionDateTimeInterval = (TextView) v.findViewById(R.id.textView1);
+		mCurrentNoteEdit = (EditText)v.findViewById(R.id.current_note);
 		return v;
 	}
 
@@ -117,6 +123,7 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 				}
 			}
 		mCurrentCounter.setSelection(mCurrentPosition);
+		mCurrentNoteEdit.setText(mCurrentNote);
 		setCurrentText();
 	};
 
@@ -167,6 +174,10 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 		}
 		cv.put(RecordsDbHelper.TIMERSID, c.getInt(4));
 		cv.put(RecordsDbHelper.STARTTIME, mStart);
+		String note = mCurrentNoteEdit.getText().toString().trim();
+		if(note.length() == 0)
+			note = null;
+		cv.put(RecordsDbHelper.NOTE, note);
 		getActivity().getContentResolver().insert(
 				RecordsDbHelper.CONTENT_URI_TIMES, cv);
 
@@ -188,13 +199,14 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 
 	public void setValues(HashMap<Integer, Boolean> selected, long start,
 			long lenght, boolean nowCounter, int iDtimer,
-			ArrayList<Integer> idrecords) {
+			ArrayList<Integer> idrecords, String note) {
 		mSelected = selected;
 		mStart = start;
 		mLenght = lenght;
 		mNowCounter = nowCounter;
 		mIDtimer = iDtimer;
 		mIdrecords = idrecords;
+		mCurrentNote = note;
 	}
 
 }
