@@ -61,4 +61,6 @@
         <item>За всё время</item>
     </string-array>
     <string name="start">Начало</string>
+    <string name="note">Примечание</string>
+    <string name="search">Поиск</string>
 </resources>

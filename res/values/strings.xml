@@ -61,5 +61,6 @@
         <item>All time</item>
     </string-array>
     <string name="start">Since</string>
-    <string name="note">Примечание</string>
+    <string name="note">Note</string>
+    <string name="search">Search</string>
 </resources>

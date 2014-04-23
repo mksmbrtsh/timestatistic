@@ -8,6 +8,13 @@
         android:title="@string/start">
     </item>
     <item
+        android:id="@+id/item_search"
+        android:showAsAction="always"
+        android:orderInCategory="7"
+        android:icon="@android:drawable/ic_menu_search"
+        android:title="@string/search">
+    </item>
+    <item
         android:id="@+id/item_add"
         android:showAsAction="always"
         android:orderInCategory="2"

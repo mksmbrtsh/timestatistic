@@ -133,6 +133,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getSupportMenuInflater().inflate(R.menu.main_activity, menu);
+		menu.findItem(R.id.item_search).setVisible(pager.getCurrentItem() == 3);
 		return true;
 	}
 
@@ -263,6 +264,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public void onPageSelected(int position) {
 		if (position == 2 || position == 1 || position == 3)
 			((MainFragments) findFragmentByPosition(position)).onReload();
+		supportInvalidateOptionsMenu();
 	}
 
 	@Override
