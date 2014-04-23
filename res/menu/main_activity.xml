@@ -21,13 +21,7 @@
         android:icon="@drawable/ic_action_reset_all_light"
         android:title="@string/reset_all">
     </item>
-    <item
-        android:id="@+id/item_search"
-        android:showAsAction="always"
-        android:orderInCategory="7"
-        android:icon="@android:drawable/ic_menu_search"
-        android:title="@string/search">
-    </item>
+    
     <item
         android:id="@+id/action_settings"
         android:icon="@drawable/abs__ic_menu_moreoverflow_holo_light"

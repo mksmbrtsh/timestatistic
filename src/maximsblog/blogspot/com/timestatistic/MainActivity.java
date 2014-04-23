@@ -19,7 +19,9 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.SearchManager;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -30,11 +32,14 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.internal.view.SupportMenuItem;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.view.View;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.widget.SearchView;
 
 public class MainActivity extends SherlockFragmentActivity implements
 		ResetAllDialog, ICounterEditorDialog, OnPageChangeListener,
@@ -133,7 +138,19 @@ public class MainActivity extends SherlockFragmentActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getSupportMenuInflater().inflate(R.menu.main_activity, menu);
-		menu.findItem(R.id.item_search).setVisible(pager.getCurrentItem() == 3);
+			SearchManager searchManager =
+			        (SearchManager)getSystemService(Context.SEARCH_SERVICE);
+			MenuItem searchMenuItem = ((MenuItem) menu.findItem(R.id.item_search));
+			SearchView searchView = (SearchView) searchMenuItem.getActionView();
+			if(pager.getCurrentItem() == 3)
+				searchMenuItem.setVisible(true);
+			else {
+				searchMenuItem.setVisible(false);
+				if(searchView.isShown())
+					searchView.setIconified(true);
+			}
+		menu.findItem(R.id.item_add).setVisible(pager.getCurrentItem() == 0);
+		menu.findItem(R.id.item_reset_all).setVisible(pager.getCurrentItem() == 0);
 		return true;
 	}
 
