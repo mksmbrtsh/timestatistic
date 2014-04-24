@@ -35,9 +35,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.support.v4.widget.SimpleCursorAdapter;
 
-public class DiaryFragment extends Fragment implements
-		LoaderCallbacks<Cursor>, MainFragments, OnItemClickListener,
-		OnItemLongClickListener, OnClickListener {
+public class DiaryFragment extends Fragment implements LoaderCallbacks<Cursor>,
+		MainFragments, OnItemClickListener, OnItemLongClickListener,
+		OnClickListener {
 	public static DiaryFragment newInstance() {
 
 		return new DiaryFragment();
@@ -47,20 +47,23 @@ public class DiaryFragment extends Fragment implements
 	private ListView mList;
 	private DiaryCursorAdapter mAdapter;
 	private long mStartdate;
+	private String mFilterNotes;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		loadermanager = getLoaderManager();
 		String[] uiBindFrom = { RecordsDbHelper.NAME,
-				RecordsDbHelper.STARTTIME, RecordsDbHelper.LENGHT, RecordsDbHelper.NOTE };
+				RecordsDbHelper.STARTTIME, RecordsDbHelper.LENGHT,
+				RecordsDbHelper.NOTE };
 		int[] uiBindTo = { R.id.name, R.id.time, R.id.lenght, R.id.note_text };
 		mStartdate = app.getStartDate(getActivity()).startDate;
 		mAdapter = new DiaryCursorAdapter(this.getActivity(),
 				R.layout.diary_row, null, uiBindFrom, uiBindTo, 0, mStartdate);
 		loadermanager.initLoader(1, null, this);
 		if (savedInstanceState != null) {
-			mAdapter.setSelectedPosition(savedInstanceState.getInt("mChoiceUnionMode"));
+			mAdapter.setSelectedPosition(savedInstanceState
+					.getInt("mChoiceUnionMode"));
 			mAdapter.setSelected((HashMap<Integer, Boolean>) savedInstanceState
 					.getSerializable("mSelected"));
 		} else {
@@ -89,10 +92,19 @@ public class DiaryFragment extends Fragment implements
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
-		String[] selectionArgs = new String[] { String.valueOf(app.getStartDate(getActivity()).startDate)};
-		CursorLoader loader = new CursorLoader(this.getActivity(),
-				RecordsDbHelper.CONTENT_URI_ALLTIMES, null,
-				RecordsDbHelper.STARTTIME + " IS NOT NULL AND " + RecordsDbHelper.NOTE + " IS NOT NULL", selectionArgs, null);
+		CursorLoader loader;
+		String[] selectionArgs;
+		if (mFilterNotes != null && mFilterNotes.length() > 0)
+			selectionArgs = new String[] { mFilterNotes };
+		else
+			selectionArgs = new String[] { "" };
+
+		loader = new CursorLoader(this.getActivity(),
+				RecordsDbHelper.CONTENT_URI_ALLNOTES, null,
+				RecordsDbHelper.STARTTIME + " IS NOT NULL AND "
+						+ RecordsDbHelper.NOTE + " LIKE ?", selectionArgs,
+				null);
+
 		return loader;
 	}
 
@@ -100,9 +112,10 @@ public class DiaryFragment extends Fragment implements
 	public void onLoadFinished(Loader<Cursor> arg0, Cursor cursor) {
 		if (mAdapter != null && cursor != null) {
 			mAdapter.swapCursor(cursor); // swap the new cursor in.
-			
+
 			if (!mAdapter.getSelected().isEmpty()
-					&& Collections.max(mAdapter.getSelected().keySet()) >= cursor.getCount()) {
+					&& Collections.max(mAdapter.getSelected().keySet()) >= cursor
+							.getCount()) {
 				mAdapter.setSelectedPosition(TimesCursorAdapter.NORMAL_MODE);
 				mAdapter.getSelected().clear();
 			}
@@ -123,7 +136,8 @@ public class DiaryFragment extends Fragment implements
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+			long arg3) {
 		if (mAdapter.getChoiceUnionMode() == TimesCursorAdapter.NORMAL_MODE) {
 			Cursor cursor = mAdapter.getCursor();
 			int idtimer = cursor.getInt(0);
@@ -134,7 +148,8 @@ public class DiaryFragment extends Fragment implements
 			SplitRecordDialogFragment mSplitRecordDialog = new SplitRecordDialogFragment();
 			mSplitRecordDialog
 					.setCounterDialogListener((MainActivity) getActivity());
-			mSplitRecordDialog.setValues(idtimer, idRecord, start, lenght, note == null ? "": note);
+			mSplitRecordDialog.setValues(idtimer, idRecord, start, lenght,
+					note == null ? "" : note);
 			mSplitRecordDialog.show(this.getActivity()
 					.getSupportFragmentManager(), "mSplitRecordDialog");
 		} else {
@@ -143,41 +158,48 @@ public class DiaryFragment extends Fragment implements
 				if (!check.isChecked()) {
 					check.setChecked(true);
 					mAdapter.getSelected().put(position, true);
-					if(position + 1  < mList.getCount() && mAdapter.getSelected().get(position + 1) == null )
+					if (position + 1 < mList.getCount()
+							&& mAdapter.getSelected().get(position + 1) == null)
 						mAdapter.getSelected().put(position + 1, false);
-					if(position - 1 >= 0 && mAdapter.getSelected().get(position - 1) == null)
+					if (position - 1 >= 0
+							&& mAdapter.getSelected().get(position - 1) == null)
 						mAdapter.getSelected().put(position - 1, false);
 					onTimeRecordChange();
 				} else {
 					check.setChecked(false);
-					if(position == mAdapter.getChoiceUnionMode()) {
+					if (position == mAdapter.getChoiceUnionMode()) {
 						mAdapter.setChoiceUnionMode(TimesCursorAdapter.NORMAL_MODE);
 						mAdapter.getSelected().clear();
 						onTimeRecordChange();
 						return;
 					}
 					mAdapter.getSelected().put(position, false);
-					if(position > mAdapter.getChoiceUnionMode()){
+					if (position > mAdapter.getChoiceUnionMode()) {
 						HashMap<Integer, Boolean> newSelected = new HashMap<Integer, Boolean>();
-						for(Entry<Integer, Boolean> iterable_element : mAdapter.getSelected().entrySet()) {
-							if(iterable_element.getKey() <= position)
-								newSelected.put(iterable_element.getKey(), iterable_element.getValue());
+						for (Entry<Integer, Boolean> iterable_element : mAdapter
+								.getSelected().entrySet()) {
+							if (iterable_element.getKey() <= position)
+								newSelected.put(iterable_element.getKey(),
+										iterable_element.getValue());
 						}
 						mAdapter.setSelected(newSelected);
 						onTimeRecordChange();
 					}
-					if(position < mAdapter.getChoiceUnionMode()){
+					if (position < mAdapter.getChoiceUnionMode()) {
 						HashMap<Integer, Boolean> newSelected = new HashMap<Integer, Boolean>();
-						for(Entry<Integer, Boolean> iterable_element : mAdapter.getSelected().entrySet()) {
-							if(iterable_element.getKey() >= position)
-								newSelected.put(iterable_element.getKey(), iterable_element.getValue());
+						for (Entry<Integer, Boolean> iterable_element : mAdapter
+								.getSelected().entrySet()) {
+							if (iterable_element.getKey() >= position)
+								newSelected.put(iterable_element.getKey(),
+										iterable_element.getValue());
 						}
 						mAdapter.setSelected(newSelected);
 						onTimeRecordChange();
 					}
 				}
 			} else {
-				if(check.getAnimation() != null && check.getAnimation().hasEnded())
+				if (check.getAnimation() != null
+						&& check.getAnimation().hasEnded())
 					check.clearAnimation();
 			}
 		}
@@ -188,7 +210,7 @@ public class DiaryFragment extends Fragment implements
 			int position, long arg3) {
 		mAdapter.getSelected().clear();
 		mAdapter.setChoiceUnionMode(position);
-		
+
 		onTimeRecordChange();
 		return true;
 	}
@@ -196,8 +218,6 @@ public class DiaryFragment extends Fragment implements
 	public void onTimeRecordChange() {
 		mList.invalidateViews();
 	}
-
-	
 
 	@Override
 	public void onClick(View v) {
@@ -249,6 +269,10 @@ public class DiaryFragment extends Fragment implements
 	public void setNormalMode() {
 		mAdapter.setSelectedPosition(TimesCursorAdapter.NORMAL_MODE);
 		mAdapter.getSelected().clear();
+	}
+
+	public void setFilter(String query) {
+		mFilterNotes = query;
 	}
 
 }

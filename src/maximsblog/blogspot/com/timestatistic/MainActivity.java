@@ -21,11 +21,14 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.SearchManager;
 import android.app.SearchableInfo;
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -42,14 +45,18 @@ import android.view.View;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
+import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
+import com.actionbarsherlock.widget.SearchView.OnSuggestionListener;
 
 public class MainActivity extends SherlockFragmentActivity implements
 		ResetAllDialog, ICounterEditorDialog, OnPageChangeListener,
-		IRecordDialog {
+		IRecordDialog, OnQueryTextListener, OnSuggestionListener {
 
 	private String[] mTitles;
 	private PagesAdapter adapter;
 	private ViewPager pager;
+	private SearchView mSearchView;
+	
 
 	public interface MainFragments {
 		void onReload();
@@ -143,19 +150,25 @@ public class MainActivity extends SherlockFragmentActivity implements
 		getSupportMenuInflater().inflate(R.menu.main_activity, menu);
 		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 		MenuItem searchMenuItem = ((MenuItem) menu.findItem(R.id.item_search));
-		SearchView searchView = (SearchView) searchMenuItem.getActionView();
-		if (pager.getCurrentItem() == 3)
+		mSearchView = (SearchView) searchMenuItem.getActionView();
+		if (pager.getCurrentItem() == 3){
+			getSupportActionBar().setTitle("");
 			searchMenuItem.setVisible(true);
+		}
 		else {
+			StartDateOption startDateOption = app.getStartDate(this);
+			getSupportActionBar().setTitle(startDateOption.startDateName);
 			searchMenuItem.setVisible(false);
-			if (searchView.isShown())
-				searchView.setIconified(true);
+			if (mSearchView.isShown())
+				mSearchView.setIconified(true);
 		}
 		SearchableInfo info = searchManager.getSearchableInfo(getComponentName());
-		searchView.setSearchableInfo(info);
+		mSearchView.setSearchableInfo(info);
+		mSearchView.setOnQueryTextListener(this);
+		mSearchView.setOnSuggestionListener(this);
 		menu.findItem(R.id.item_add).setVisible(pager.getCurrentItem() == 0);
-		menu.findItem(R.id.item_reset_all).setVisible(
-				pager.getCurrentItem() == 0);
+		menu.findItem(R.id.item_reset_all).setVisible(pager.getCurrentItem() == 0);
+		menu.findItem(R.id.item_starts).setVisible(pager.getCurrentItem() != 3);
 		return true;
 	}
 
@@ -293,5 +306,46 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public void onRefreshFragmentsValue() {
 		reloadFragments();
 	}
+
+	@Override
+	public boolean onQueryTextSubmit(String query) {
+		DiaryFragment diaryFragment = (DiaryFragment) ((MainFragments) findFragmentByPosition(3));
+		if (diaryFragment != null){
+			diaryFragment.setFilter(query);
+			diaryFragment.onReload();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean onQueryTextChange(String newText) {
+		if(newText.length() == 0){
+			DiaryFragment diaryFragment = (DiaryFragment) ((MainFragments) findFragmentByPosition(3));
+			if (diaryFragment != null) {
+				diaryFragment.setFilter(newText);
+				diaryFragment.onReload();
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public boolean onSuggestionSelect(int position) {
+		Cursor c = mSearchView.getSuggestionsAdapter().getCursor();
+		c.moveToPosition(position);
+		mSearchView.setQuery(c.getString(c.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1)), true);
+		return false;
+	}
+
+	@Override
+	public boolean onSuggestionClick(int position) {
+		Cursor c = mSearchView.getSuggestionsAdapter().getCursor();
+		c.moveToPosition(position);
+		mSearchView.setQuery(c.getString(c.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1)), true);
+		return false;
+	}
+
+	
+
 
 }

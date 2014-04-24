@@ -41,6 +41,8 @@ public class RecordsDbHelper extends ContentProvider {
 	public static final int RESETCOUNTERS = 6;
 	public static final int RENAMECOUNTER = 7;
 	public static final int ALLTIMES = 8;
+    private static final int SEARCH_SUGGEST = 9;
+	public static final int ALLNOTES = 10;
 	
 	final static String TABLE_TIMERS = OpenHelper.TABLE_TIMERS;
 	final static String TABLE_TIMES = OpenHelper.TABLE_TIMES;
@@ -56,7 +58,7 @@ public class RecordsDbHelper extends ContentProvider {
 	public final static String ENDTIME = OpenHelper.ENDTIME;
 	public final static String NOTE = OpenHelper.NOTE;
 	// UriMatcher constant for search suggestions
-    private static final int SEARCH_SUGGEST = 9;
+
 	
 	private static HashMap<String, String> timersProjectionMap;
 	private static HashMap<String, String> timesProjectionMap;
@@ -72,6 +74,7 @@ public class RecordsDbHelper extends ContentProvider {
 		sUriMatcher.addURI(AUTHORITY, "resetcounters", RESETCOUNTERS);
 		sUriMatcher.addURI(AUTHORITY, "renamecounter", RENAMECOUNTER);
 		sUriMatcher.addURI(AUTHORITY, "alltimes", ALLTIMES);
+		sUriMatcher.addURI(AUTHORITY, "allnotes", ALLNOTES);
 		sUriMatcher.addURI(AUTHORITY, SearchManager.SUGGEST_URI_PATH_QUERY, SEARCH_SUGGEST);
 		sUriMatcher.addURI(AUTHORITY, SearchManager.SUGGEST_URI_PATH_QUERY + "/*", SEARCH_SUGGEST);
 
@@ -101,6 +104,8 @@ public class RecordsDbHelper extends ContentProvider {
 	public static final Uri CONTENT_URI_ALLTIMES = Uri.parse("content://"
 			+ AUTHORITY + "/alltimes");
 	public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.jwei512.notes";
+	public static final Uri CONTENT_URI_ALLNOTES = Uri.parse("content://"
+			+ AUTHORITY + "/allnotes");
 
 	SQLiteDatabase mDB;
 	private OpenHelper openHelper;
@@ -127,6 +132,8 @@ public class RecordsDbHelper extends ContentProvider {
 		case SUMTIMES:
 			return "vnd.android.cursor.dir/vnd.jwei512.times";
 		case ALLTIMES:
+			return "vnd.android.cursor.dir/vnd.jwei512.times";
+		case ALLNOTES:
 			return "vnd.android.cursor.dir/vnd.jwei512.times";
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
@@ -267,6 +274,21 @@ public class RecordsDbHelper extends ContentProvider {
 			c.setNotificationUri(getContext().getContentResolver(), uri);
 			return c;
 		}
+		case ALLNOTES: {
+			selectionArgs[0] = "%" + selectionArgs[0] + "%";
+			String s = qb.buildQueryString(false, TABLE_TIMERS
+					+ " LEFT OUTER JOIN " + TABLE_TIMES + " ON " + ID + " = "
+					+ TIMERSID, new String[] {
+					RecordsDbHelper.ID,
+					RecordsDbHelper.LENGHT,
+					RecordsDbHelper.STARTTIME,
+					RecordsDbHelper.NAME,
+					RecordsDbHelper.COLOR, RecordsDbHelper.ID2, INTERVAL, RecordsDbHelper.ENDTIME, NOTE },
+					selection, null, null, RecordsDbHelper.STARTTIME + " DESC", null);
+			c = mDB.rawQuery(s, selectionArgs);
+			c.setNotificationUri(getContext().getContentResolver(), uri);
+			return c;
+		}
 		case SEARCH_SUGGEST:{
 			selectionArgs[0] = "%" + selectionArgs[0] + "%";
 			String s = qb.buildQueryString(false, TABLE_TIMERS
@@ -275,8 +297,8 @@ public class RecordsDbHelper extends ContentProvider {
 					RecordsDbHelper.ID,
 					RecordsDbHelper.LENGHT,
 					RecordsDbHelper.STARTTIME,
-					RecordsDbHelper.NAME + " AS " + SearchManager.SUGGEST_COLUMN_TEXT_1,
-					RecordsDbHelper.COLOR, RecordsDbHelper.ID2, INTERVAL, RecordsDbHelper.ENDTIME, NOTE + " AS " + SearchManager.SUGGEST_COLUMN_TEXT_2 },
+					RecordsDbHelper.NAME,
+					RecordsDbHelper.COLOR, RecordsDbHelper.ID2, INTERVAL, RecordsDbHelper.ENDTIME, NOTE + " AS " + SearchManager.SUGGEST_COLUMN_TEXT_1 },
 					selection, null, null, RecordsDbHelper.STARTTIME + " DESC", null);
 			c = mDB.rawQuery(s, selectionArgs);
 			c.setNotificationUri(getContext().getContentResolver(), uri);
