@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.SearchManager;
+import android.app.SearchableInfo;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -35,6 +36,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.internal.view.SupportMenuItem;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v4.widget.CursorAdapter;
 import android.view.View;
 
 import com.actionbarsherlock.view.Menu;
@@ -86,8 +88,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 					.findFragmentByTag("mUnionRecordDialog");
 			if (unionRecordDialogFragment != null)
 				unionRecordDialogFragment.setDialogListener(this);
-			StartDateSetDialogFragment startDateSetDialogFragment = (StartDateSetDialogFragment) fm.findFragmentByTag("mStartDateSetDialogFragment");
-			if(startDateSetDialogFragment!=null)
+			StartDateSetDialogFragment startDateSetDialogFragment = (StartDateSetDialogFragment) fm
+					.findFragmentByTag("mStartDateSetDialogFragment");
+			if (startDateSetDialogFragment != null)
 				startDateSetDialogFragment.setDialogListener(this);
 		}
 	}
@@ -113,7 +116,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			} else if (position == 1) {
 				TimeRecordsFragment fg = TimeRecordsFragment.newInstance();
 				f = fg;
-			} else if(position == 2){
+			} else if (position == 2) {
 				DiagramFragment fg = DiagramFragment.newInstance();
 				f = fg;
 			} else {
@@ -138,19 +141,21 @@ public class MainActivity extends SherlockFragmentActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getSupportMenuInflater().inflate(R.menu.main_activity, menu);
-			SearchManager searchManager =
-			        (SearchManager)getSystemService(Context.SEARCH_SERVICE);
-			MenuItem searchMenuItem = ((MenuItem) menu.findItem(R.id.item_search));
-			SearchView searchView = (SearchView) searchMenuItem.getActionView();
-			if(pager.getCurrentItem() == 3)
-				searchMenuItem.setVisible(true);
-			else {
-				searchMenuItem.setVisible(false);
-				if(searchView.isShown())
-					searchView.setIconified(true);
-			}
+		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+		MenuItem searchMenuItem = ((MenuItem) menu.findItem(R.id.item_search));
+		SearchView searchView = (SearchView) searchMenuItem.getActionView();
+		if (pager.getCurrentItem() == 3)
+			searchMenuItem.setVisible(true);
+		else {
+			searchMenuItem.setVisible(false);
+			if (searchView.isShown())
+				searchView.setIconified(true);
+		}
+		SearchableInfo info = searchManager.getSearchableInfo(getComponentName());
+		searchView.setSearchableInfo(info);
 		menu.findItem(R.id.item_add).setVisible(pager.getCurrentItem() == 0);
-		menu.findItem(R.id.item_reset_all).setVisible(pager.getCurrentItem() == 0);
+		menu.findItem(R.id.item_reset_all).setVisible(
+				pager.getCurrentItem() == 0);
 		return true;
 	}
 
@@ -258,10 +263,10 @@ public class MainActivity extends SherlockFragmentActivity implements
 		timeRecordsFragment.setNormalMode();
 		timeRecordsFragment.onReload();
 		DiagramFragment diagramFragment = (DiagramFragment) ((MainFragments) findFragmentByPosition(2));
-		if(diagramFragment != null)
+		if (diagramFragment != null)
 			diagramFragment.onReload();
 		DiaryFragment diaryFragment = (DiaryFragment) ((MainFragments) findFragmentByPosition(3));
-		if(diaryFragment != null)
+		if (diaryFragment != null)
 			diaryFragment.onReload();
 	}
 

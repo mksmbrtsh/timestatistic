@@ -1,5 +1,6 @@
 package maximsblog.blogspot.com.timestatistic;
 
+import android.app.SearchManager;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -54,7 +55,8 @@ public class RecordsDbHelper extends ContentProvider {
 	public final static String INTERVAL = OpenHelper.INTERVAL;
 	public final static String ENDTIME = OpenHelper.ENDTIME;
 	public final static String NOTE = OpenHelper.NOTE;
-
+	// UriMatcher constant for search suggestions
+    private static final int SEARCH_SUGGEST = 9;
 	
 	private static HashMap<String, String> timersProjectionMap;
 	private static HashMap<String, String> timesProjectionMap;
@@ -70,6 +72,8 @@ public class RecordsDbHelper extends ContentProvider {
 		sUriMatcher.addURI(AUTHORITY, "resetcounters", RESETCOUNTERS);
 		sUriMatcher.addURI(AUTHORITY, "renamecounter", RENAMECOUNTER);
 		sUriMatcher.addURI(AUTHORITY, "alltimes", ALLTIMES);
+		sUriMatcher.addURI(AUTHORITY, SearchManager.SUGGEST_URI_PATH_QUERY, SEARCH_SUGGEST);
+		sUriMatcher.addURI(AUTHORITY, SearchManager.SUGGEST_URI_PATH_QUERY + "/*", SEARCH_SUGGEST);
 
 		timersProjectionMap = new HashMap<String, String>();
 		timersProjectionMap.put(ID, ID);
@@ -258,6 +262,21 @@ public class RecordsDbHelper extends ContentProvider {
 					RecordsDbHelper.STARTTIME,
 					RecordsDbHelper.NAME,
 					RecordsDbHelper.COLOR, RecordsDbHelper.ID2, INTERVAL, RecordsDbHelper.ENDTIME, NOTE },
+					selection, null, null, RecordsDbHelper.STARTTIME + " DESC", null);
+			c = mDB.rawQuery(s, selectionArgs);
+			c.setNotificationUri(getContext().getContentResolver(), uri);
+			return c;
+		}
+		case SEARCH_SUGGEST:{
+			selectionArgs[0] = "%" + selectionArgs[0] + "%";
+			String s = qb.buildQueryString(false, TABLE_TIMERS
+					+ " LEFT OUTER JOIN " + TABLE_TIMES + " ON " + ID + " = "
+					+ TIMERSID, new String[] {
+					RecordsDbHelper.ID,
+					RecordsDbHelper.LENGHT,
+					RecordsDbHelper.STARTTIME,
+					RecordsDbHelper.NAME + " AS " + SearchManager.SUGGEST_COLUMN_TEXT_1,
+					RecordsDbHelper.COLOR, RecordsDbHelper.ID2, INTERVAL, RecordsDbHelper.ENDTIME, NOTE + " AS " + SearchManager.SUGGEST_COLUMN_TEXT_2 },
 					selection, null, null, RecordsDbHelper.STARTTIME + " DESC", null);
 			c = mDB.rawQuery(s, selectionArgs);
 			c.setNotificationUri(getContext().getContentResolver(), uri);

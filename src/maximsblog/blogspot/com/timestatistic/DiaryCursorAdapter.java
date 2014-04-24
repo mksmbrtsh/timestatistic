@@ -75,8 +75,9 @@ public class DiaryCursorAdapter extends SimpleCursorAdapter {
 		holder.note_text.setText(cursor.getString(8));
 		Date d = new Date(start);
 		String t = mSimpleDateFormat.format(d);
-		if (cursor.getLong(1) == 0)
-			holder.stop.setText("");
+		if (cursor.getLong(1) == 0){
+		
+		}
 		else {
 			d = new Date(cursor.getLong(1) + cursor.getLong(2));
 			t += "-" + mSimpleDateFormat.format(d);

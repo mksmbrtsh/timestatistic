@@ -1,0 +1,6 @@
+<searchable xmlns:android="http://schemas.android.com/apk/res/android"
+    android:label="@string/app_name"
+    android:searchSuggestAuthority="maximsblogspot.com.timestatistic.providers.db"
+    android:searchSuggestSelection="times.note like ?" >
+
+</searchable>
