@@ -35,7 +35,7 @@ public class DiaryCursorAdapter extends SimpleCursorAdapter {
 	public DiaryCursorAdapter(Context context, int layout, Cursor c,
 			String[] from, int[] to, int flags, long startdate) {
 		super(context, layout, c, from, to, flags);
-		mSimpleDateFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
+		mSimpleDateFormat = new SimpleDateFormat("dd/MM/yy\nHH:mm");
 		mStartdate = startdate;
 		int[] attrs = { android.R.attr.listChoiceIndicatorMultiple };
 		TypedArray ta = context.getTheme().obtainStyledAttributes(attrs);
@@ -52,7 +52,6 @@ public class DiaryCursorAdapter extends SimpleCursorAdapter {
 		public TextView lenght;
 		public View LinearLayout01;
 		public TextView note_text;
-		public View note;
 	}
 	
 	@Override
@@ -63,9 +62,9 @@ public class DiaryCursorAdapter extends SimpleCursorAdapter {
 		if (view.getTag() == null) {
 			holder = new ViewHolder();
 			holder.time = (TextView) view.findViewById(R.id.time);
+			holder.stop = (TextView) view.findViewById(R.id.stop);
 			holder.LinearLayout01 = view.findViewById(R.id.before_record);
 			holder.note_text = (TextView) view.findViewById(R.id.note_text);
-			holder.note = view.findViewById(R.id.note);
 			view.setTag(holder);
 		} else {
 			holder = (ViewHolder) view.getTag();
@@ -76,11 +75,11 @@ public class DiaryCursorAdapter extends SimpleCursorAdapter {
 		Date d = new Date(start);
 		String t = mSimpleDateFormat.format(d);
 		if (cursor.getLong(1) == 0){
-		
+			holder.stop.setText(mContext.getString(R.string.now));
 		}
 		else {
 			d = new Date(cursor.getLong(1) + cursor.getLong(2));
-			t += "-" + mSimpleDateFormat.format(d);
+			holder.stop.setText(mSimpleDateFormat.format(d));
 		}
 		holder.time.setText(t);
 		holder.LinearLayout01.setBackgroundColor(cursor.getInt(4));

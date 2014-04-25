@@ -54,7 +54,7 @@ public class TimesCursorAdapter extends SimpleCursorAdapter {
 		public CheckBox check;
 		public View note;
 	}
-	
+
 	@Override
 	public void bindView(View view, Context context, final Cursor cursor) {
 		super.bindView(view, context, cursor);
@@ -74,10 +74,7 @@ public class TimesCursorAdapter extends SimpleCursorAdapter {
 		}
 		long start = cursor.getLong(2);
 		long stop = cursor.getLong(7);
-		if(cursor.getString(8)!=null)
-			holder.note.setVisibility(View.VISIBLE);
-		else
-			holder.note.setVisibility(View.GONE);
+
 		Date d = new Date(start);
 		holder.start.setText(mSimpleDateFormat.format(d));
 		if (cursor.getLong(1) == 0)
@@ -86,18 +83,26 @@ public class TimesCursorAdapter extends SimpleCursorAdapter {
 			d = new Date(cursor.getLong(1) + cursor.getLong(2));
 			holder.stop.setText(mSimpleDateFormat.format(d));
 		}
-		setTime(holder.lenght, stop - start > 0 ? stop - start : new Date().getTime() - start);
+		setTime(holder.lenght,
+				stop - start > 0 ? stop - start : new Date().getTime() - start);
 		if (mSelectedPosition != -1) {
 			if (mSelected.get(position) != null) {
 				holder.check.setChecked(mSelected.get(position));
 				holder.check.setVisibility(View.VISIBLE);
 			} else {
 				holder.check.setChecked(false);
-					holder.check.setVisibility(View.INVISIBLE);
-			}
-		} else {
-				holder.check.setChecked(false);
 				holder.check.setVisibility(View.INVISIBLE);
+			}
+			holder.note.setVisibility(View.GONE);
+			holder.lenght.setVisibility(View.INVISIBLE);
+		} else {
+			holder.check.setChecked(false);
+			holder.check.setVisibility(View.INVISIBLE);
+			if (cursor.getString(8) != null)
+				holder.note.setVisibility(View.VISIBLE);
+			else
+				holder.note.setVisibility(View.GONE);
+			holder.lenght.setVisibility(View.VISIBLE);
 		}
 		holder.LinearLayout01.setBackgroundColor(cursor.getInt(4));
 	}
@@ -170,5 +175,5 @@ public class TimesCursorAdapter extends SimpleCursorAdapter {
 	public void setStartDate(long startdate) {
 		mStartdate = startdate;
 	}
-	
+
 }
