@@ -86,7 +86,7 @@ public class DiaryFragment extends Fragment implements LoaderCallbacks<Cursor>,
 				R.layout.fragment_diary, container, false);
 		mList = (ListView) layout.findViewById(R.id.listView1);
 		mList.setAdapter(mAdapter);
-		//mList.setOnItemClickListener(this);
+		mList.setOnItemClickListener(this);
 		return layout;
 	}
 
@@ -139,18 +139,17 @@ public class DiaryFragment extends Fragment implements LoaderCallbacks<Cursor>,
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 			long arg3) {
 			Cursor cursor = mAdapter.getCursor();
-			int idtimer = cursor.getInt(0);
+			String name = cursor.getString(3);
 			int idRecord = cursor.getInt(5);
 			long start = cursor.getLong(2);
 			long lenght = cursor.getLong(1);
 			String note = cursor.getString(8);
-			SplitRecordDialogFragment mSplitRecordDialog = new SplitRecordDialogFragment();
-			mSplitRecordDialog
+			DiaryEditorDialogFragment mDiaryEditorDialogFragment = new DiaryEditorDialogFragment();
+			mDiaryEditorDialogFragment
 					.setCounterDialogListener((MainActivity) getActivity());
-			mSplitRecordDialog.setValues(idtimer, idRecord, start, lenght,
-					note == null ? "" : note);
-			mSplitRecordDialog.show(this.getActivity()
-					.getSupportFragmentManager(), "mSplitRecordDialog");
+			mDiaryEditorDialogFragment.setValues(name, idRecord, start, lenght, note);
+			mDiaryEditorDialogFragment.show(this.getActivity()
+					.getSupportFragmentManager(), "mDiaryEditorDialogFragment");
 	}
 
 	@Override

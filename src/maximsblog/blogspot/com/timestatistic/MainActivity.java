@@ -56,7 +56,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private PagesAdapter adapter;
 	private ViewPager pager;
 	private SearchView mSearchView;
-	
 
 	public interface MainFragments {
 		void onReload();
@@ -99,6 +98,10 @@ public class MainActivity extends SherlockFragmentActivity implements
 					.findFragmentByTag("mStartDateSetDialogFragment");
 			if (startDateSetDialogFragment != null)
 				startDateSetDialogFragment.setDialogListener(this);
+			DiaryEditorDialogFragment diaryEditorDialogFragment = (DiaryEditorDialogFragment) fm
+					.findFragmentByTag("mDiaryEditorDialogFragment");
+			if (diaryEditorDialogFragment != null)
+				diaryEditorDialogFragment.setCounterDialogListener(this);
 		}
 	}
 
@@ -151,23 +154,24 @@ public class MainActivity extends SherlockFragmentActivity implements
 		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 		MenuItem searchMenuItem = ((MenuItem) menu.findItem(R.id.item_search));
 		mSearchView = (SearchView) searchMenuItem.getActionView();
-		if (pager.getCurrentItem() == 3){
+		if (pager.getCurrentItem() == 3) {
 			getSupportActionBar().setTitle("");
 			searchMenuItem.setVisible(true);
-		}
-		else {
+		} else {
 			StartDateOption startDateOption = app.getStartDate(this);
 			getSupportActionBar().setTitle(startDateOption.startDateName);
 			searchMenuItem.setVisible(false);
 			if (mSearchView.isShown())
 				mSearchView.setIconified(true);
 		}
-		SearchableInfo info = searchManager.getSearchableInfo(getComponentName());
+		SearchableInfo info = searchManager
+				.getSearchableInfo(getComponentName());
 		mSearchView.setSearchableInfo(info);
 		mSearchView.setOnQueryTextListener(this);
 		mSearchView.setOnSuggestionListener(this);
 		menu.findItem(R.id.item_add).setVisible(pager.getCurrentItem() == 0);
-		menu.findItem(R.id.item_reset_all).setVisible(pager.getCurrentItem() == 0);
+		menu.findItem(R.id.item_reset_all).setVisible(
+				pager.getCurrentItem() == 0);
 		menu.findItem(R.id.item_starts).setVisible(pager.getCurrentItem() != 3);
 		return true;
 	}
@@ -273,8 +277,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private void reloadFragments() {
 		((MainFragments) findFragmentByPosition(0)).onReload();
 		TimeRecordsFragment timeRecordsFragment = (TimeRecordsFragment) ((MainFragments) findFragmentByPosition(1));
-		timeRecordsFragment.setNormalMode();
-		timeRecordsFragment.onReload();
+			timeRecordsFragment.setNormalMode();
+			timeRecordsFragment.onReload();
 		DiagramFragment diagramFragment = (DiagramFragment) ((MainFragments) findFragmentByPosition(2));
 		if (diagramFragment != null)
 			diagramFragment.onReload();
@@ -310,7 +314,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	@Override
 	public boolean onQueryTextSubmit(String query) {
 		DiaryFragment diaryFragment = (DiaryFragment) ((MainFragments) findFragmentByPosition(3));
-		if (diaryFragment != null){
+		if (diaryFragment != null) {
 			diaryFragment.setFilter(query);
 			diaryFragment.onReload();
 		}
@@ -319,7 +323,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public boolean onQueryTextChange(String newText) {
-		if(newText.length() == 0){
+		if (newText.length() == 0) {
 			DiaryFragment diaryFragment = (DiaryFragment) ((MainFragments) findFragmentByPosition(3));
 			if (diaryFragment != null) {
 				diaryFragment.setFilter(newText);
@@ -333,7 +337,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public boolean onSuggestionSelect(int position) {
 		Cursor c = mSearchView.getSuggestionsAdapter().getCursor();
 		c.moveToPosition(position);
-		mSearchView.setQuery(c.getString(c.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1)), true);
+		mSearchView.setQuery(c.getString(c
+				.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1)), true);
 		return false;
 	}
 
@@ -341,11 +346,15 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public boolean onSuggestionClick(int position) {
 		Cursor c = mSearchView.getSuggestionsAdapter().getCursor();
 		c.moveToPosition(position);
-		mSearchView.setQuery(c.getString(c.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1)), true);
+		mSearchView.setQuery(c.getString(c
+				.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1)), true);
 		return false;
 	}
 
-	
-
+	@Override
+	public void onDiaryFragmentsRefresh() {
+		DiaryFragment diaryFragment = (DiaryFragment) ((MainFragments) findFragmentByPosition(3));
+			diaryFragment.onReload();
+	}
 
 }
