@@ -86,7 +86,7 @@ public class DiaryFragment extends Fragment implements LoaderCallbacks<Cursor>,
 				R.layout.fragment_diary, container, false);
 		mList = (ListView) layout.findViewById(R.id.listView1);
 		mList.setAdapter(mAdapter);
-
+		//mList.setOnItemClickListener(this);
 		return layout;
 	}
 
@@ -138,7 +138,6 @@ public class DiaryFragment extends Fragment implements LoaderCallbacks<Cursor>,
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 			long arg3) {
-		if (mAdapter.getChoiceUnionMode() == TimesCursorAdapter.NORMAL_MODE) {
 			Cursor cursor = mAdapter.getCursor();
 			int idtimer = cursor.getInt(0);
 			int idRecord = cursor.getInt(5);
@@ -152,57 +151,6 @@ public class DiaryFragment extends Fragment implements LoaderCallbacks<Cursor>,
 					note == null ? "" : note);
 			mSplitRecordDialog.show(this.getActivity()
 					.getSupportFragmentManager(), "mSplitRecordDialog");
-		} else {
-			CheckBox check = (CheckBox) arg1.findViewById(R.id.check);
-			if (check.getVisibility() == View.VISIBLE) {
-				if (!check.isChecked()) {
-					check.setChecked(true);
-					mAdapter.getSelected().put(position, true);
-					if (position + 1 < mList.getCount()
-							&& mAdapter.getSelected().get(position + 1) == null)
-						mAdapter.getSelected().put(position + 1, false);
-					if (position - 1 >= 0
-							&& mAdapter.getSelected().get(position - 1) == null)
-						mAdapter.getSelected().put(position - 1, false);
-					onTimeRecordChange();
-				} else {
-					check.setChecked(false);
-					if (position == mAdapter.getChoiceUnionMode()) {
-						mAdapter.setChoiceUnionMode(TimesCursorAdapter.NORMAL_MODE);
-						mAdapter.getSelected().clear();
-						onTimeRecordChange();
-						return;
-					}
-					mAdapter.getSelected().put(position, false);
-					if (position > mAdapter.getChoiceUnionMode()) {
-						HashMap<Integer, Boolean> newSelected = new HashMap<Integer, Boolean>();
-						for (Entry<Integer, Boolean> iterable_element : mAdapter
-								.getSelected().entrySet()) {
-							if (iterable_element.getKey() <= position)
-								newSelected.put(iterable_element.getKey(),
-										iterable_element.getValue());
-						}
-						mAdapter.setSelected(newSelected);
-						onTimeRecordChange();
-					}
-					if (position < mAdapter.getChoiceUnionMode()) {
-						HashMap<Integer, Boolean> newSelected = new HashMap<Integer, Boolean>();
-						for (Entry<Integer, Boolean> iterable_element : mAdapter
-								.getSelected().entrySet()) {
-							if (iterable_element.getKey() >= position)
-								newSelected.put(iterable_element.getKey(),
-										iterable_element.getValue());
-						}
-						mAdapter.setSelected(newSelected);
-						onTimeRecordChange();
-					}
-				}
-			} else {
-				if (check.getAnimation() != null
-						&& check.getAnimation().hasEnded())
-					check.clearAnimation();
-			}
-		}
 	}
 
 	@Override

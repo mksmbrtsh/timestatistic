@@ -15,14 +15,19 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.InputFilter.LengthFilter;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AbsListView;
 import android.widget.CheckBox;
 import android.widget.CheckedTextView;
 import android.widget.CompoundButton;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.AbsListView.OnScrollListener;
 
-public class TimesCursorAdapter extends SimpleCursorAdapter {
+public class TimesCursorAdapter extends SimpleCursorAdapter implements
+ListView.OnScrollListener {
 
 	private SimpleDateFormat mSimpleDateFormat;
 	// private ITimes mListener;
@@ -30,6 +35,7 @@ public class TimesCursorAdapter extends SimpleCursorAdapter {
 	private HashMap<Integer, Boolean> mSelected;
 	private int mSelectedPosition;
 	private long mStartdate;
+	private boolean mBusy = false;
 	public static final int NORMAL_MODE = -1;
 
 	public TimesCursorAdapter(Context context, int layout, Cursor c,
@@ -53,6 +59,7 @@ public class TimesCursorAdapter extends SimpleCursorAdapter {
 		public View LinearLayout01;
 		public CheckBox check;
 		public View note;
+		public int id;
 	}
 
 	@Override
@@ -77,6 +84,7 @@ public class TimesCursorAdapter extends SimpleCursorAdapter {
 
 		Date d = new Date(start);
 		holder.start.setText(mSimpleDateFormat.format(d));
+		holder.id = cursor.getInt(5);
 		if (cursor.getLong(1) == 0)
 			holder.stop.setText("");
 		else {
@@ -93,18 +101,22 @@ public class TimesCursorAdapter extends SimpleCursorAdapter {
 				holder.check.setChecked(false);
 				holder.check.setVisibility(View.INVISIBLE);
 			}
-			holder.note.setVisibility(View.GONE);
 			holder.lenght.setVisibility(View.INVISIBLE);
 		} else {
 			holder.check.setChecked(false);
 			holder.check.setVisibility(View.INVISIBLE);
-			if (cursor.getString(8) != null)
-				holder.note.setVisibility(View.VISIBLE);
-			else
-				holder.note.setVisibility(View.GONE);
 			holder.lenght.setVisibility(View.VISIBLE);
 		}
 		holder.LinearLayout01.setBackgroundColor(cursor.getInt(4));
+		if (!mBusy) {
+			Cursor c = mContext.getContentResolver().query(RecordsDbHelper.CONTENT_URI_NOTES, new String[] { RecordsDbHelper.ID3, RecordsDbHelper.NOTE },RecordsDbHelper.ID3+ "=?" , new String[] { String.valueOf(holder.id) }, null);
+			if(c.getCount() == 1) {
+				holder.note.setVisibility(View.VISIBLE);
+			} else
+				holder.note.setVisibility(View.INVISIBLE);	
+			c.close();
+		} else 
+			holder.note.setVisibility(View.INVISIBLE);
 	}
 
 	private void setTime(TextView t, long time) {
@@ -176,4 +188,37 @@ public class TimesCursorAdapter extends SimpleCursorAdapter {
 		mStartdate = startdate;
 	}
 
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
+		switch (scrollState) {
+		case OnScrollListener.SCROLL_STATE_IDLE:
+			mBusy = false;
+			int first = view.getFirstVisiblePosition();
+			int count = view.getChildCount();
+			for (int i = 0; i < count; i++) {
+				ViewHolder holder = (ViewHolder) view.getChildAt(i).getTag();
+				Cursor c = mContext.getContentResolver().query(RecordsDbHelper.CONTENT_URI_NOTES, new String[] { RecordsDbHelper.ID3, RecordsDbHelper.NOTE },RecordsDbHelper.ID3+ "=?" , new String[] { String.valueOf(holder.id) }, null);
+				if(c.getCount() == 1) {
+					holder.note.setVisibility(View.VISIBLE);
+				} else
+					holder.note.setVisibility(View.INVISIBLE);	
+				c.close();
+			}
+
+			break;
+		case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+			mBusy = true;
+			break;
+		case OnScrollListener.SCROLL_STATE_FLING:
+			mBusy = true;
+			break;
+		}
+	}
+
+	@Override
+	public void onScroll(AbsListView arg0, int arg1, int arg2, int arg3) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 }

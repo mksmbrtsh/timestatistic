@@ -82,7 +82,8 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 		outState.putSerializable("mIdrecords", mIdrecords);
 		outState.putBoolean("mNowCounter", mNowCounter);
 		outState.putInt("mCurrentPosition", mCurrentPosition);
-		outState.putString("mCurrentNoteEdit", mCurrentNoteEdit.getText().toString());
+		outState.putString("mCurrentNoteEdit", mCurrentNoteEdit.getText()
+				.toString());
 		super.onSaveInstanceState(outState);
 	};
 
@@ -104,7 +105,7 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		mCurrentCounter.setAdapter(mCurrentCounterAdapter);
 		mUnionDateTimeInterval = (TextView) v.findViewById(R.id.note_text);
-		mCurrentNoteEdit = (EditText)v.findViewById(R.id.current_note);
+		mCurrentNoteEdit = (EditText) v.findViewById(R.id.current_note);
 		return v;
 	}
 
@@ -174,18 +175,24 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 		}
 		cv.put(RecordsDbHelper.TIMERSID, c.getInt(4));
 		cv.put(RecordsDbHelper.STARTTIME, mStart);
-		String note = mCurrentNoteEdit.getText().toString().trim();
-		if(note.length() == 0)
-			note = null;
-		cv.put(RecordsDbHelper.NOTE, note);
+		cv.put(RecordsDbHelper.ID2, c.getInt(0));
 		getActivity().getContentResolver().insert(
 				RecordsDbHelper.CONTENT_URI_TIMES, cv);
 
+		editNote(c.getInt(0), mCurrentNoteEdit.getText().toString().trim());
+
 		for (Integer iterable_element : mIdrecords) {
-			getActivity().getContentResolver().delete(
-					RecordsDbHelper.CONTENT_URI_TIMES,
-					RecordsDbHelper.ID2 + "=?",
-					new String[] { String.valueOf(iterable_element) });
+			if (c.getInt(0) != iterable_element) {
+				getActivity().getContentResolver().delete(
+						RecordsDbHelper.CONTENT_URI_TIMES,
+						RecordsDbHelper.ID2 + "=?",
+						new String[] { String.valueOf(iterable_element) });
+
+				getActivity().getContentResolver().delete(
+						RecordsDbHelper.CONTENT_URI_NOTES,
+						RecordsDbHelper.ID3 + "=?",
+						new String[] { String.valueOf(iterable_element) });
+			}
 		}
 	}
 
@@ -209,4 +216,18 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 		mCurrentNote = note;
 	}
 
+	private void editNote(int id, String note) {
+		if (note.length() == 0) {
+			getActivity().getContentResolver().delete(
+					RecordsDbHelper.CONTENT_URI_NOTES,
+					RecordsDbHelper.ID3 + "=?",
+					new String[] { String.valueOf(id) });
+			return;
+		}
+		ContentValues cv = new ContentValues();
+		cv.put(RecordsDbHelper.ID3, id);
+		cv.put(RecordsDbHelper.NOTE, note);
+		getActivity().getContentResolver().insert(
+				RecordsDbHelper.CONTENT_URI_NOTES, cv);
+	}
 }

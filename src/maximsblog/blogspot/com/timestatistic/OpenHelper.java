@@ -19,8 +19,10 @@ public class OpenHelper extends SQLiteOpenHelper {
 	final static int DB_VER = 4;
 	final static String TABLE_TIMERS = "timers";
 	final static String TABLE_TIMES = "times";
+	final static String TABLE_NOTES = "notes";
 	public final static String ID = "_id";
 	public final static String ID2 = "_idt";
+	public final static String ID3 = "_idn";
 	public final static String NAME = "name";
 	public final static String COLOR = "color";
 	public final static String INTERVAL = "interval";
@@ -31,8 +33,6 @@ public class OpenHelper extends SQLiteOpenHelper {
 	public final static String ENDTIME = "endtime";
 	public final static String NOTE = "note";
 
-	// public static String DB_FILEPATH =
-	// "/data/data/maximsblog.blogspot.com.timestatistic/databases/database.db";
 
 	final String CREATE_TABLE_TIMERS = "CREATE TABLE " + TABLE_TIMERS + "( "
 			+ ID + " INTEGER PRIMARY KEY autoincrement, " + NAME + " TEXT, "
@@ -42,11 +42,17 @@ public class OpenHelper extends SQLiteOpenHelper {
 	final String CREATE_TABLE_TIMES = "CREATE TABLE " + TABLE_TIMES + "( "
 			+ ID2 + " INTEGER PRIMARY KEY autoincrement, " + TIMERSID
 			+ " INTEGER, " + STARTTIME + " INTEGER, " + LENGHT
-			+ " INTEGER DEFAULT 0, " + ENDTIME + " INTEGER, " + NOTE + " TEXT )";
+			+ " INTEGER DEFAULT 0, " + ENDTIME + " INTEGER )";
+	
+	final String CREATE_TABLE_NOTES = "CREATE TABLE " + TABLE_NOTES + "( "
+			+ ID3 + " INTEGER PRIMARY KEY, " + NOTE
+			+ " TEXT )";
 
 	final String DROP_TABLE_TIMERS = "DROP TABLE IF EXISTS " + TABLE_TIMERS;
 	final String DROP_TABLE_TIMES = "DROP TABLE IF EXISTS " + TABLE_TIMES;
+	final String DROP_TABLE_NOTES = "DROP TABLE IF EXISTS " + TABLE_NOTES;
 
+	
 	public OpenHelper(Context context) {
 		super(context, DB_NAME, null, DB_VER);
 	}
@@ -133,6 +139,7 @@ public class OpenHelper extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(CREATE_TABLE_TIMERS);
 		db.execSQL(CREATE_TABLE_TIMES);
+		db.execSQL(CREATE_TABLE_NOTES);
 		ContentValues cv = new ContentValues();
 		cv.put(NAME, "Idle");
 		cv.put(ISRUNNING, 1);
@@ -168,23 +175,21 @@ public class OpenHelper extends SQLiteOpenHelper {
 				db.execSQL("ALTER TABLE " + TABLE_TIMES + " ADD COLUMN " + ENDTIME
 						+ " INTEGER");
 				calculateEndTime(db);
-				db.execSQL("ALTER TABLE " + TABLE_TIMES + " ADD COLUMN " + NOTE
-						+ " TEXT");
+				db.execSQL(CREATE_TABLE_NOTES);
 			}
 			if(oldVersion == 2) {
 				db.execSQL("ALTER TABLE " + TABLE_TIMES + " ADD COLUMN " + ENDTIME
 						+ " INTEGER");
 				calculateEndTime(db);
-				db.execSQL("ALTER TABLE " + TABLE_TIMES + " ADD COLUMN " + NOTE
-						+ " TEXT");
+				db.execSQL(CREATE_TABLE_NOTES);
 			}
 			if(oldVersion == 3) {
-				db.execSQL("ALTER TABLE " + TABLE_TIMES + " ADD COLUMN " + NOTE
-						+ " TEXT");
+				db.execSQL(CREATE_TABLE_NOTES);
 			}
 		} else {
 			db.execSQL(DROP_TABLE_TIMERS);
 			db.execSQL(DROP_TABLE_TIMES);
+			db.execSQL(DROP_TABLE_NOTES);
 			onCreate(db);
 		}
 

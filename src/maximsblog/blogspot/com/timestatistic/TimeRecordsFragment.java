@@ -86,7 +86,7 @@ public class TimeRecordsFragment extends Fragment implements
 		mList.setAdapter(mAdapter);
 		mList.setOnItemClickListener(this);
 		mList.setOnItemLongClickListener(this);
-
+		mList.setOnScrollListener(mAdapter);
 		mUnionPanel = layout.findViewById(R.id.union_panel);
 		mUnionPanel.setVisibility(View.GONE);
 		Button mUnionButton = (Button) mUnionPanel.findViewById(R.id.ok);
@@ -142,7 +142,14 @@ public class TimeRecordsFragment extends Fragment implements
 			int idRecord = cursor.getInt(5);
 			long start = cursor.getLong(2);
 			long lenght = cursor.getLong(1);
-			String note = cursor.getString(8);
+			cursor = getActivity().getContentResolver().query(RecordsDbHelper.CONTENT_URI_NOTES,
+					new String[] {RecordsDbHelper.ID3, RecordsDbHelper.NOTE}, RecordsDbHelper.ID3 + "=?",new String[] { String.valueOf(idRecord) }, null);
+			String note;
+			if(cursor.getCount() ==1){
+				cursor.moveToFirst();
+				note = cursor.getString(1);
+			} else
+				note = null;
 			SplitRecordDialogFragment mSplitRecordDialog = new SplitRecordDialogFragment();
 			mSplitRecordDialog
 					.setCounterDialogListener((MainActivity) getActivity());
@@ -236,14 +243,27 @@ public class TimeRecordsFragment extends Fragment implements
 				if (clenght < times.getLong(1)) {
 					clenght = times.getLong(1);
 					iDtimer = times.getInt(0);
-					note = times.getString(8);
+					Cursor cursor = getActivity().getContentResolver().query(RecordsDbHelper.CONTENT_URI_NOTES,
+							new String[] {RecordsDbHelper.ID3, RecordsDbHelper.NOTE}, RecordsDbHelper.ID3 + "=?",new String[] { String.valueOf(times.getInt(5)) }, null);
+					
+					if(cursor.getCount() ==1){
+						cursor.moveToFirst();
+						note = cursor.getString(1);
+					} else
+						note = null;
 				}
 				lenght += times.getLong(1);
 				idrecords.add(times.getInt(5));
 				if (times.getLong(1) == 0) {
 					nowCounter = true;
 					iDtimer = times.getInt(5);
-					note = times.getString(8);
+					Cursor cursor = getActivity().getContentResolver().query(RecordsDbHelper.CONTENT_URI_NOTES,
+							new String[] {RecordsDbHelper.ID3, RecordsDbHelper.NOTE}, RecordsDbHelper.ID3 + "=?",new String[] { String.valueOf(times.getInt(5)) }, null);
+					if(cursor.getCount() ==1){
+						cursor.moveToFirst();
+						note = cursor.getString(1);
+					} else
+						note = null;
 				}
 
 			}

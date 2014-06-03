@@ -14,6 +14,7 @@ import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -328,28 +329,25 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 		cv.put(RecordsDbHelper.STARTTIME, mCurrentStart);
 		cv.put(RecordsDbHelper.LENGHT, mCurrentLenght);
 		cv.put(RecordsDbHelper.ENDTIME, mCurrentStart + mCurrentLenght);
-		String note = mCurrentNoteEdit.getText().toString().trim();;
-		if(note.length() == 0)
-			note = null;
-		cv.put(RecordsDbHelper.NOTE, note);
 		getActivity().getContentResolver().update(
 				RecordsDbHelper.CONTENT_URI_TIMES, cv,
 				RecordsDbHelper.ID2 + "=?",
 				new String[] { String.valueOf(mIDrecord) });
 		cv.clear();
+		editNote(mIDrecord, mCurrentNoteEdit.getText().toString().trim());
+		Uri u;
+		
 		if (mOriginalStart != mCurrentStart) {
 			c.moveToPosition(mBeforeCounter.getSelectedItemPosition());
 			cv.put(RecordsDbHelper.TIMERSID, c.getInt(4));
 			cv.put(RecordsDbHelper.STARTTIME, mOriginalStart);
 			cv.put(RecordsDbHelper.LENGHT, mCurrentStart - mOriginalStart);
 			cv.put(RecordsDbHelper.ENDTIME, mCurrentStart);
-			note = mBeforeNoteEdit.getText().toString().trim();;
-			if(note.length() == 0)
-				note = null;
-			cv.put(RecordsDbHelper.NOTE, note);
-			getActivity().getContentResolver().insert(
+			u = getActivity().getContentResolver().insert(
 					RecordsDbHelper.CONTENT_URI_TIMES, cv);
 			cv.clear();
+			int id = Integer.valueOf(u.getLastPathSegment());
+			editNote(id, mBeforeNoteEdit.getText().toString().trim());
 		}
 
 		if (mOriginalLenght + mOriginalStart != mCurrentStart + mCurrentLenght
@@ -366,13 +364,12 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 			else {
 				cv.put(RecordsDbHelper.LENGHT, 0);
 			}
-			note = mAfterNoteEdit.getText().toString().trim();;
-			if(note.length() == 0)
-				note = null;
-			cv.put(RecordsDbHelper.NOTE, note);
-			getActivity().getContentResolver().insert(
+			u = getActivity().getContentResolver().insert(
 					RecordsDbHelper.CONTENT_URI_TIMES, cv);
 			cv.clear();
+			int id = Integer.valueOf(u.getLastPathSegment());
+			editNote(id, mAfterNoteEdit.getText().toString().trim());
+			
 			if (mOriginalLenght == 0) {
 				c.moveToPosition(mAfterCounter.getSelectedItemPosition());
 				cv.put(RecordsDbHelper.ISRUNNING, 1);
@@ -383,6 +380,18 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 				cv.clear();
 			}
 		}
+	}
+
+	private void editNote(int id, String note) {
+		if(note.length() == 0){
+			getActivity().getContentResolver().delete(RecordsDbHelper.CONTENT_URI_NOTES, RecordsDbHelper.ID3 + "=?", new String[]{String.valueOf(id)});
+			return;
+		}
+		ContentValues cv = new ContentValues();
+		cv.put(RecordsDbHelper.ID3, id);
+		cv.put(RecordsDbHelper.NOTE, note);
+		getActivity().getContentResolver().insert(
+				RecordsDbHelper.CONTENT_URI_NOTES, cv);
 	}
 
 	public void onDismiss(DialogInterface dialog) {

@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_margin="4dip"
-        android:layout_alignParentLeft="true"
+        android:layout_toRightOf="@+id/before_record"
         android:minLines="2"
         android:gravity="center"
         android:text="@string/start_time"
@@ -47,7 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/stop"
         android:layout_alignTop="@+id/stop"
-        android:layout_toRightOf="@+id/stop"
+        android:layout_alignParentLeft="true"
         android:gravity="center"
         android:orientation="horizontal" >
 
@@ -59,7 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_margin="4dip"
-        android:layout_toRightOf="@+id/before_record"
+        android:layout_toRightOf="@+id/stop"
         android:layout_weight="1"
         android:ellipsize="end"
         android:minLines="2"
