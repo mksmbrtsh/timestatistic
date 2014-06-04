@@ -275,8 +275,6 @@ ListView.OnScrollListener {
 	}
 	
 	private boolean isNewGroup(Cursor cursor, int position) {
-		long now_start = (cursor.getLong(2) / 1000 / 60 / 60 / 24) * 1000 * 60 * 60* 24;
-		long now_stop = (cursor.getLong(7) / 1000 / 60 / 60 / 24) * 1000 * 60 * 60* 24;
         cursor.moveToPosition(position - 1);
         long before_start = (cursor.getLong(2) / 1000 / 60 / 60 / 24) * 1000 * 60 * 60* 24;
         long before_stop = (cursor.getLong(7) / 1000 / 60 / 60 / 24) * 1000 * 60 * 60* 24;

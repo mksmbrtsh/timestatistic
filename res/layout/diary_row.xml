@@ -6,76 +6,73 @@
     android:gravity="center"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/time"
+    <RelativeLayout
+        android:id="@+id/diary_row"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_margin="4dip"
-        android:layout_toRightOf="@+id/before_record"
-        android:minLines="2"
-        android:gravity="center"
-        android:text="@string/start_time"
-        android:textSize="12sp"
-        android:textStyle="bold" />
+        android:layout_below="@+id/date_header"
+        android:gravity="center_vertical" >
 
-    <TextView
-        android:id="@+id/splitter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/time"
-        android:gravity="center"
-        android:minLines="2"
-        android:text="-" />
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_margin="4dip"
+            android:layout_toRightOf="@+id/color_record"
+            android:gravity="center"
+            android:minLines="2"
+            android:text="@string/start_time"
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/stop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_margin="4dip"
-        android:layout_toRightOf="@+id/splitter"
-        android:gravity="center"
-        android:minLines="2"
-        android:text="@string/end_time"
-        android:textSize="12sp"
-        android:textStyle="bold" />
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_margin="4dip"
+            android:layout_toRightOf="@+id/time"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:minLines="2"
+            android:text="@string/name"
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
-    <LinearLayout
-        android:id="@+id/before_record"
-        android:layout_width="16dip"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/stop"
-        android:layout_alignTop="@+id/stop"
-        android:layout_alignParentLeft="true"
-        android:gravity="center"
-        android:orientation="horizontal" >
+        <LinearLayout
+            android:id="@+id/color_record"
+            android:layout_width="16dip"
+            android:layout_height="16dip"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:orientation="horizontal" >
+        </LinearLayout>
 
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_margin="4dip"
-        android:layout_toRightOf="@+id/stop"
-        android:layout_weight="1"
-        android:ellipsize="end"
-        android:minLines="2"
-        android:text="@string/name"
-        android:textSize="12sp"
-        android:textStyle="bold" />
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/note_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@id/name"
-        android:text="TextView" />
+        android:layout_below="@+id/diary_row"
+        android:text="TextView"
+        android:textStyle="italic" />
 
-    
+    <TextView
+        android:id="@+id/date_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+
+        android:gravity="center_horizontal"
+        android:text="Medium Text"
+        android:textStyle="bold"
+        android:textAppearance="?android:attr/textAppearanceMedium" 
+        android:visibility="visible" />
 
 
 </RelativeLayout>

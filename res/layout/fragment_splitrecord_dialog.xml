@@ -50,6 +50,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10" 
+                    android:inputType="textCapSentences|textMultiLine"
                     android:minLines="2">
 
                     <requestFocus />
@@ -85,6 +86,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
+                    android:inputType="textCapSentences|textMultiLine"
                     android:minLines="2" />
 
                 <LinearLayout
@@ -114,7 +116,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/before_record"
+                android:id="@+id/color_record"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
@@ -150,6 +152,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
+                    android:inputType="textCapSentences|textMultiLine"
                     android:minLines="2" />
 
             </LinearLayout>

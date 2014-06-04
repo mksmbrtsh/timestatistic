@@ -191,7 +191,7 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 		mCurrentStopDateTime.setOnClickListener(this);
 		
 		mAfterLayout = v.findViewById(R.id.after_record);
-		mBeforeLayout = v.findViewById(R.id.before_record);
+		mBeforeLayout = v.findViewById(R.id.color_record);
 
 		mAfterText = (TextView) v.findViewById(R.id.after_period_value);
 		mBeforeText = (TextView) v.findViewById(R.id.before_period_value);

@@ -24,18 +24,22 @@ import android.widget.TextView;
 
 public class DiaryCursorAdapter extends SimpleCursorAdapter {
 
+	private SimpleDateFormat mSimpleTimeFormat;
 	private SimpleDateFormat mSimpleDateFormat;
-	// private ITimes mListener;
 	private Drawable mIndicator;
 	private HashMap<Integer, Boolean> mSelected;
 	private int mSelectedPosition;
 	private long mStartdate;
 	public static final int NORMAL_MODE = -1;
+	private static final int VIEW_TYPE_GROUP_START = 0;
+    private static final int VIEW_TYPE_GROUP_CONT = 1;
+    private static final int VIEW_TYPE_COUNT = 2;
 
 	public DiaryCursorAdapter(Context context, int layout, Cursor c,
 			String[] from, int[] to, int flags, long startdate) {
 		super(context, layout, c, from, to, flags);
-		mSimpleDateFormat = new SimpleDateFormat("dd/MM/yy\nHH:mm");
+		mSimpleTimeFormat = new SimpleDateFormat("HH:mm");
+		mSimpleDateFormat = new SimpleDateFormat("EEEE, d MMMM");
 		mStartdate = startdate;
 		int[] attrs = { android.R.attr.listChoiceIndicatorMultiple };
 		TypedArray ta = context.getTheme().obtainStyledAttributes(attrs);
@@ -45,13 +49,31 @@ public class DiaryCursorAdapter extends SimpleCursorAdapter {
 	public interface ITimes {
 		void onTimeRecordChange();
 	}
+	@Override
+    public int getViewTypeCount() {
+        return VIEW_TYPE_COUNT;
+    }
+	
+	@Override
+    public int getItemViewType(int position) {
+        if (position == 0) {
+            return VIEW_TYPE_GROUP_START;
+        }
+        Cursor cursor = getCursor();
+        cursor.moveToPosition(position);
+        boolean newGroup = isNewGroup(cursor, position);
 
+        if (newGroup) {
+            return VIEW_TYPE_GROUP_START;
+        } else {
+            return VIEW_TYPE_GROUP_CONT;
+        }
+    }
 	public static class ViewHolder {
 		public TextView time;
-		public TextView stop;
-		public TextView lenght;
 		public View LinearLayout01;
 		public TextView note_text;
+		public TextView dateHeader;
 	}
 	
 	@Override
@@ -59,11 +81,23 @@ public class DiaryCursorAdapter extends SimpleCursorAdapter {
 		super.bindView(view, context, cursor);
 		final ViewHolder holder;
 		final int position = cursor.getPosition();
+		int nViewType;
+		
+        if (position == 0) {
+            nViewType = VIEW_TYPE_GROUP_START;
+        } else {
+            boolean newGroup = isNewGroup(cursor, position);
+            if (newGroup) {
+                nViewType = VIEW_TYPE_GROUP_START;
+            } else {
+                nViewType = VIEW_TYPE_GROUP_CONT;
+            }
+        }
 		if (view.getTag() == null) {
 			holder = new ViewHolder();
 			holder.time = (TextView) view.findViewById(R.id.time);
-			holder.stop = (TextView) view.findViewById(R.id.stop);
-			holder.LinearLayout01 = view.findViewById(R.id.before_record);
+			holder.dateHeader = (TextView) view.findViewById(R.id.date_header);
+			holder.LinearLayout01 = view.findViewById(R.id.color_record);
 			holder.note_text = (TextView) view.findViewById(R.id.note_text);
 			view.setTag(holder);
 		} else {
@@ -71,17 +105,25 @@ public class DiaryCursorAdapter extends SimpleCursorAdapter {
 		}
 		long start = cursor.getLong(2);
 		long stop = cursor.getLong(7);
-		holder.note_text.setText(cursor.getString(8));
+		holder.note_text.setText("   " + cursor.getString(8));
 		Date d = new Date(start);
-		String t = mSimpleDateFormat.format(d);
+		if(nViewType == VIEW_TYPE_GROUP_START){
+			holder.dateHeader.setText(mSimpleDateFormat.format(d));
+			holder.dateHeader.setVisibility(View.VISIBLE);
+		}
+		else
+			holder.dateHeader.setVisibility(View.GONE);
+		StringBuilder sb = new StringBuilder(mSimpleTimeFormat.format(d));
 		if (cursor.getLong(1) == 0){
-			holder.stop.setText(mContext.getString(R.string.now));
+			sb.append(" - ");
+			sb.append(mContext.getString(R.string.now));
 		}
 		else {
 			d = new Date(cursor.getLong(1) + cursor.getLong(2));
-			holder.stop.setText(mSimpleDateFormat.format(d));
+			sb.append(" - ");
+			sb.append(mSimpleTimeFormat.format(d));
 		}
-		holder.time.setText(t);
+		holder.time.setText(sb.toString());
 		holder.LinearLayout01.setBackgroundColor(cursor.getInt(4));
 	}
 
@@ -114,5 +156,18 @@ public class DiaryCursorAdapter extends SimpleCursorAdapter {
 	public void setStartDate(long startdate) {
 		mStartdate = startdate;
 	}
-	
+	private boolean isNewGroup(Cursor cursor, int position) {
+		long now_start = (cursor.getLong(2) / 1000 / 60 / 60 / 24) * 1000 * 60 * 60* 24;
+		long now_stop = (cursor.getLong(7) / 1000 / 60 / 60 / 24) * 1000 * 60 * 60* 24;
+        cursor.moveToPosition(position - 1);
+        long before_start = (cursor.getLong(2) / 1000 / 60 / 60 / 24) * 1000 * 60 * 60* 24;
+        long before_stop = (cursor.getLong(7) / 1000 / 60 / 60 / 24) * 1000 * 60 * 60* 24;
+        cursor.moveToPosition(position);    
+        //if ((now != before_start || before_stop != now) && before_stop != 0 ) {
+        if((before_start != before_stop || before_stop != now_start) && before_stop !=0){
+            return true;
+        }
+
+        return false;
+    }
 }
