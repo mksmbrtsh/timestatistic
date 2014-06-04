@@ -303,7 +303,7 @@ public class RecordsDbHelper extends ContentProvider {
 					RecordsDbHelper.LENGHT, RecordsDbHelper.STARTTIME,
 					RecordsDbHelper.NAME, RecordsDbHelper.COLOR,
 					RecordsDbHelper.ID2, INTERVAL, RecordsDbHelper.ENDTIME },
-					selection, null, null, RecordsDbHelper.STARTTIME + " DESC",
+					selection, null, null, RecordsDbHelper.STARTTIME + " ASC",
 					null);
 			c = mDB.rawQuery(s, selectionArgs);
 			c.setNotificationUri(getContext().getContentResolver(), uri);
@@ -319,7 +319,7 @@ public class RecordsDbHelper extends ContentProvider {
 					RecordsDbHelper.STARTTIME, RecordsDbHelper.NAME,
 					RecordsDbHelper.COLOR, RecordsDbHelper.ID2, INTERVAL,
 					RecordsDbHelper.ENDTIME, NOTE },
-					selection, null, null, RecordsDbHelper.STARTTIME + " DESC",
+					selection, null, null, RecordsDbHelper.STARTTIME + " ASC",
 					null);
 			c = mDB.rawQuery(s, selectionArgs);
 			c.setNotificationUri(getContext().getContentResolver(), uri);

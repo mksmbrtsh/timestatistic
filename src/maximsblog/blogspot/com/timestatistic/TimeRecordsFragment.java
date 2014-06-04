@@ -55,7 +55,7 @@ public class TimeRecordsFragment extends Fragment implements
 		loadermanager = getLoaderManager();
 		String[] uiBindFrom = { RecordsDbHelper.NAME,
 				RecordsDbHelper.STARTTIME, RecordsDbHelper.LENGHT };
-		int[] uiBindTo = { R.id.name, R.id.time, R.id.lenght };
+		int[] uiBindTo = { R.id.name, R.id.time, R.id.lenght_record };
 		mStartdate = app.getStartDate(getActivity()).startDate;
 		mAdapter = new TimesCursorAdapter(this.getActivity(),
 				R.layout.time_row, null, uiBindFrom, uiBindTo, 0, mStartdate);
@@ -223,9 +223,7 @@ public class TimeRecordsFragment extends Fragment implements
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == R.id.ok) {
-			Cursor times = getActivity().getContentResolver().query(
-					RecordsDbHelper.CONTENT_URI_ALLTIMES, null, null, null,
-					null);
+			Cursor times = mAdapter.getCursor();
 			long start = Long.MAX_VALUE;
 			long lenght = 0;
 			long clenght = -1;
@@ -251,6 +249,7 @@ public class TimeRecordsFragment extends Fragment implements
 						note = cursor.getString(1);
 					} else
 						note = null;
+					cursor.close();
 				}
 				lenght += times.getLong(1);
 				idrecords.add(times.getInt(5));
@@ -264,6 +263,7 @@ public class TimeRecordsFragment extends Fragment implements
 						note = cursor.getString(1);
 					} else
 						note = null;
+					cursor.close();
 				}
 
 			}

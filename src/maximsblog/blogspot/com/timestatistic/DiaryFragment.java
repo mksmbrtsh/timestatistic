@@ -56,7 +56,7 @@ public class DiaryFragment extends Fragment implements LoaderCallbacks<Cursor>,
 		String[] uiBindFrom = { RecordsDbHelper.NAME,
 				RecordsDbHelper.STARTTIME, RecordsDbHelper.LENGHT,
 				RecordsDbHelper.NOTE };
-		int[] uiBindTo = { R.id.name, R.id.time, R.id.lenght, R.id.note_text };
+		int[] uiBindTo = { R.id.name, R.id.time, R.id.lenght_record, R.id.note_text };
 		mStartdate = app.getStartDate(getActivity()).startDate;
 		mAdapter = new DiaryCursorAdapter(this.getActivity(),
 				R.layout.diary_row, null, uiBindFrom, uiBindTo, 0, mStartdate);
