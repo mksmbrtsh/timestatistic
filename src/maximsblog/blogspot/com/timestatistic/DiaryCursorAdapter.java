@@ -72,6 +72,7 @@ public class DiaryCursorAdapter extends SimpleCursorAdapter {
 	public static class ViewHolder {
 		public TextView time;
 		public View LinearLayout01;
+		public TextView name;
 		public TextView note_text;
 		public TextView dateHeader;
 	}
@@ -99,6 +100,7 @@ public class DiaryCursorAdapter extends SimpleCursorAdapter {
 			holder.dateHeader = (TextView) view.findViewById(R.id.date_header);
 			holder.LinearLayout01 = view.findViewById(R.id.color_record);
 			holder.note_text = (TextView) view.findViewById(R.id.note_text);
+			holder.name = (TextView) view.findViewById(R.id.name);
 			view.setTag(holder);
 		} else {
 			holder = (ViewHolder) view.getTag();
@@ -125,6 +127,8 @@ public class DiaryCursorAdapter extends SimpleCursorAdapter {
 		}
 		holder.time.setText(sb.toString());
 		holder.LinearLayout01.setBackgroundColor(cursor.getInt(4));
+		setTime(holder.name,
+				stop - start > 0 ? stop - start : new Date().getTime() - start);
 	}
 
 
@@ -135,6 +139,46 @@ public class DiaryCursorAdapter extends SimpleCursorAdapter {
 			mSelected.put(position + 1, false);
 		if (position - 1 >= 0)
 			mSelected.put(position - 1, false);
+	}
+	
+	private void setTime(TextView t, long time) {
+		if (time == 0) {
+			t.setText(getCursor().getString(3));
+		} else {
+			int day;
+			int hours;
+			int minutes;
+			int seconds;
+			day = (int) (time / (24 * 60 * 60 * 1000));
+			hours = (int) (time / (60 * 60 * 1000)) - day * 24;
+			minutes = (int) (time / (60 * 1000)) - day * 24 * 60 - 60 * hours;
+			seconds = (int) (time / 1000) - day * 24 * 60 * 60 - 60 * 60
+					* hours - 60 * minutes;
+			String s = new String();
+			if (day > 0) {
+				s = String.format(getCursor().getString(3) + " (%s\n%02d:%02d:%02d)",
+						getTimeString("day", day), hours, minutes, seconds);
+			} else
+				s = String.format(getCursor().getString(3) + " (%02d:%02d:%02d)", hours, minutes, seconds);
+			t.setText(s);
+		}
+	}
+
+	private String getTimeString(String res, int l) {
+		StringBuilder s = new StringBuilder();
+		s.append(l);
+		s.append(' ');
+		if (l == 1 || (l % 10 == 1 && l != 11)) {
+			s.append(mContext.getString(mContext.getResources().getIdentifier(
+					res + "1", "string", mContext.getPackageName())));
+		} else if ((l % 10 == 2 || l % 10 == 3 || l % 10 == 4) && l != 12
+				&& l != 13 && l != 14) {
+			s.append(mContext.getString(mContext.getResources().getIdentifier(
+					res + "234", "string", mContext.getPackageName())));
+		} else
+			s.append(mContext.getString(mContext.getResources().getIdentifier(
+					res + "s", "string", mContext.getPackageName())));
+		return s.toString();
 	}
 
 	public void setSelectedPosition(int position) {
