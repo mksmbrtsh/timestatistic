@@ -64,10 +64,13 @@ The application works with a database <b>timestat.db</b>. Usually it is located 
       <p> While the application is using two tables:</p>
       <p>timers</p>
       <p>times</p>
+      <p>notes</p>
       <h2>timers</h2>
       <p> The table &#34;timers&#34; are attributes counters. Description of column is: id - the identifier of the counter; name - his name; color - color; isrunning - 1, if run and 0 if stop (<b> Attention! </ b> can be started only one counter, that can only be one unit, otherwise the program will fall); interval - Time in milliseconds between reminders</p>
       <h2>times</h2>
-      <p> This table stores the the records themselves. Description of columns: _idt - record identifier; timerid - counter identifier (it matches the value of the _id table timers); start - the start time, in milliseconds, class java DateTime; length - the length of records in milliseconds; endtime - the end time, in milliseconds, class java DateTime; note - diary note for record.</p>
+      <p> This table stores the records themselves. Description of columns: _idt - record identifier; timerid - counter identifier (it matches the value of the _id table timers); start - the start time, in milliseconds, class java DateTime; length - the length of records in milliseconds; endtime - the end time, in milliseconds, class java DateTime.</p>
+      <h2>notes</h2>
+      <p> This table store notes of diary. Description of columns: _idn - record identifier(==_idt from &#34;times&#34; table); note - diary note for record</p>
       <h1>Export and import data base</h1>
       <p> In the settings, you can create your backup and recovery. Backup is saved in the memory card.</p>
       <p>Path: memory card/Android/data/maximsblog.blogspot.com.timestatistic/files</p>
