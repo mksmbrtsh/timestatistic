@@ -107,7 +107,7 @@ public class DiaryCursorAdapter extends SimpleCursorAdapter {
 		}
 		long start = cursor.getLong(2);
 		long stop = cursor.getLong(7);
-		holder.note_text.setText("   " + cursor.getString(8));
+		holder.note_text.setText(cursor.getString(8));
 		Date d = new Date(start);
 		if(nViewType == VIEW_TYPE_GROUP_START){
 			holder.dateHeader.setText(mSimpleDateFormat.format(d));

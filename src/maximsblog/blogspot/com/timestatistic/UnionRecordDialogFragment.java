@@ -124,7 +124,10 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 				}
 			}
 		mCurrentCounter.setSelection(mCurrentPosition);
-		mCurrentNoteEdit.setText(mCurrentNote);
+		if(mCurrentNote!=null) {
+			mCurrentNoteEdit.setText("");
+			mCurrentNoteEdit.append(mCurrentNote);
+		}
 		setCurrentText();
 	};
 

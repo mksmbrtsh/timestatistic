@@ -105,7 +105,7 @@ public class DiaryEditorDialogFragment extends DialogFragment implements OnClick
 	@Override
 	public void onResume() {
 		super.onResume();
-		mCurrentNoteEdit.setText(mCurrentNote);
+		mCurrentNoteEdit.append(mCurrentNote);
 		mCalendar.setTimeInMillis(mOriginalStart);
 		String startString = mFormatterDateTime.format(mCalendar.getTime());
 		mCalendar.setTimeInMillis(mOriginalStart + mOriginalLenght);

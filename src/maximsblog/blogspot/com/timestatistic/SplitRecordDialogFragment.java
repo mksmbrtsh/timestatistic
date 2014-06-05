@@ -237,7 +237,10 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 		mCurrentCounter.setSelection(mCurrentPosition);
 		mAfterCounter.setSelection(mAfterPosition);
 		mBeforeCounter.setSelection(mBeforePosition);
-		mCurrentNoteEdit.setText(mCurrentNote);
+		if(mCurrentNote!=null) {
+			mCurrentNoteEdit.setText("");
+			mCurrentNoteEdit.append(mCurrentNote);
+		}
 		setCurrentText();
 	};
 
