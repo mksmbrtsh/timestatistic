@@ -2,20 +2,29 @@
 <item
         android:id="@+id/item_starts"
         android:showAsAction="always"
-        android:orderInCategory="1"
+        android:orderInCategory="3"
         android:icon="@drawable/ic_startdatefilter"
         android:title="@string/start">
     </item>
+     <item android:id="@+id/item_search"
+         android:title="@string/search"
+         android:orderInCategory="4"
+         android:icon="@android:drawable/ic_menu_search"
+         android:showAsAction="always"
+         android:iconifiedByDefault="true"
+         android:voiceSearchMode="showVoiceSearchButton|launchRecognizer"
+         android:actionViewClass="com.actionbarsherlock.widget.SearchView">
+         </item>
     <item
         android:id="@+id/item_add"
         android:showAsAction="always"
-        android:orderInCategory="2"
+        android:orderInCategory="1"
         android:icon="@drawable/ic_plus"
         android:title="@string/add">
     </item>
     <item
         android:id="@+id/item_reset_all"
-        android:orderInCategory="3"
+        android:orderInCategory="2"
         android:showAsAction="never"
         android:icon="@drawable/ic_action_reset_all_light"
         android:title="@string/reset_all">
