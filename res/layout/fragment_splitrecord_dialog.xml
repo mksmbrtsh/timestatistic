@@ -38,6 +38,24 @@
                     android:id="@+id/after_record_counter"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/note" />
+
+                <EditText
+                    android:id="@+id/after_note"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10" 
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:minLines="2">
+
+                    <requestFocus />
+                </EditText>
+
             </LinearLayout>
 
             <LinearLayout
@@ -46,7 +64,7 @@
                 android:orientation="vertical" >
 
                 <TextView
-                    android:id="@+id/textView1"
+                    android:id="@+id/note_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -56,6 +74,20 @@
                     android:id="@+id/current_counter"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/note" />
+
+                <EditText
+                    android:id="@+id/current_note"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:minLines="2" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -80,10 +112,11 @@
                         android:inputType="date"
                         android:text="Button" />
                 </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/before_record"
+                android:id="@+id/color_record"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
@@ -106,6 +139,22 @@
                     android:id="@+id/before_record_counter"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/note" />
+
+                <EditText
+                    android:id="@+id/before_note"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:minLines="2" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -130,6 +179,7 @@
                     android:ems="10"
                     android:inputType="date"
                     android:text="@android:string/ok" />
+
             </LinearLayout>
 
         </LinearLayout>

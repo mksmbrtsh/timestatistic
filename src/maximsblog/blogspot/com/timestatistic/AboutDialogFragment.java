@@ -27,7 +27,7 @@ public class AboutDialogFragment extends DialogFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view =  inflater.inflate(R.layout.fragment_about,container, false);
-		TextView t = (TextView) view.findViewById(R.id.textView1);
+		TextView t = (TextView) view.findViewById(R.id.note_text);
 		t.setText(getResources().getText(R.string.about_text));
 		Linkify.addLinks(t, Linkify.ALL);
 		t.setMovementMethod(LinkMovementMethod.getInstance());

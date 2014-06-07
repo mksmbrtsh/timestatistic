@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,6 +47,8 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 			DateFormat.SHORT, DateFormat.SHORT);
 
 	private TextView mUnionDateTimeInterval;
+	private EditText mCurrentNoteEdit;
+	private String mCurrentNote;
 
 	public void setDialogListener(MainActivity mainActivity) {
 		mListener = mainActivity;
@@ -60,6 +63,7 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 			mLenght = savedInstanceState.getLong("mLenght");
 			mIDtimer = savedInstanceState.getInt("mIDtimer");
 			mNowCounter = savedInstanceState.getBoolean("mNowCounter");
+			mCurrentNote = savedInstanceState.getString("mCurrentNoteEdit");
 			mIdrecords = (ArrayList<Integer>) savedInstanceState
 					.getSerializable("mIdrecords");
 			mCurrentPosition = savedInstanceState.getInt("mCurrentPosition");
@@ -78,6 +82,8 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 		outState.putSerializable("mIdrecords", mIdrecords);
 		outState.putBoolean("mNowCounter", mNowCounter);
 		outState.putInt("mCurrentPosition", mCurrentPosition);
+		outState.putString("mCurrentNoteEdit", mCurrentNoteEdit.getText()
+				.toString());
 		super.onSaveInstanceState(outState);
 	};
 
@@ -98,7 +104,8 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 		mCurrentCounterAdapter
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		mCurrentCounter.setAdapter(mCurrentCounterAdapter);
-		mUnionDateTimeInterval = (TextView) v.findViewById(R.id.textView1);
+		mUnionDateTimeInterval = (TextView) v.findViewById(R.id.note_text);
+		mCurrentNoteEdit = (EditText) v.findViewById(R.id.current_note);
 		return v;
 	}
 
@@ -117,6 +124,10 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 				}
 			}
 		mCurrentCounter.setSelection(mCurrentPosition);
+		if(mCurrentNote!=null) {
+			mCurrentNoteEdit.setText("");
+			mCurrentNoteEdit.append(mCurrentNote);
+		}
 		setCurrentText();
 	};
 
@@ -167,14 +178,24 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 		}
 		cv.put(RecordsDbHelper.TIMERSID, c.getInt(4));
 		cv.put(RecordsDbHelper.STARTTIME, mStart);
+		cv.put(RecordsDbHelper.ID2, c.getInt(0));
 		getActivity().getContentResolver().insert(
 				RecordsDbHelper.CONTENT_URI_TIMES, cv);
 
+		editNote(c.getInt(0), mCurrentNoteEdit.getText().toString().trim());
+
 		for (Integer iterable_element : mIdrecords) {
-			getActivity().getContentResolver().delete(
-					RecordsDbHelper.CONTENT_URI_TIMES,
-					RecordsDbHelper.ID2 + "=?",
-					new String[] { String.valueOf(iterable_element) });
+			if (c.getInt(0) != iterable_element) {
+				getActivity().getContentResolver().delete(
+						RecordsDbHelper.CONTENT_URI_TIMES,
+						RecordsDbHelper.ID2 + "=?",
+						new String[] { String.valueOf(iterable_element) });
+
+				getActivity().getContentResolver().delete(
+						RecordsDbHelper.CONTENT_URI_NOTES,
+						RecordsDbHelper.ID3 + "=?",
+						new String[] { String.valueOf(iterable_element) });
+			}
 		}
 	}
 
@@ -188,13 +209,28 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 
 	public void setValues(HashMap<Integer, Boolean> selected, long start,
 			long lenght, boolean nowCounter, int iDtimer,
-			ArrayList<Integer> idrecords) {
+			ArrayList<Integer> idrecords, String note) {
 		mSelected = selected;
 		mStart = start;
 		mLenght = lenght;
 		mNowCounter = nowCounter;
 		mIDtimer = iDtimer;
 		mIdrecords = idrecords;
+		mCurrentNote = note;
 	}
 
+	private void editNote(int id, String note) {
+		if (note.length() == 0) {
+			getActivity().getContentResolver().delete(
+					RecordsDbHelper.CONTENT_URI_NOTES,
+					RecordsDbHelper.ID3 + "=?",
+					new String[] { String.valueOf(id) });
+			return;
+		}
+		ContentValues cv = new ContentValues();
+		cv.put(RecordsDbHelper.ID3, id);
+		cv.put(RecordsDbHelper.NOTE, note);
+		getActivity().getContentResolver().insert(
+				RecordsDbHelper.CONTENT_URI_NOTES, cv);
+	}
 }

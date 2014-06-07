@@ -13,6 +13,7 @@
         <item>Счётчики</item>
         <item>Записи</item>
         <item>Диаграмма</item>
+        <item>Дневник</item>
     </string-array>
     <string name="del">Удалить</string>
     <string name="day1">день</string>
@@ -60,4 +61,6 @@
         <item>За всё время</item>
     </string-array>
     <string name="start">Начало</string>
+    <string name="note">Примечание</string>
+    <string name="search">Поиск</string>
 </resources>

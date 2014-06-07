@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/before_record"
+    android:id="@+id/color_record"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:gravity="center"
@@ -25,7 +25,7 @@
         android:gravity="center" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/note_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="5dip"

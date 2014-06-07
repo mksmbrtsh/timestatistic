@@ -2,40 +2,49 @@
 	<item
         android:id="@+id/item_starts"
         android:showAsAction="always"
-        android:orderInCategory="1"
+        android:orderInCategory="3"
         android:icon="@drawable/ic_startdatefilter"
         android:title="@string/start">
     </item>
+    <item android:id="@+id/item_search"
+         android:title="@string/search"
+         android:orderInCategory="4"
+         android:icon="@android:drawable/ic_menu_search"
+         android:showAsAction="always"
+         android:iconifiedByDefault="true"
+         android:voiceSearchMode="showVoiceSearchButton|launchRecognizer"
+         android:actionViewClass="com.actionbarsherlock.widget.SearchView">
+         </item>
     <item
         android:id="@+id/item_add"
         android:showAsAction="always"
-        android:orderInCategory="2"
+        android:orderInCategory="1"
         android:icon="@drawable/ic_plus"
         android:title="@string/add">
     </item>
     <item
         android:id="@+id/item_reset_all"
-        android:orderInCategory="3"
+        android:orderInCategory="2"
         android:showAsAction="always"
         android:icon="@drawable/ic_action_reset_all_dark"
         android:title="@string/reset_all">
     </item>
     <item
         android:id="@+id/action_settings"
-        android:orderInCategory="4"
+        android:orderInCategory="5"
         android:showAsAction="never"
         android:title="@string/action_settings"/>
      <item
         android:id="@+id/item_help"
         android:icon="@drawable/ic_action_about_light"
-        android:orderInCategory="5"
+        android:orderInCategory="6"
         android:showAsAction="never"
         android:title="@string/help">
     </item>
     <item
         android:id="@+id/item_about"
         android:icon="@drawable/ic_action_about_dark"
-        android:orderInCategory="6"
+        android:orderInCategory="7"
         android:showAsAction="never"
         android:title="@string/about">
     </item>

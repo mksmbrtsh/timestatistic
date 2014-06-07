@@ -19,10 +19,16 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.SearchManager;
+import android.app.SearchableInfo;
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -30,19 +36,26 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.internal.view.SupportMenuItem;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v4.widget.CursorAdapter;
+import android.view.View;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.widget.SearchView;
+import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
+import com.actionbarsherlock.widget.SearchView.OnSuggestionListener;
 
 public class MainActivity extends SherlockFragmentActivity implements
 		ResetAllDialog, ICounterEditorDialog, OnPageChangeListener,
-		IRecordDialog {
+		IRecordDialog, OnQueryTextListener, OnSuggestionListener {
 
 	private String[] mTitles;
 	private PagesAdapter adapter;
 	private ViewPager pager;
+	private SearchView mSearchView;
 
 	public interface MainFragments {
 		void onReload();
@@ -81,9 +94,14 @@ public class MainActivity extends SherlockFragmentActivity implements
 					.findFragmentByTag("mUnionRecordDialog");
 			if (unionRecordDialogFragment != null)
 				unionRecordDialogFragment.setDialogListener(this);
-			StartDateSetDialogFragment startDateSetDialogFragment = (StartDateSetDialogFragment) fm.findFragmentByTag("mStartDateSetDialogFragment");
-			if(startDateSetDialogFragment!=null)
+			StartDateSetDialogFragment startDateSetDialogFragment = (StartDateSetDialogFragment) fm
+					.findFragmentByTag("mStartDateSetDialogFragment");
+			if (startDateSetDialogFragment != null)
 				startDateSetDialogFragment.setDialogListener(this);
+			DiaryEditorDialogFragment diaryEditorDialogFragment = (DiaryEditorDialogFragment) fm
+					.findFragmentByTag("mDiaryEditorDialogFragment");
+			if (diaryEditorDialogFragment != null)
+				diaryEditorDialogFragment.setCounterDialogListener(this);
 		}
 	}
 
@@ -108,8 +126,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 			} else if (position == 1) {
 				TimeRecordsFragment fg = TimeRecordsFragment.newInstance();
 				f = fg;
-			} else {
+			} else if (position == 2) {
 				DiagramFragment fg = DiagramFragment.newInstance();
+				f = fg;
+			} else {
+				DiaryFragment fg = DiaryFragment.newInstance();
 				f = fg;
 			}
 			return f;
@@ -130,6 +151,28 @@ public class MainActivity extends SherlockFragmentActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getSupportMenuInflater().inflate(R.menu.main_activity, menu);
+		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+		MenuItem searchMenuItem = ((MenuItem) menu.findItem(R.id.item_search));
+		mSearchView = (SearchView) searchMenuItem.getActionView();
+		if (pager.getCurrentItem() == 3) {
+			getSupportActionBar().setTitle("");
+			searchMenuItem.setVisible(true);
+		} else {
+			StartDateOption startDateOption = app.getStartDate(this);
+			getSupportActionBar().setTitle(startDateOption.startDateName);
+			searchMenuItem.setVisible(false);
+			if (mSearchView.isShown())
+				mSearchView.setIconified(true);
+		}
+		SearchableInfo info = searchManager
+				.getSearchableInfo(getComponentName());
+		mSearchView.setSearchableInfo(info);
+		mSearchView.setOnQueryTextListener(this);
+		mSearchView.setOnSuggestionListener(this);
+		menu.findItem(R.id.item_add).setVisible(pager.getCurrentItem() == 0);
+		menu.findItem(R.id.item_reset_all).setVisible(
+				pager.getCurrentItem() == 0);
+		menu.findItem(R.id.item_starts).setVisible(pager.getCurrentItem() != 3);
 		return true;
 	}
 
@@ -234,11 +277,14 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private void reloadFragments() {
 		((MainFragments) findFragmentByPosition(0)).onReload();
 		TimeRecordsFragment timeRecordsFragment = (TimeRecordsFragment) ((MainFragments) findFragmentByPosition(1));
-		timeRecordsFragment.setNormalMode();
-		timeRecordsFragment.onReload();
+			timeRecordsFragment.setNormalMode();
+			timeRecordsFragment.onReload();
 		DiagramFragment diagramFragment = (DiagramFragment) ((MainFragments) findFragmentByPosition(2));
-		if(diagramFragment != null)
+		if (diagramFragment != null)
 			diagramFragment.onReload();
+		DiaryFragment diaryFragment = (DiaryFragment) ((MainFragments) findFragmentByPosition(3));
+		if (diaryFragment != null)
+			diaryFragment.onReload();
 	}
 
 	@Override
@@ -255,13 +301,60 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onPageSelected(int position) {
-		if (position == 2 || position == 1)
+		if (position == 2 || position == 1 || position == 3)
 			((MainFragments) findFragmentByPosition(position)).onReload();
+		supportInvalidateOptionsMenu();
 	}
 
 	@Override
 	public void onRefreshFragmentsValue() {
 		reloadFragments();
+	}
+
+	@Override
+	public boolean onQueryTextSubmit(String query) {
+		DiaryFragment diaryFragment = (DiaryFragment) ((MainFragments) findFragmentByPosition(3));
+		if (diaryFragment != null) {
+			diaryFragment.setFilter(query);
+			diaryFragment.onReload();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean onQueryTextChange(String newText) {
+		if (newText.length() == 0) {
+			DiaryFragment diaryFragment = (DiaryFragment) ((MainFragments) findFragmentByPosition(3));
+			if (diaryFragment != null) {
+				diaryFragment.setFilter(newText);
+				diaryFragment.onReload();
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public boolean onSuggestionSelect(int position) {
+		Cursor c = mSearchView.getSuggestionsAdapter().getCursor();
+		c.moveToPosition(position);
+		mSearchView.setQuery(c.getString(c
+				.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1)), true);
+		return false;
+	}
+
+	@Override
+	public boolean onSuggestionClick(int position) {
+		Cursor c = mSearchView.getSuggestionsAdapter().getCursor();
+		c.moveToPosition(position);
+		mSearchView.setQuery(c.getString(c
+				.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1)), true);
+		return false;
+	}
+
+	@Override
+	public void onDiaryFragmentsRefresh() {
+		DiaryFragment diaryFragment = (DiaryFragment) ((MainFragments) findFragmentByPosition(3));
+			diaryFragment.onReload();
 	}
 
 }

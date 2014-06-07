@@ -35,33 +35,35 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.support.v4.widget.SimpleCursorAdapter;
 
-public class TimeRecordsFragment extends Fragment implements
-		LoaderCallbacks<Cursor>, MainFragments, OnItemClickListener,
-		OnItemLongClickListener, OnClickListener {
-	public static TimeRecordsFragment newInstance() {
+public class DiaryFragment extends Fragment implements LoaderCallbacks<Cursor>,
+		MainFragments, OnItemClickListener, OnItemLongClickListener,
+		OnClickListener {
+	public static DiaryFragment newInstance() {
 
-		return new TimeRecordsFragment();
+		return new DiaryFragment();
 	}
 
 	private LoaderManager loadermanager;
 	private ListView mList;
-	private TimesCursorAdapter mAdapter;
-	private View mUnionPanel;
+	private DiaryCursorAdapter mAdapter;
 	private long mStartdate;
+	private String mFilterNotes;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		loadermanager = getLoaderManager();
 		String[] uiBindFrom = { RecordsDbHelper.NAME,
-				RecordsDbHelper.STARTTIME, RecordsDbHelper.LENGHT };
-		int[] uiBindTo = { R.id.name, R.id.time, R.id.lenght_record };
+				RecordsDbHelper.STARTTIME, RecordsDbHelper.LENGHT,
+				RecordsDbHelper.NOTE };
+		int[] uiBindTo = { R.id.name, R.id.time, R.id.lenght_record, R.id.note_text };
 		mStartdate = app.getStartDate(getActivity()).startDate;
-		mAdapter = new TimesCursorAdapter(this.getActivity(),
-				R.layout.time_row, null, uiBindFrom, uiBindTo, 0, mStartdate);
+		mAdapter = new DiaryCursorAdapter(this.getActivity(),
+				R.layout.diary_row, null, uiBindFrom, uiBindTo, 0, mStartdate);
 		loadermanager.initLoader(1, null, this);
 		if (savedInstanceState != null) {
-			mAdapter.setSelectedPosition(savedInstanceState.getInt("mChoiceUnionMode"));
+			mAdapter.setSelectedPosition(savedInstanceState
+					.getInt("mChoiceUnionMode"));
 			mAdapter.setSelected((HashMap<Integer, Boolean>) savedInstanceState
 					.getSerializable("mSelected"));
 		} else {
@@ -81,28 +83,28 @@ public class TimeRecordsFragment extends Fragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		LinearLayout layout = (LinearLayout) inflater.inflate(
-				R.layout.fragment_time_records, container, false);
+				R.layout.fragment_diary, container, false);
 		mList = (ListView) layout.findViewById(R.id.listView1);
 		mList.setAdapter(mAdapter);
 		mList.setOnItemClickListener(this);
-		mList.setOnItemLongClickListener(this);
-		mList.setOnScrollListener(mAdapter);
-		mUnionPanel = layout.findViewById(R.id.union_panel);
-		mUnionPanel.setVisibility(View.GONE);
-		Button mUnionButton = (Button) mUnionPanel.findViewById(R.id.ok);
-		Button mCancelUnionButton = (Button) mUnionPanel
-				.findViewById(R.id.cancel);
-		mUnionButton.setOnClickListener(this);
-		mCancelUnionButton.setOnClickListener(this);
 		return layout;
 	}
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
-		String[] selectionArgs = new String[] { String.valueOf(app.getStartDate(getActivity()).startDate)};
-		CursorLoader loader = new CursorLoader(this.getActivity(),
-				RecordsDbHelper.CONTENT_URI_ALLTIMES, null,
-				RecordsDbHelper.STARTTIME + " IS NOT NULL ", selectionArgs, null);
+		CursorLoader loader;
+		String[] selectionArgs;
+		if (mFilterNotes != null && mFilterNotes.length() > 0)
+			selectionArgs = new String[] { mFilterNotes };
+		else
+			selectionArgs = new String[] { "" };
+
+		loader = new CursorLoader(this.getActivity(),
+				RecordsDbHelper.CONTENT_URI_ALLNOTES, null,
+				RecordsDbHelper.STARTTIME + " IS NOT NULL AND "
+						+ RecordsDbHelper.NOTE + " LIKE ?", selectionArgs,
+				null);
+
 		return loader;
 	}
 
@@ -110,14 +112,13 @@ public class TimeRecordsFragment extends Fragment implements
 	public void onLoadFinished(Loader<Cursor> arg0, Cursor cursor) {
 		if (mAdapter != null && cursor != null) {
 			mAdapter.swapCursor(cursor); // swap the new cursor in.
-			
+
 			if (!mAdapter.getSelected().isEmpty()
-					&& Collections.max(mAdapter.getSelected().keySet()) >= cursor.getCount()) {
+					&& Collections.max(mAdapter.getSelected().keySet()) >= cursor
+							.getCount()) {
 				mAdapter.setSelectedPosition(TimesCursorAdapter.NORMAL_MODE);
 				mAdapter.getSelected().clear();
 			}
-			if (mAdapter.getChoiceUnionMode() != TimesCursorAdapter.NORMAL_MODE)
-				mUnionPanel.setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -135,72 +136,20 @@ public class TimeRecordsFragment extends Fragment implements
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-		if (mAdapter.getChoiceUnionMode() == TimesCursorAdapter.NORMAL_MODE) {
+	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+			long arg3) {
 			Cursor cursor = mAdapter.getCursor();
-			int idtimer = cursor.getInt(0);
+			String name = cursor.getString(3);
 			int idRecord = cursor.getInt(5);
 			long start = cursor.getLong(2);
 			long lenght = cursor.getLong(1);
-			cursor = getActivity().getContentResolver().query(RecordsDbHelper.CONTENT_URI_NOTES,
-					new String[] {RecordsDbHelper.ID3, RecordsDbHelper.NOTE}, RecordsDbHelper.ID3 + "=?",new String[] { String.valueOf(idRecord) }, null);
-			String note;
-			if(cursor.getCount() ==1){
-				cursor.moveToFirst();
-				note = cursor.getString(1);
-			} else
-				note = null;
-			SplitRecordDialogFragment mSplitRecordDialog = new SplitRecordDialogFragment();
-			mSplitRecordDialog
+			String note = cursor.getString(8);
+			DiaryEditorDialogFragment mDiaryEditorDialogFragment = new DiaryEditorDialogFragment();
+			mDiaryEditorDialogFragment
 					.setCounterDialogListener((MainActivity) getActivity());
-			mSplitRecordDialog.setValues(idtimer, idRecord, start, lenght, note == null ? "": note);
-			mSplitRecordDialog.show(this.getActivity()
-					.getSupportFragmentManager(), "mSplitRecordDialog");
-		} else {
-			CheckBox check = (CheckBox) arg1.findViewById(R.id.check);
-			if (check.getVisibility() == View.VISIBLE) {
-				if (!check.isChecked()) {
-					check.setChecked(true);
-					mAdapter.getSelected().put(position, true);
-					if(position + 1  < mList.getCount() && mAdapter.getSelected().get(position + 1) == null )
-						mAdapter.getSelected().put(position + 1, false);
-					if(position - 1 >= 0 && mAdapter.getSelected().get(position - 1) == null)
-						mAdapter.getSelected().put(position - 1, false);
-					onTimeRecordChange();
-				} else {
-					check.setChecked(false);
-					if(position == mAdapter.getChoiceUnionMode()) {
-						mAdapter.setChoiceUnionMode(TimesCursorAdapter.NORMAL_MODE);
-						mAdapter.getSelected().clear();
-						mUnionPanel.setVisibility(View.GONE);
-						onTimeRecordChange();
-						return;
-					}
-					mAdapter.getSelected().put(position, false);
-					if(position > mAdapter.getChoiceUnionMode()){
-						HashMap<Integer, Boolean> newSelected = new HashMap<Integer, Boolean>();
-						for(Entry<Integer, Boolean> iterable_element : mAdapter.getSelected().entrySet()) {
-							if(iterable_element.getKey() <= position)
-								newSelected.put(iterable_element.getKey(), iterable_element.getValue());
-						}
-						mAdapter.setSelected(newSelected);
-						onTimeRecordChange();
-					}
-					if(position < mAdapter.getChoiceUnionMode()){
-						HashMap<Integer, Boolean> newSelected = new HashMap<Integer, Boolean>();
-						for(Entry<Integer, Boolean> iterable_element : mAdapter.getSelected().entrySet()) {
-							if(iterable_element.getKey() >= position)
-								newSelected.put(iterable_element.getKey(), iterable_element.getValue());
-						}
-						mAdapter.setSelected(newSelected);
-						onTimeRecordChange();
-					}
-				}
-			} else {
-				if(check.getAnimation() != null && check.getAnimation().hasEnded())
-					check.clearAnimation();
-			}
-		}
+			mDiaryEditorDialogFragment.setValues(name, idRecord, start, lenght, note);
+			mDiaryEditorDialogFragment.show(this.getActivity()
+					.getSupportFragmentManager(), "mDiaryEditorDialogFragment");
 	}
 
 	@Override
@@ -208,8 +157,7 @@ public class TimeRecordsFragment extends Fragment implements
 			int position, long arg3) {
 		mAdapter.getSelected().clear();
 		mAdapter.setChoiceUnionMode(position);
-		
-		mUnionPanel.setVisibility(View.VISIBLE);
+
 		onTimeRecordChange();
 		return true;
 	}
@@ -218,12 +166,12 @@ public class TimeRecordsFragment extends Fragment implements
 		mList.invalidateViews();
 	}
 
-	
-
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == R.id.ok) {
-			Cursor times = mAdapter.getCursor();
+			Cursor times = getActivity().getContentResolver().query(
+					RecordsDbHelper.CONTENT_URI_ALLTIMES, null, null, null,
+					null);
 			long start = Long.MAX_VALUE;
 			long lenght = 0;
 			long clenght = -1;
@@ -241,29 +189,14 @@ public class TimeRecordsFragment extends Fragment implements
 				if (clenght < times.getLong(1)) {
 					clenght = times.getLong(1);
 					iDtimer = times.getInt(0);
-					Cursor cursor = getActivity().getContentResolver().query(RecordsDbHelper.CONTENT_URI_NOTES,
-							new String[] {RecordsDbHelper.ID3, RecordsDbHelper.NOTE}, RecordsDbHelper.ID3 + "=?",new String[] { String.valueOf(times.getInt(5)) }, null);
-					
-					if(cursor.getCount() ==1){
-						cursor.moveToFirst();
-						note = cursor.getString(1);
-					} else
-						note = null;
-					cursor.close();
+					note = times.getString(8);
 				}
 				lenght += times.getLong(1);
 				idrecords.add(times.getInt(5));
 				if (times.getLong(1) == 0) {
 					nowCounter = true;
 					iDtimer = times.getInt(5);
-					Cursor cursor = getActivity().getContentResolver().query(RecordsDbHelper.CONTENT_URI_NOTES,
-							new String[] {RecordsDbHelper.ID3, RecordsDbHelper.NOTE}, RecordsDbHelper.ID3 + "=?",new String[] { String.valueOf(times.getInt(5)) }, null);
-					if(cursor.getCount() ==1){
-						cursor.moveToFirst();
-						note = cursor.getString(1);
-					} else
-						note = null;
-					cursor.close();
+					note = times.getString(8);
 				}
 
 			}
@@ -283,7 +216,10 @@ public class TimeRecordsFragment extends Fragment implements
 	public void setNormalMode() {
 		mAdapter.setSelectedPosition(TimesCursorAdapter.NORMAL_MODE);
 		mAdapter.getSelected().clear();
-		mUnionPanel.setVisibility(View.GONE);
+	}
+
+	public void setFilter(String query) {
+		mFilterNotes = query;
 	}
 
 }

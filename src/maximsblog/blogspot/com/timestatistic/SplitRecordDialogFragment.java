@@ -14,6 +14,7 @@ import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -44,7 +45,7 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 	private Spinner mCurrentCounter;
 	private Spinner mAfterCounter;
 	private Spinner mBeforeCounter;
-
+	private EditText mCurrentNoteEdit;
 	// original values
 	private int mOriginalPosition;
 	private long mOriginalStart;
@@ -56,6 +57,9 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 	private int mCurrentPosition;
 	private long mCurrentStart;
 	private long mCurrentLenght;
+	private String mCurrentNote;
+	private String mAfterNote;
+	private String mBeforeNote;
 
 	private Calendar mCalendar = Calendar.getInstance();
 	private SimpleCursorAdapter mCurrentCounterAdapter;
@@ -76,6 +80,12 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 
 	private int mAfterPosition;
 
+	private EditText mAfterNoteEdit;
+
+	private EditText mBeforeNoteEdit;
+
+
+
 
 	public void setCounterDialogListener(IRecordDialog listener) {
 		mListener = listener;
@@ -95,7 +105,9 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 			mCurrentPosition = savedInstanceState.getInt("mCurrentPosition");
 			mCurrentStart = savedInstanceState.getLong("mCurrentStart");
 			mCurrentLenght = savedInstanceState.getLong("mCurrentLenght");
-
+			mCurrentNote = savedInstanceState.getString("mCurrentNote");
+			mAfterNote = savedInstanceState.getString("mAfterNote");
+			mBeforeNote = savedInstanceState.getString("mBeforeNote");
 			mBeforePosition = savedInstanceState.getInt("mBeforeCounter");
 			mAfterPosition = savedInstanceState.getInt("mAfterCounter");
 			CustomDateTimePickerFragment customDateTimePickerFragment = (CustomDateTimePickerFragment) getActivity()
@@ -130,6 +142,9 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 				mBeforeCounter.getSelectedItemPosition());
 		outState.putInt("mAfterCounter",
 				mAfterCounter.getSelectedItemPosition());
+		outState.putString("mCurrentNote", mCurrentNoteEdit.getText().toString());
+		outState.putString("mAfterNote", mAfterNoteEdit.getText().toString());
+		outState.putString("mBeforeNote", mBeforeNoteEdit.getText().toString());
 		super.onSaveInstanceState(outState);
 	};
 
@@ -143,7 +158,9 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 		mCurrentCounter = (Spinner) v.findViewById(R.id.current_counter);
 		mAfterCounter = (Spinner) v.findViewById(R.id.after_record_counter);
 		mBeforeCounter = (Spinner) v.findViewById(R.id.before_record_counter);
-
+		mCurrentNoteEdit = (EditText)v.findViewById(R.id.current_note);
+		mAfterNoteEdit = (EditText)v.findViewById(R.id.after_note);
+		mBeforeNoteEdit = (EditText)v.findViewById(R.id.before_note);
 		String[] from = { RecordsDbHelper.NAME };
 		int[] to = { android.R.id.text1 };
 
@@ -172,9 +189,9 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 
 		mCurrentStartDateTime.setOnClickListener(this);
 		mCurrentStopDateTime.setOnClickListener(this);
-
+		
 		mAfterLayout = v.findViewById(R.id.after_record);
-		mBeforeLayout = v.findViewById(R.id.before_record);
+		mBeforeLayout = v.findViewById(R.id.color_record);
 
 		mAfterText = (TextView) v.findViewById(R.id.after_period_value);
 		mBeforeText = (TextView) v.findViewById(R.id.before_period_value);
@@ -220,7 +237,10 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 		mCurrentCounter.setSelection(mCurrentPosition);
 		mAfterCounter.setSelection(mAfterPosition);
 		mBeforeCounter.setSelection(mBeforePosition);
-
+		if(mCurrentNote!=null) {
+			mCurrentNoteEdit.setText("");
+			mCurrentNoteEdit.append(mCurrentNote);
+		}
 		setCurrentText();
 	};
 
@@ -277,7 +297,8 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 			if (mOriginalPosition != mCurrentCounter.getSelectedItemPosition()
 					|| mOriginalStart != mCurrentStart
 					|| mOriginalLenght + mOriginalStart != mCurrentStart
-							+ mCurrentLenght)
+							+ mCurrentLenght
+							|| !mCurrentNote.equals(mCurrentNoteEdit.getText().toString()))
 				editRecord();
 			mListener.onRefreshFragmentsValue();
 			dismiss();
@@ -316,15 +337,20 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 				RecordsDbHelper.ID2 + "=?",
 				new String[] { String.valueOf(mIDrecord) });
 		cv.clear();
+		editNote(mIDrecord, mCurrentNoteEdit.getText().toString().trim());
+		Uri u;
+		
 		if (mOriginalStart != mCurrentStart) {
 			c.moveToPosition(mBeforeCounter.getSelectedItemPosition());
 			cv.put(RecordsDbHelper.TIMERSID, c.getInt(4));
 			cv.put(RecordsDbHelper.STARTTIME, mOriginalStart);
 			cv.put(RecordsDbHelper.LENGHT, mCurrentStart - mOriginalStart);
 			cv.put(RecordsDbHelper.ENDTIME, mCurrentStart);
-			getActivity().getContentResolver().insert(
+			u = getActivity().getContentResolver().insert(
 					RecordsDbHelper.CONTENT_URI_TIMES, cv);
 			cv.clear();
+			int id = Integer.valueOf(u.getLastPathSegment());
+			editNote(id, mBeforeNoteEdit.getText().toString().trim());
 		}
 
 		if (mOriginalLenght + mOriginalStart != mCurrentStart + mCurrentLenght
@@ -340,11 +366,13 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 			}
 			else {
 				cv.put(RecordsDbHelper.LENGHT, 0);
-				//cv.put(RecordsDbHelper.ENDTIME, 0);
 			}
-			getActivity().getContentResolver().insert(
+			u = getActivity().getContentResolver().insert(
 					RecordsDbHelper.CONTENT_URI_TIMES, cv);
 			cv.clear();
+			int id = Integer.valueOf(u.getLastPathSegment());
+			editNote(id, mAfterNoteEdit.getText().toString().trim());
+			
 			if (mOriginalLenght == 0) {
 				c.moveToPosition(mAfterCounter.getSelectedItemPosition());
 				cv.put(RecordsDbHelper.ISRUNNING, 1);
@@ -357,6 +385,18 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 		}
 	}
 
+	private void editNote(int id, String note) {
+		if(note.length() == 0){
+			getActivity().getContentResolver().delete(RecordsDbHelper.CONTENT_URI_NOTES, RecordsDbHelper.ID3 + "=?", new String[]{String.valueOf(id)});
+			return;
+		}
+		ContentValues cv = new ContentValues();
+		cv.put(RecordsDbHelper.ID3, id);
+		cv.put(RecordsDbHelper.NOTE, note);
+		getActivity().getContentResolver().insert(
+				RecordsDbHelper.CONTENT_URI_NOTES, cv);
+	}
+
 	public void onDismiss(DialogInterface dialog) {
 		super.onDismiss(dialog);
 	}
@@ -365,7 +405,7 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 		super.onCancel(dialog);
 	}
 
-	public void setValues(int idtimer, int idRecord, long start, long lenght) {
+	public void setValues(int idtimer, int idRecord, long start, long lenght, String note) {
 		mIDtimer = idtimer;
 		mIDrecord = idRecord;
 		mOriginalStart = start;
@@ -373,7 +413,8 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 
 		mCurrentStart = start;
 		mCurrentLenght = lenght;
-
+		mCurrentNote = note;
+		mBeforeNote = mAfterNote = note;
 	}
 
 	public static class CustomDateTimePickerFragment extends DialogFragment
@@ -490,8 +531,10 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 			if (mCurrentStart > mOriginalStart + lenght) {
 				mBeforeLayout.setVisibility(View.GONE);
 				return 1;
-			} else
+			} else {
 				mBeforeLayout.setVisibility(View.VISIBLE);
+				mBeforeNoteEdit.setText(mBeforeNote);
+			}
 		} else {
 			mBeforeLayout.setVisibility(View.GONE);
 			return -1;
@@ -511,8 +554,10 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 			if (mCurrentStart + mCurrentLenght < mOriginalStart) {
 				mAfterLayout.setVisibility(View.GONE);
 				return -1;
-			} else
+			} else {
 				mAfterLayout.setVisibility(View.VISIBLE);
+				mAfterNoteEdit.setText(mAfterNote);
+			}
 		} else {
 			mAfterLayout.setVisibility(View.GONE);
 			return 1;

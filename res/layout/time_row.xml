@@ -1,68 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:descendantFocusability="blocksDescendants"
-    android:gravity="center" >
+    android:gravity="center"
+    android:orientation="horizontal" >
 
     <LinearLayout
-        android:id="@+id/before_record"
-        android:layout_width="12dip"
-        android:layout_height="12dip"
-        android:orientation="horizontal" >
+        android:id="@+id/row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/date_header"
+        android:layout_centerVertical="true"
+        android:descendantFocusability="blocksDescendants"
+        android:gravity="center" >
+
+        <TextView
+            android:id="@+id/times"
+            android:layout_width="60dip"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dip"
+            android:layout_weight="1"
+            android:gravity="left"
+            android:text="@string/start_time" />
+
+        <LinearLayout
+            android:id="@+id/before_record"
+            android:layout_width="16dip"
+            android:layout_height="16dip"
+            android:orientation="horizontal" >
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="80dip"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dip"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:gravity="left"
+            android:text="@string/name"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/lenght_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:text="TextView" />
+
+        <CheckBox
+            android:id="@+id/check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false" />
+
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/name"
-        android:layout_width="80dip"
-        android:layout_height="wrap_content"
-        android:layout_margin="4dip"
-        android:layout_weight="1"
-        android:ellipsize="end"
-        android:gravity="left"
-        android:text="@string/name"
-        android:textSize="12sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/start"
-        android:layout_width="80dip"
-        android:layout_height="wrap_content"
-        android:layout_margin="4dip"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/start_time"
-        android:textSize="12sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/stop"
-        android:layout_width="80dip"
-        android:layout_height="wrap_content"
-        android:layout_margin="4dip"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/end_time"
-        android:textSize="12sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/lenght"
-        android:layout_width="80dip"
-        android:layout_height="wrap_content"
-        android:layout_margin="4dip"
-        android:layout_weight="1"
-        android:gravity="right"
-        android:text="@string/lenght"
-        android:textSize="12sp"
-        android:textStyle="bold"
-         />
-
-    <CheckBox
-        android:id="@+id/check"
+    <ImageView
+        android:id="@+id/note"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:clickable="false"/>
+        android:src="@drawable/ic_note" 
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:visibility="invisible"/>
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/date_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:gravity="center_horizontal"
+        android:text="Medium Text"
+        android:textStyle="bold"
+        android:textAppearance="?android:attr/textAppearanceMedium" 
+        android:visibility="visible" />
+</RelativeLayout>

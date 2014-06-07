@@ -15,35 +15,27 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.InputFilter.LengthFilter;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AbsListView;
 import android.widget.CheckBox;
 import android.widget.CheckedTextView;
 import android.widget.CompoundButton;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.AbsListView.OnScrollListener;
 
-public class TimesCursorAdapter extends SimpleCursorAdapter implements
-ListView.OnScrollListener {
+public class DiaryCursorAdapter extends SimpleCursorAdapter {
 
 	private SimpleDateFormat mSimpleTimeFormat;
 	private SimpleDateFormat mSimpleDateFormat;
-	// private ITimes mListener;
 	private Drawable mIndicator;
 	private HashMap<Integer, Boolean> mSelected;
 	private int mSelectedPosition;
 	private long mStartdate;
-	private boolean mBusy = false;
 	public static final int NORMAL_MODE = -1;
-	
 	private static final int VIEW_TYPE_GROUP_START = 0;
     private static final int VIEW_TYPE_GROUP_CONT = 1;
     private static final int VIEW_TYPE_COUNT = 2;
 
-	public TimesCursorAdapter(Context context, int layout, Cursor c,
+	public DiaryCursorAdapter(Context context, int layout, Cursor c,
 			String[] from, int[] to, int flags, long startdate) {
 		super(context, layout, c, from, to, flags);
 		mSimpleTimeFormat = new SimpleDateFormat("HH:mm");
@@ -57,7 +49,6 @@ ListView.OnScrollListener {
 	public interface ITimes {
 		void onTimeRecordChange();
 	}
-	
 	@Override
     public int getViewTypeCount() {
         return VIEW_TYPE_COUNT;
@@ -78,17 +69,14 @@ ListView.OnScrollListener {
             return VIEW_TYPE_GROUP_CONT;
         }
     }
-
 	public static class ViewHolder {
-		public TextView times;
+		public TextView time;
 		public View LinearLayout01;
-		public CheckBox check;
-		public View note;
-		public int id;
+		public TextView name;
+		public TextView note_text;
 		public TextView dateHeader;
-		public TextView lenghtRecord;
 	}
-
+	
 	@Override
 	public void bindView(View view, Context context, final Cursor cursor) {
 		super.bindView(view, context, cursor);
@@ -106,75 +94,56 @@ ListView.OnScrollListener {
                 nViewType = VIEW_TYPE_GROUP_CONT;
             }
         }
-        
 		if (view.getTag() == null) {
 			holder = new ViewHolder();
-			holder.times = (TextView) view.findViewById(R.id.times);
-			holder.LinearLayout01 = view.findViewById(R.id.before_record);
-			holder.check = (CheckBox) view.findViewById(R.id.check);
-			holder.note = view.findViewById(R.id.note);
-			holder.dateHeader = (TextView)view.findViewById(R.id.date_header);
-			holder.lenghtRecord = (TextView)view.findViewById(R.id.lenght_record);
+			holder.time = (TextView) view.findViewById(R.id.time);
+			holder.dateHeader = (TextView) view.findViewById(R.id.date_header);
+			holder.LinearLayout01 = view.findViewById(R.id.color_record);
+			holder.note_text = (TextView) view.findViewById(R.id.note_text);
+			holder.name = (TextView) view.findViewById(R.id.name);
 			view.setTag(holder);
 		} else {
 			holder = (ViewHolder) view.getTag();
 		}
 		long start = cursor.getLong(2);
 		long stop = cursor.getLong(7);
-
+		holder.note_text.setText(cursor.getString(8));
 		Date d = new Date(start);
-		StringBuilder sb = new StringBuilder();
-		sb.append(mSimpleTimeFormat.format(d));
-		holder.id = cursor.getInt(5);
-		
 		if(nViewType == VIEW_TYPE_GROUP_START){
 			holder.dateHeader.setText(mSimpleDateFormat.format(d));
 			holder.dateHeader.setVisibility(View.VISIBLE);
 		}
 		else
 			holder.dateHeader.setVisibility(View.GONE);
-		
+		StringBuilder sb = new StringBuilder(mSimpleTimeFormat.format(d));
 		if (cursor.getLong(1) == 0){
 			sb.append(" - ");
 			sb.append(mContext.getString(R.string.now));
-		} else {
+		}
+		else {
 			d = new Date(cursor.getLong(1) + cursor.getLong(2));
 			sb.append(" - ");
 			sb.append(mSimpleTimeFormat.format(d));
 		}
-		setTime(holder.lenghtRecord,
-				stop - start > 0 ? stop - start : new Date().getTime() - start);
-		
-		
-		if (mSelectedPosition != -1) {
-			if (mSelected.get(position) != null) {
-				holder.check.setChecked(mSelected.get(position));
-				holder.check.setVisibility(View.VISIBLE);
-			} else {
-				holder.check.setChecked(false);
-				holder.check.setVisibility(View.INVISIBLE);
-			}
-		} else {
-			holder.check.setChecked(false);
-			holder.check.setVisibility(View.INVISIBLE);
-		}
+		holder.time.setText(sb.toString());
 		holder.LinearLayout01.setBackgroundColor(cursor.getInt(4));
-		if (!mBusy) {
-			Cursor c = mContext.getContentResolver().query(RecordsDbHelper.CONTENT_URI_NOTES, new String[] { RecordsDbHelper.ID3, RecordsDbHelper.NOTE },RecordsDbHelper.ID3+ "=?" , new String[] { String.valueOf(holder.id) }, null);
-			if(c.getCount() == 1) {
-				holder.note.setVisibility(View.VISIBLE);
-			} else
-				holder.note.setVisibility(View.INVISIBLE);	
-			c.close();
-		} else 
-			holder.note.setVisibility(View.INVISIBLE);
-		
-		holder.times.setText(sb.toString());
+		setTime(holder.name,
+				stop - start > 0 ? stop - start : new Date().getTime() - start);
 	}
 
+
+	public void setChoiceUnionMode(int position) {
+		mSelectedPosition = position;
+		mSelected.put(position, true);
+		if (position + 1 < mCursor.getCount())
+			mSelected.put(position + 1, false);
+		if (position - 1 >= 0)
+			mSelected.put(position - 1, false);
+	}
+	
 	private void setTime(TextView t, long time) {
 		if (time == 0) {
-			t.setText("");
+			t.setText(getCursor().getString(3));
 		} else {
 			int day;
 			int hours;
@@ -187,10 +156,10 @@ ListView.OnScrollListener {
 					* hours - 60 * minutes;
 			String s = new String();
 			if (day > 0) {
-				s = String.format(" (+%s\n%02d:%02d:%02d)",
+				s = String.format(getCursor().getString(3) + " (%s\n%02d:%02d:%02d)",
 						getTimeString("day", day), hours, minutes, seconds);
 			} else
-				s = String.format(" (+%02d:%02d:%02d)", hours, minutes, seconds);
+				s = String.format(getCursor().getString(3) + " (%02d:%02d:%02d)", hours, minutes, seconds);
 			t.setText(s);
 		}
 	}
@@ -212,15 +181,6 @@ ListView.OnScrollListener {
 		return s.toString();
 	}
 
-	public void setChoiceUnionMode(int position) {
-		mSelectedPosition = position;
-		mSelected.put(position, true);
-		if (position + 1 < mCursor.getCount())
-			mSelected.put(position + 1, false);
-		if (position - 1 >= 0)
-			mSelected.put(position - 1, false);
-	}
-
 	public void setSelectedPosition(int position) {
 		mSelectedPosition = position;
 	}
@@ -240,51 +200,18 @@ ListView.OnScrollListener {
 	public void setStartDate(long startdate) {
 		mStartdate = startdate;
 	}
-
-	@Override
-	public void onScrollStateChanged(AbsListView view, int scrollState) {
-		switch (scrollState) {
-		case OnScrollListener.SCROLL_STATE_IDLE:
-			mBusy = false;
-			int first = view.getFirstVisiblePosition();
-			int count = view.getChildCount();
-			for (int i = 0; i < count; i++) {
-				ViewHolder holder = (ViewHolder) view.getChildAt(i).getTag();
-				Cursor c = mContext.getContentResolver().query(RecordsDbHelper.CONTENT_URI_NOTES, new String[] { RecordsDbHelper.ID3, RecordsDbHelper.NOTE },RecordsDbHelper.ID3+ "=?" , new String[] { String.valueOf(holder.id) }, null);
-				if(c.getCount() == 1) {
-					holder.note.setVisibility(View.VISIBLE);
-				} else
-					holder.note.setVisibility(View.INVISIBLE);	
-				c.close();
-			}
-
-			break;
-		case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-			mBusy = true;
-			break;
-		case OnScrollListener.SCROLL_STATE_FLING:
-			mBusy = true;
-			break;
-		}
-	}
-
-	@Override
-	public void onScroll(AbsListView arg0, int arg1, int arg2, int arg3) {
-		// TODO Auto-generated method stub
-		
-	}
-	
 	private boolean isNewGroup(Cursor cursor, int position) {
+		long now_start = (cursor.getLong(2) / 1000 / 60 / 60 / 24) * 1000 * 60 * 60* 24;
+		long now_stop = (cursor.getLong(7) / 1000 / 60 / 60 / 24) * 1000 * 60 * 60* 24;
         cursor.moveToPosition(position - 1);
         long before_start = (cursor.getLong(2) / 1000 / 60 / 60 / 24) * 1000 * 60 * 60* 24;
         long before_stop = (cursor.getLong(7) / 1000 / 60 / 60 / 24) * 1000 * 60 * 60* 24;
         cursor.moveToPosition(position);    
         //if ((now != before_start || before_stop != now) && before_stop != 0 ) {
-        if((before_start != before_stop) && before_stop !=0){
+        if((before_start != before_stop || before_stop != now_start) && before_stop !=0){
             return true;
         }
 
         return false;
     }
-	
 }

@@ -154,9 +154,9 @@ public final class CountersFragment extends Fragment implements
 				RecordsDbHelper.ID + " = ?",
 				new String[] { String.valueOf(counterId) });
 		app.loadRunningCounterAlarm(getActivity().getApplicationContext());
-		loadermanager.restartLoader(1, null, this);
 		SettingsActivity.visibleNotif(getActivity(), cursor.getLong(3),
 				cursor.getLong(2), cursor.getString(5));
+		loadermanager.restartLoader(1, null, this);
 
 		TimeRecordsFragment timeRecordsFragment = (TimeRecordsFragment) ((MainActivity) getActivity())
 				.findFragmentByPosition(1);
