@@ -55,10 +55,12 @@
     <string name="startdateset">Since time filter</string>
     <string-array name="StartFilters">
         <item>Today</item>
+        <item>Yesterday</item>
         <item>Week</item>
         <item>Month</item>
         <item>Year</item>
         <item>All time</item>
+        <item>Since</item>
     </string-array>
     <string name="start">Since</string>
     <string name="note">Note</string>

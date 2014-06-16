@@ -55,10 +55,12 @@
     <string name="startdateset">Показать данные</string>
     <string-array name="StartFilters">
         <item>За сегодня</item>
+        <item>За вчера</item>
         <item>За неделю</item>
         <item>За месяц</item>
         <item>За год</item>
         <item>За всё время</item>
+        <item>С</item>
     </string-array>
     <string name="start">Начало</string>
     <string name="note">Примечание</string>

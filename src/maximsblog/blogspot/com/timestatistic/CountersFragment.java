@@ -1,5 +1,6 @@
 package maximsblog.blogspot.com.timestatistic;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.EnumSet;
@@ -59,9 +60,7 @@ public final class CountersFragment extends Fragment implements
 		loadermanager = getLoaderManager();
 		String[] uiBindFrom = { RecordsDbHelper.LENGHT, RecordsDbHelper.NAME };
 		int[] uiBindTo = { R.id.current, R.id.name };
-		StartDateOption startDateOption = app.getStartDate(getActivity());
-		mStartdate = startDateOption.startDate;
-		((SherlockFragmentActivity)getActivity()).getSupportActionBar().setTitle(startDateOption.startDateName);
+		setActivityTitle();
 		mAdapter = new CountersCursorAdapter(this.getActivity(),
 				R.layout.count_row, null, uiBindFrom, uiBindTo, 0, mStartdate);
 		loadermanager.initLoader(1, null, this);
@@ -208,11 +207,22 @@ public final class CountersFragment extends Fragment implements
 
 	@Override
 	public void onReload() {
-		StartDateOption startDateOption = app.getStartDate(getActivity());
-		mStartdate = startDateOption.startDate;
-		((SherlockFragmentActivity)getActivity()).getSupportActionBar().setTitle(startDateOption.startDateName);
+		setActivityTitle();
 		mAdapter.setStartDate(mStartdate);
 		loadermanager.restartLoader(1, null, this);
+	}
+
+	private void setActivityTitle() {
+		StartDateOption startDateOption = app.getStartDate(getActivity());
+		mStartdate = startDateOption.startDate;
+		if(mStartdate < 6)
+			((SherlockFragmentActivity)getActivity()).getSupportActionBar().setTitle(startDateOption.startDateName);
+		else
+		{
+			SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(
+					"dd/MM/yy HH:mm");
+			((SherlockFragmentActivity)getActivity()).getSupportActionBar().setTitle(startDateOption.startDateName + " " + mSimpleDateFormat.format(new Date(mStartdate)));
+		}
 	}
 
 	@Override

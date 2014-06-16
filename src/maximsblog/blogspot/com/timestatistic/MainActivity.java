@@ -1,6 +1,8 @@
 package maximsblog.blogspot.com.timestatistic;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -159,7 +161,16 @@ public class MainActivity extends SherlockFragmentActivity implements
 			searchMenuItem.setVisible(true);
 		} else {
 			StartDateOption startDateOption = app.getStartDate(this);
-			getSupportActionBar().setTitle(startDateOption.startDateName);
+			long startdate = startDateOption.startDate;
+			if(startdate < 6)
+				getSupportActionBar().setTitle(startDateOption.startDateName);
+			else
+			{
+				SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(
+						"dd/MM/yy HH:mm");
+				getSupportActionBar().setTitle(startDateOption.startDateName + " " + mSimpleDateFormat.format(new Date(startdate)));
+			}
+			
 			searchMenuItem.setVisible(false);
 			if (mSearchView.isShown())
 				mSearchView.setIconified(true);
