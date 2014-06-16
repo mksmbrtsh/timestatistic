@@ -215,7 +215,7 @@ public final class CountersFragment extends Fragment implements
 	private void setActivityTitle() {
 		StartDateOption startDateOption = app.getStartDate(getActivity());
 		mStartdate = startDateOption.startDate;
-		if(mStartdate < 6)
+		if(!startDateOption.startDateName.equals(getResources().getStringArray(R.array.StartFilters)[6]))
 			((SherlockFragmentActivity)getActivity()).getSupportActionBar().setTitle(startDateOption.startDateName);
 		else
 		{

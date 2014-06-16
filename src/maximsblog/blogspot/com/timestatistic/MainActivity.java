@@ -162,7 +162,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		} else {
 			StartDateOption startDateOption = app.getStartDate(this);
 			long startdate = startDateOption.startDate;
-			if(startdate < 6)
+			if(!startDateOption.startDateName.equals(getResources().getStringArray(R.array.StartFilters)[6]))
 				getSupportActionBar().setTitle(startDateOption.startDateName);
 			else
 			{
