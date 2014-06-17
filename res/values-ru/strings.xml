@@ -54,12 +54,12 @@
     <string name="union">Объединить</string>
     <string name="startdateset">Показать данные</string>
     <string-array name="StartFilters">
-        <item>За сегодня</item>
-        <item>За вчера</item>
-        <item>За неделю</item>
-        <item>За месяц</item>
-        <item>За год</item>
-        <item>За всё время</item>
+        <item>C сегодня</item>
+        <item>Cо вчера</item>
+        <item>С начала недели</item>
+        <item>С начала месяца</item>
+        <item>С начала года</item>
+        <item>С установки программы</item>
         <item>С</item>
     </string-array>
     <string name="start">Начало</string>
