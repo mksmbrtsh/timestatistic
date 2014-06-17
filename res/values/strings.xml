@@ -65,4 +65,5 @@
     <string name="start">Since</string>
     <string name="note">Note</string>
     <string name="search">Search</string>
+    <dimen name="fragment_border">4dp</dimen>
 </resources>
