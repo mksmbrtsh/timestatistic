@@ -255,7 +255,7 @@ public class TimeRecordsFragment extends Fragment implements
 				idrecords.add(times.getInt(5));
 				if (times.getLong(1) == 0) {
 					nowCounter = true;
-					iDtimer = times.getInt(5);
+					iDtimer = times.getInt(0);
 					Cursor cursor = getActivity().getContentResolver().query(RecordsDbHelper.CONTENT_URI_NOTES,
 							new String[] {RecordsDbHelper.ID3, RecordsDbHelper.NOTE}, RecordsDbHelper.ID3 + "=?",new String[] { String.valueOf(times.getInt(5)) }, null);
 					if(cursor.getCount() ==1){
