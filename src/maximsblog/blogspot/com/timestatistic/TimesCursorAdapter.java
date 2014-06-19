@@ -133,13 +133,11 @@ ListView.OnScrollListener {
 		}
 		else
 			holder.dateHeader.setVisibility(View.GONE);
-		
+		sb.append(" - ");
 		if (cursor.getLong(1) == 0){
-			sb.append(" - ");
-			sb.append(mContext.getString(R.string.now));
+
 		} else {
 			d = new Date(cursor.getLong(1) + cursor.getLong(2));
-			sb.append(" - ");
 			sb.append(mSimpleTimeFormat.format(d));
 		}
 		setTime(holder.lenghtRecord,

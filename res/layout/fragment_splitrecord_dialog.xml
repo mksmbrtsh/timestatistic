@@ -94,6 +94,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:weightSum="2"
                     android:orientation="horizontal" >
 
                     <Button
@@ -102,17 +103,14 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:clickable="true"
-                        android:hint="Date"
-                        android:text="Button" />
+                        android:singleLine="true"/>
 
                     <Button
                         android:id="@+id/current_stopdatetime"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:ems="10"
-                        android:inputType="date"
-                        android:text="Button" />
+                        android:singleLine="true"/>
                 </LinearLayout>
 
             </LinearLayout>
