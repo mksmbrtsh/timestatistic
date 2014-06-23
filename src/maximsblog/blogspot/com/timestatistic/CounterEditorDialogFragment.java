@@ -282,7 +282,7 @@ public class CounterEditorDialogFragment extends DialogFragment implements
 		mNameEditor.setText(mName);
 		long minutes = mInterval / 60 / 1000;
 		long hours = 0;
-		while (minutes > 60) {
+		while (minutes >= 60) {
 			hours++;
 			minutes -= 60;
 		}
