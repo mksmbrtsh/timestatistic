@@ -16,6 +16,9 @@ package maximsblog.blogspot.com.timestatistic;
  * limitations under the License.
  */
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -26,16 +29,22 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.SweepGradient;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Spanned;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import maximsblog.blogspot.com.timestatistic.ColorPickerDialog.ColorPickerView;
+import maximsblog.blogspot.com.timestatistic.CounterEditorDialogFragment.PartialRegexInputFilter;
 import maximsblog.blogspot.com.timestatistic.R;
 
 public class ColorPickerDialog extends Dialog implements android.view.View.OnClickListener {
@@ -47,6 +56,7 @@ public class ColorPickerDialog extends Dialog implements android.view.View.OnCli
 	private OnColorChangedListener mListener;
 	private int mInitialColor;
 	private ColorPickerView mColorPickerView;
+	
 
 	public static class ColorPickerView extends View {
 		private Paint mPaint;
@@ -54,18 +64,64 @@ public class ColorPickerDialog extends Dialog implements android.view.View.OnCli
 		private Paint mRadialPaint;
 		private final int[] mRadialColors;
 		private OnColorChangedListener mListener;
-
+		private EditText mR;
+		private EditText mG;
+		private EditText mB;
 		private Paint mGradientPaint;
 		private int[] mLinearColors;
+		private TextWatcher colorWatcher = new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				
+				
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				int red;
+				if(mR.getText().toString().length() == 0)
+					red = 0; 
+				else
+					red = Integer.valueOf(mR.getText().toString());
+				int green;
+				if(mG.getText().toString().length() == 0)
+					green = 0; 
+				else
+					green = Integer.valueOf(mG.getText().toString());
+				int blue;
+				if(mB.getText().toString().length() == 0)
+					blue = 0;
+				else
+					blue = Integer.valueOf(mB.getText().toString());
+				
+				mCenterPaint.setColor(Color.rgb(red, green, blue));
+				mRadialPaint.setColor(Color.rgb(red, green, blue));
+				invalidate();
+			}
+		};
 		
 		public int getColor() {
 			return mCenterPaint.getColor();
 		}
 
-		ColorPickerView(Context c, OnColorChangedListener l, int color) {
+		ColorPickerView(Context c, OnColorChangedListener l, int color, EditText r, EditText g, EditText b) {
 			super(c);
 			mListener = l;
-			mRadialColors = new int[] { 0xFFFF0000, 0xFFFF00FF, 0xFF0000FF,
+			mR = r;
+			mG = g;
+			mB = b;
+			r.addTextChangedListener(colorWatcher);
+			g.addTextChangedListener(colorWatcher);
+			b.addTextChangedListener(colorWatcher);
+			mRadialColors = new int[] { 0xFFFF0000, 0xFFFF00FF, 0xFF0000FF, 0xFFFFFFFF, 0xFF000000,
 					0xFF00FFFF, 0xFF00FF00, 0xFFFFFF00, 0xFFFF0000 };
 			Shader s = new SweepGradient(0, 0, mRadialColors, null);
 
@@ -111,9 +167,10 @@ public class ColorPickerDialog extends Dialog implements android.view.View.OnCli
 
 			canvas.drawOval(new RectF(-r, -r, r, r), mPaint);
 			canvas.drawCircle(0, 0, CENTER_RADIUS, mCenterPaint);
-
+			int color = mCenterPaint.getColor();
+			setColorText(color);
 			if (mTrackingCenter) {
-				int color = mCenterPaint.getColor();
+				
 				mCenterPaint.setStyle(Paint.Style.STROKE);
 
 				if (mHighlightCenter) {
@@ -129,7 +186,7 @@ public class ColorPickerDialog extends Dialog implements android.view.View.OnCli
 				mCenterPaint.setColor(color);
 			}
 
-			int color = mRadialPaint.getColor();
+			color = mRadialPaint.getColor();
 			mLinearColors = getColors(color);
 			Shader shader = new LinearGradient(0, 0, CENTER_X * 2, 0,
 					mLinearColors, null, Shader.TileMode.CLAMP);
@@ -137,6 +194,22 @@ public class ColorPickerDialog extends Dialog implements android.view.View.OnCli
 
 			canvas.translate(-CENTER_X, 0);
 			canvas.drawLine(0, r + 64, CENTER_X * 2, r + 64, mGradientPaint);
+			
+		}
+
+		private void setColorText(int color) {
+			mR.removeTextChangedListener(colorWatcher);
+			mG.removeTextChangedListener(colorWatcher);
+			mB.removeTextChangedListener(colorWatcher);
+			mR.setText(String.valueOf(Color.red(color & 0xFFFFFF)));
+			mG.setText(String.valueOf(Color.green(color & 0xFFFFFF)));
+			mB.setText(String.valueOf(Color.blue(color & 0xFFFFFF)));
+			mR.setSelection(mR.getText().toString().length());
+			mG.setSelection(mG.getText().toString().length());
+			mB.setSelection(mB.getText().toString().length());
+			mR.addTextChangedListener(colorWatcher);
+			mG.addTextChangedListener(colorWatcher);
+			mB.addTextChangedListener(colorWatcher);
 		}
 
 		@Override
@@ -257,13 +330,19 @@ public class ColorPickerDialog extends Dialog implements android.view.View.OnCli
 		LinearLayout mainLayout = new LinearLayout(getContext());
 		mainLayout.setGravity(Gravity.CENTER);
 		mainLayout.setOrientation(LinearLayout.VERTICAL);
-		mColorPickerView = new ColorPickerView(getContext(), l, mInitialColor);
-		mainLayout.addView(mColorPickerView);
+		
 		View v = this.getLayoutInflater().inflate(R.layout.color_picker_dialog, null, false);
 		Button mOkButton = (Button)v.findViewById(R.id.ok_btn);
 		Button mCancelButton = (Button)v.findViewById(R.id.cancel_btn);
+		EditText mR = (EditText)v.findViewById(R.id.r);
+		EditText mG = (EditText)v.findViewById(R.id.g);
+		EditText mB = (EditText)v.findViewById(R.id.b);
 		mOkButton.setOnClickListener(this);
 		mCancelButton.setOnClickListener(this);
+		mColorPickerView = new ColorPickerView(getContext(), l, mInitialColor, mR, mG, mB);
+		int border =  (int) getContext().getResources().getDimension(R.dimen.fragment_border);
+		mColorPickerView.setPadding(border,border,border,border);
+		mainLayout.addView(mColorPickerView);
 		mainLayout.addView(v);
 		setContentView(mainLayout);
 	}
