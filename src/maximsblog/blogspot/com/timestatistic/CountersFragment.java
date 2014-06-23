@@ -234,6 +234,7 @@ public final class CountersFragment extends Fragment implements
 		boolean isRunning = cursor.getInt(6) == 1;
 		int color = cursor.getInt(7);
 		long interval = cursor.getLong(8);
+		int sort = cursor.getInt(9);
 		CounterEditorDialogFragment counterEditorDialogFragment = new CounterEditorDialogFragment();
 		counterEditorDialogFragment
 				.setCounterDialogListener((MainActivity) getActivity());
@@ -242,6 +243,7 @@ public final class CountersFragment extends Fragment implements
 		counterEditorDialogFragment.setColor(color);
 		counterEditorDialogFragment.setInterval(interval);
 		counterEditorDialogFragment.setIsRunning(isRunning);
+		counterEditorDialogFragment.setSortId(sort);
 		counterEditorDialogFragment.show(this.getActivity()
 				.getSupportFragmentManager(), "mCounterEditorDialogFragment");
 		return true;

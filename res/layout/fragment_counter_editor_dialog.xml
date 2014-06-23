@@ -7,23 +7,15 @@
     android:paddingRight="@dimen/fragment_border"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/note_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:text="@string/name" />
-
     <EditText
         android:id="@+id/name_editor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_below="@+id/note_text"
-        android:selectAllOnFocus="true"
         android:layout_toLeftOf="@+id/color_imageButton"
-        android:ems="10" >
+        android:layout_toRightOf="@+id/sortid"
+        android:ems="10"
+        android:selectAllOnFocus="true" >
 
         <requestFocus />
     </EditText>
@@ -111,5 +103,31 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/note_text"
         android:src="@drawable/color_line" />
+
+    <EditText
+        android:id="@+id/sortid"
+        android:layout_width="55dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/note_text"
+        android:selectAllOnFocus="true"
+        android:maxLength="5"
+        android:inputType="numberDecimal"
+    	android:singleLine="true" />
+
+    <TextView
+        android:id="@+id/note_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/name_editor"
+        android:layout_alignParentTop="true"
+        android:text="@string/name" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="№" />
 
 </RelativeLayout>

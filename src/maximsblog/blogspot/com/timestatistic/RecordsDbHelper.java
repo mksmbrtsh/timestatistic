@@ -61,6 +61,7 @@ public class RecordsDbHelper extends ContentProvider {
 	public final static String INTERVAL = OpenHelper.INTERVAL;
 	public final static String ENDTIME = OpenHelper.ENDTIME;
 	public final static String NOTE = OpenHelper.NOTE;
+	public final static String SORTID = OpenHelper.SORTID;
 	// UriMatcher constant for search suggestions
 
 	private static HashMap<String, String> timersProjectionMap;
@@ -90,7 +91,8 @@ public class RecordsDbHelper extends ContentProvider {
 		timersProjectionMap.put(ID, ID);
 		timersProjectionMap.put(NAME, NAME);
 		timersProjectionMap.put(ISRUNNING, ISRUNNING);
-
+		timersProjectionMap.put(SORTID, SORTID);
+		
 		timesProjectionMap = new HashMap<String, String>();
 		timesProjectionMap.put(ID2, ID2);
 		timesProjectionMap.put(TIMERSID, TIMERSID);
@@ -258,8 +260,8 @@ public class RecordsDbHelper extends ContentProvider {
 					"MAX(" + RecordsDbHelper.STARTTIME + ") AS "
 							+ RecordsDbHelper.STARTTIME, RecordsDbHelper.ID,
 					RecordsDbHelper.NAME, RecordsDbHelper.ISRUNNING,
-					RecordsDbHelper.COLOR, INTERVAL }, selection,
-					RecordsDbHelper.TIMERSID, null, null, null);
+					RecordsDbHelper.COLOR, INTERVAL, SORTID }, selection,
+					RecordsDbHelper.TIMERSID, null, RecordsDbHelper.SORTID, null);
 			c = mDB.rawQuery(
 					e,
 					!(selectionArgs != null && selection == null) ? selectionArgs

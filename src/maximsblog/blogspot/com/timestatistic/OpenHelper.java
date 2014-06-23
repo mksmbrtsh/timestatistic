@@ -16,7 +16,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class OpenHelper extends SQLiteOpenHelper {
 
 	final static String DB_NAME = "timestat.db";
-	final static int DB_VER = 4;
+	final static int DB_VER = 5;
 	final static String TABLE_TIMERS = "timers";
 	final static String TABLE_TIMES = "times";
 	final static String TABLE_NOTES = "notes";
@@ -32,12 +32,12 @@ public class OpenHelper extends SQLiteOpenHelper {
 	public final static String LENGHT = "lenght";
 	public final static String ENDTIME = "endtime";
 	public final static String NOTE = "note";
-
+	public final static String SORTID = "sortid";
 
 	final String CREATE_TABLE_TIMERS = "CREATE TABLE " + TABLE_TIMERS + "( "
 			+ ID + " INTEGER PRIMARY KEY autoincrement, " + NAME + " TEXT, "
 			+ COLOR + " INTEGER, " + ISRUNNING + " INTEGER DEFAULT 0, "
-			+ INTERVAL + " INTEGER DEFAULT 900000 )";
+			+ INTERVAL + " INTEGER DEFAULT 900000, " + SORTID + " INTEGER DEFAULT 0)";
 
 	final String CREATE_TABLE_TIMES = "CREATE TABLE " + TABLE_TIMES + "( "
 			+ ID2 + " INTEGER PRIMARY KEY autoincrement, " + TIMERSID
@@ -186,13 +186,60 @@ public class OpenHelper extends SQLiteOpenHelper {
 			if(oldVersion == 3) {
 				db.execSQL(CREATE_TABLE_NOTES);
 			}
-		} else {
+		} else if(newVersion == 5) {
+			if(oldVersion == 1) {
+				db.execSQL("ALTER TABLE " + TABLE_TIMERS + " ADD COLUMN "
+						+ INTERVAL + " INTEGER DEFAULT 900000");
+				db.execSQL("ALTER TABLE " + TABLE_TIMES + " ADD COLUMN " + ENDTIME
+						+ " INTEGER");
+				calculateEndTime(db);
+				db.execSQL(CREATE_TABLE_NOTES);
+				db.execSQL("ALTER TABLE " + TABLE_TIMERS + " ADD COLUMN "
+						+ SORTID + " INTEGER DEFAULT 0");
+				add_sort(db);
+			}
+			if(oldVersion == 2) {
+				db.execSQL("ALTER TABLE " + TABLE_TIMES + " ADD COLUMN " + ENDTIME
+						+ " INTEGER");
+				calculateEndTime(db);
+				db.execSQL(CREATE_TABLE_NOTES);
+				db.execSQL("ALTER TABLE " + TABLE_TIMERS + " ADD COLUMN "
+						+ SORTID + " INTEGER DEFAULT 0");
+				add_sort(db);
+			}
+			if(oldVersion == 3) {
+				db.execSQL(CREATE_TABLE_NOTES);
+				db.execSQL("ALTER TABLE " + TABLE_TIMERS + " ADD COLUMN "
+						+ SORTID + " INTEGER DEFAULT 0");
+				add_sort(db);
+			}
+			if(oldVersion == 4) {
+				db.execSQL("ALTER TABLE " + TABLE_TIMERS + " ADD COLUMN "
+						+ SORTID + " INTEGER DEFAULT 0");
+				add_sort(db);
+			}
+		} else {	
 			db.execSQL(DROP_TABLE_TIMERS);
 			db.execSQL(DROP_TABLE_TIMES);
 			db.execSQL(DROP_TABLE_NOTES);
 			onCreate(db);
 		}
 
+	}
+
+	private void add_sort(SQLiteDatabase db) {
+		Cursor c = db.query(TABLE_TIMERS, new String[] {
+				RecordsDbHelper.ID }, null, null, null, null, null);
+		if (c.moveToFirst()) {
+			ContentValues values = new ContentValues();
+			int sortid = 0;
+			do {
+				int id = c.getInt(0);
+				values.put(SORTID, sortid);
+				sortid++;
+				db.update(TABLE_TIMERS, values, ID + "=?", new String[]{ String.valueOf(id) });
+			} while (c.moveToNext());
+		}
 	}
 
 	private void calculateEndTime(SQLiteDatabase db) {

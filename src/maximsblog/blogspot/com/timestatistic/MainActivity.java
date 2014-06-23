@@ -246,12 +246,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onFinishDialog(String inputText, int id, Status status,
-			boolean isRunning, int color, long interval) {
+			boolean isRunning, int color, long interval, int sortid) {
 		if (status == Status.ADD) {
 			ContentValues cv = new ContentValues();
 			cv.put(RecordsDbHelper.NAME, inputText);
 			cv.put(RecordsDbHelper.COLOR, color);
 			cv.put(RecordsDbHelper.INTERVAL, interval);
+			cv.put(RecordsDbHelper.SORTID, sortid);
 			Uri row = getContentResolver().insert(
 					RecordsDbHelper.CONTENT_URI_TIMERS, cv);
 			int iDcounters = Integer.valueOf(row.getLastPathSegment());
@@ -260,10 +261,26 @@ public class MainActivity extends SherlockFragmentActivity implements
 			getContentResolver().insert(RecordsDbHelper.CONTENT_URI_TIMES, cv);
 			reloadFragments();
 		} else if (status == Status.EDIT) {
+			Cursor c = getContentResolver().query(
+					RecordsDbHelper.CONTENT_URI_TIMERS, new String[] { RecordsDbHelper.ID, RecordsDbHelper.SORTID }, RecordsDbHelper.SORTID + " > ?", new String[] { String.valueOf(sortid) }, RecordsDbHelper.SORTID);
+			c.moveToFirst();
 			ContentValues cv = new ContentValues();
+			int index = sortid +1;
+			do {
+				cv.clear();
+				cv.put(RecordsDbHelper.SORTID, index);
+				index++;
+				getContentResolver().update(
+						RecordsDbHelper.CONTENT_URI_RENAMECOUNTER, cv,
+						RecordsDbHelper.ID + "=?",
+						new String[] { String.valueOf(c.getInt(0)) });
+			} while(c.moveToNext());
+			c.close();
+			cv.clear();
 			cv.put(RecordsDbHelper.NAME, inputText);
 			cv.put(RecordsDbHelper.COLOR, color);
 			cv.put(RecordsDbHelper.INTERVAL, interval);
+			cv.put(RecordsDbHelper.SORTID, sortid);
 			getContentResolver().update(
 					RecordsDbHelper.CONTENT_URI_RENAMECOUNTER, cv,
 					RecordsDbHelper.ID + "=?",

@@ -43,8 +43,11 @@ public class CounterEditorDialogFragment extends DialogFragment implements
 	private boolean mIsRunning;
 	private ImageButton mColorButton;
 	private int mColor;
+	private int mSortId;
+	private int mOriginSortId;
 	private EditText mIntervalHoursEditor;
 	private EditText mIntervalMinutesEditor;
+	private EditText mSortidEditor;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,8 @@ public class CounterEditorDialogFragment extends DialogFragment implements
 			mColor = savedInstanceState.getInt("mColor");
 			mName = savedInstanceState.getString("mName");
 			mInterval = savedInstanceState.getLong("mInterval");
+			mSortId = savedInstanceState.getInt("mSortId");
+			mOriginSortId = savedInstanceState.getInt("mOriginSortId");
 		}
 		ColorPickerDialogFragment mColorPickerDialogFragment = (ColorPickerDialogFragment) getActivity()
 				.getSupportFragmentManager().findFragmentByTag(
@@ -74,6 +79,8 @@ public class CounterEditorDialogFragment extends DialogFragment implements
 		outState.putInt("mColor", mColor);
 		outState.putString("mName", mNameEditor.getText().toString());
 		outState.putLong("mInterval", getInterval());
+		outState.putInt("mSortId", mSortidEditor.getText().toString().length() == 0? 1: Integer.valueOf(mSortidEditor.getText().toString()));
+		outState.putInt("mOriginSortId", mOriginSortId);
 		super.onSaveInstanceState(outState);
 	}
 
@@ -88,7 +95,7 @@ public class CounterEditorDialogFragment extends DialogFragment implements
 
 	public interface ICounterEditorDialog {
 		void onFinishDialog(String inputText, int id, Status status,
-				boolean isRunning, int color, long interval);
+				boolean isRunning, int color, long interval, int sortid);
 	}
 
 	public void setCounterDialogListener(ICounterEditorDialog listener) {
@@ -101,6 +108,11 @@ public class CounterEditorDialogFragment extends DialogFragment implements
 
 	public void setColor(int color) {
 		mColor = color;
+	}
+	
+	public void setSortId(int sortid) {
+		mSortId = sortid;
+		mOriginSortId = sortid;
 	}
 
 	public void setIdCounter(int id) {
@@ -123,6 +135,39 @@ public class CounterEditorDialogFragment extends DialogFragment implements
 		mColorButton = (ImageButton) v.findViewById(R.id.color_imageButton);
 		mColorButton.setOnClickListener(this);
 		mNameEditor = (EditText) v.findViewById(R.id.name_editor);
+		mSortidEditor = (EditText) v.findViewById(R.id.sortid);
+		mSortidEditor.setFilters(new InputFilter[] { new PartialRegexInputFilter(mIntervalHoursEditor,
+				"\\d{1,}") });
+		mSortidEditor.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				String h = mSortidEditor.getText().toString();
+				if (h.length() == 0) {
+					mSortidEditor.removeTextChangedListener(this);
+					mSortidEditor.setText(String.valueOf(mOriginSortId));
+					mSortidEditor.addTextChangedListener(this);
+				} else if(Integer.valueOf(h) == 0) {
+					mSortidEditor.removeTextChangedListener(this);
+					mSortidEditor.setText(String.valueOf(mOriginSortId));
+					mSortidEditor.addTextChangedListener(this);
+				}
+				
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		
 		Handler  mHandler = new Handler();;
 		mHandler.post(new Runnable() {
@@ -280,6 +325,7 @@ public class CounterEditorDialogFragment extends DialogFragment implements
 	@Override
 	public void onResume() {
 		mNameEditor.setText(mName);
+		mSortidEditor.setText(String.valueOf(mSortId));
 		long minutes = mInterval / 60 / 1000;
 		long hours = 0;
 		while (minutes >= 60) {
@@ -288,12 +334,17 @@ public class CounterEditorDialogFragment extends DialogFragment implements
 		}
 		mIntervalHoursEditor.setText(String.valueOf(hours));
 		mIntervalMinutesEditor.setText(String.valueOf(minutes));
-		if (mId != -1 && mId != 1) {
-			mDelButton.setVisibility(View.VISIBLE);
+		if (mId != -1) {
 			getDialog().setTitle(R.string.edit_counter_dialog);
 		} else {
-			mDelButton.setVisibility(View.INVISIBLE);
 			getDialog().setTitle(R.string.add_counter_dialog);
+		}
+		if(mId != 1){
+			mSortidEditor.setEnabled(true);
+			mDelButton.setVisibility(View.VISIBLE);
+		} else {
+			mSortidEditor.setEnabled(false);
+			mDelButton.setVisibility(View.INVISIBLE);
 		}
 		super.onResume();
 	};
@@ -303,10 +354,10 @@ public class CounterEditorDialogFragment extends DialogFragment implements
 		if (id == R.id.ok) {
 			mListener.onFinishDialog(mNameEditor.getText().toString(), mId,
 					mId != -1 ? Status.EDIT : Status.ADD, mIsRunning, mColor,
-							getInterval());
+							getInterval(), mSortidEditor.getText().toString().length() == 0 ? 1: Integer.valueOf(mSortidEditor.getText().toString()));
 		} else if (id == R.id.del) {
 			mListener.onFinishDialog(mNameEditor.getText().toString(), mId,
-					Status.DEL, mIsRunning, mColor, getInterval());
+					Status.DEL, mIsRunning, mColor, getInterval(), mSortidEditor.getText().toString().length() == 1? 0: Integer.valueOf(mSortidEditor.getText().toString()));
 		} else if (id == R.id.color_imageButton) {
 			ColorPickerDialogFragment mColorPickerDialogFragment = new ColorPickerDialogFragment();
 			mColorPickerDialogFragment.setColorCounterDialogListener(this);
