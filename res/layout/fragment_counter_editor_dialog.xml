@@ -50,7 +50,7 @@
     android:layout_below="@+id/version"
     android:layout_toRightOf="@+id/interval_hours_editor"
     android:gravity="center"
-    android:text=":"
+    android:text="@string/h"
     android:textSize="16sp" />
 
  <EditText
@@ -130,5 +130,16 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:text="№" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+            android:layout_above="@+id/panel"
+    android:layout_below="@+id/version"
+    android:gravity="center"
+    android:textSize="16sp"
+        android:layout_toRightOf="@+id/interval_minutes_editor"
+        android:text="@string/m" />
 
 </RelativeLayout>

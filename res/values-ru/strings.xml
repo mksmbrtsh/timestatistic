@@ -65,4 +65,6 @@
     <string name="start">Начало</string>
     <string name="note">Примечание</string>
     <string name="search">Поиск</string>
+    <string name="h">ч</string>
+    <string name="m">м</string>
 </resources>

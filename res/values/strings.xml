@@ -66,4 +66,6 @@
     <string name="note">Note</string>
     <string name="search">Search</string>
     <dimen name="fragment_border">4dp</dimen>
+    <string name="h">h</string>
+    <string name="m">m</string>
 </resources>
