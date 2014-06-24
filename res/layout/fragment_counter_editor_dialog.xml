@@ -111,6 +111,7 @@
         android:layout_below="@+id/note_text"
         android:selectAllOnFocus="true"
         android:maxLength="5"
+        
         android:inputType="numberDecimal"
     	android:singleLine="true" />
 

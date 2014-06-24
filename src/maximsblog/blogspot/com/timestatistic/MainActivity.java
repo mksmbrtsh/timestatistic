@@ -262,7 +262,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			reloadFragments();
 		} else if (status == Status.EDIT) {
 			Cursor c = getContentResolver().query(
-					RecordsDbHelper.CONTENT_URI_TIMERS, new String[] { RecordsDbHelper.ID, RecordsDbHelper.SORTID }, RecordsDbHelper.SORTID + " > ?", new String[] { String.valueOf(sortid) }, RecordsDbHelper.SORTID);
+					RecordsDbHelper.CONTENT_URI_TIMERS, new String[] { RecordsDbHelper.ID, RecordsDbHelper.SORTID }, RecordsDbHelper.SORTID + " >= ?", new String[] { String.valueOf(sortid) }, RecordsDbHelper.SORTID);
 			c.moveToFirst();
 			ContentValues cv = new ContentValues();
 			int index = sortid +1;
