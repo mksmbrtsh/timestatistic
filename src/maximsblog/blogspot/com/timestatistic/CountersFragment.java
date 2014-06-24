@@ -53,7 +53,7 @@ public final class CountersFragment extends Fragment implements
 	private LoaderManager loadermanager;
 	private GridView mList;
 	private long mStartdate;
-
+	private long mEnddate;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -62,7 +62,7 @@ public final class CountersFragment extends Fragment implements
 		int[] uiBindTo = { R.id.current, R.id.name };
 		setActivityTitle();
 		mAdapter = new CountersCursorAdapter(this.getActivity(),
-				R.layout.count_row, null, uiBindFrom, uiBindTo, 0, mStartdate);
+				R.layout.count_row, null, uiBindFrom, uiBindTo, 0, mStartdate, mEnddate);
 		loadermanager.initLoader(1, null, this);
 	}
 
@@ -88,7 +88,7 @@ public final class CountersFragment extends Fragment implements
 	@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
 		
-		String[] selectionArgs = new String[] { String.valueOf(mStartdate)};
+		String[] selectionArgs = new String[] { String.valueOf(mStartdate), String.valueOf(mEnddate)};
 		CursorLoader loader = new CursorLoader(this.getActivity(),
 				RecordsDbHelper.CONTENT_URI_TIMES, null, null, selectionArgs, null);
 		return loader;
@@ -208,7 +208,7 @@ public final class CountersFragment extends Fragment implements
 	@Override
 	public void onReload() {
 		setActivityTitle();
-		mAdapter.setStartDate(mStartdate);
+		mAdapter.setDate(mStartdate, mEnddate);		
 		loadermanager.restartLoader(1, null, this);
 	}
 
@@ -223,6 +223,8 @@ public final class CountersFragment extends Fragment implements
 					"dd/MM/yy HH:mm");
 			((SherlockFragmentActivity)getActivity()).getSupportActionBar().setTitle(startDateOption.startDateName + " " + mSimpleDateFormat.format(new Date(mStartdate)));
 		}
+		startDateOption = app.getEndDate(getActivity());
+		mEnddate = startDateOption.startDate;
 	}
 
 	@Override

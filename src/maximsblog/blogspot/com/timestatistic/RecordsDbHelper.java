@@ -240,23 +240,59 @@ public class RecordsDbHelper extends ContentProvider {
 			break;
 		case TIMES: {
 			String start;
-			if (selectionArgs != null && selection == null)
+			String stop;
+			if (selectionArgs != null && selection == null) {
 				start = selectionArgs[0];
-			else
+				stop = selectionArgs[1];
+			}
+			else {
 				start = "0";
+				stop = String.valueOf(Integer.MAX_VALUE);
+			}
 			String e = qb.buildQueryString(false, TABLE_TIMERS
 					+ " LEFT OUTER JOIN " + TABLE_TIMES + " ON " + ID + " = "
 					+ TIMERSID, new String[] {
 					RecordsDbHelper.ID2 + " AS " + RecordsDbHelper.ID,
 					RecordsDbHelper.TIMERSID,
-					"SUM(CASE WHEN " + RecordsDbHelper.ENDTIME + " >= '"
+					"SUM(CASE WHEN " 
+							+ RecordsDbHelper.ENDTIME + " >= '"
 							+ start + "' AND " + RecordsDbHelper.STARTTIME
-							+ " >= '" + start + "' THEN "
-							+ RecordsDbHelper.LENGHT + " ELSE CASE WHEN "
-							+ RecordsDbHelper.ENDTIME + " >= '" + start
-							+ "' THEN " + RecordsDbHelper.ENDTIME + "- '"
-							+ start + "' ELSE '0' END END ) AS "
-							+ RecordsDbHelper.LENGHT,
+							+ " >= '" + start + 
+						"' THEN CASE WHEN "
+								   + RecordsDbHelper.ENDTIME + " <= '"
+								   + stop + "' AND " + RecordsDbHelper.STARTTIME
+								   + " <= '" + stop +
+								   "' THEN "
+								   	 + RecordsDbHelper.LENGHT +
+								   " ELSE CASE WHEN "
+								   			 + RecordsDbHelper.STARTTIME
+								   			 + " <= '" + stop +
+								   		   "' THEN '"
+								   			 + stop + "' - " + RecordsDbHelper.STARTTIME +
+								   			 " ELSE '0' " +
+								   		  "END " +
+								"END" + 
+						" ELSE CASE WHEN "
+								  + RecordsDbHelper.ENDTIME + " >= '" + start +
+								"' THEN CASE WHEN "
+								  		   + RecordsDbHelper.ENDTIME + " <= '"
+								  		   + stop + "' AND " + RecordsDbHelper.STARTTIME
+								  		   + " <= '" + stop +
+								  		"' THEN "
+								  		  + RecordsDbHelper.ENDTIME + "- '"
+										  + start + 
+								  		"' ELSE CASE WHEN "
+								   			 	  + RecordsDbHelper.ENDTIME
+								   			      + " <= '" + stop +
+								   		       "' THEN '"
+								   			      + stop + "' - '" + start + "'" +
+								   			   " ELSE '0' " +
+								   		       "END " +
+								   		" END" + 
+								  
+								  " END" +
+						 " END) " +
+						 "AS " + RecordsDbHelper.LENGHT,
 					"MAX(" + RecordsDbHelper.STARTTIME + ") AS "
 							+ RecordsDbHelper.STARTTIME, RecordsDbHelper.ID,
 					RecordsDbHelper.NAME, RecordsDbHelper.ISRUNNING,
@@ -281,8 +317,10 @@ public class RecordsDbHelper extends ContentProvider {
 					+ TIMERSID,
 					new String[] {
 							RecordsDbHelper.TIMERSID,
-							"SUM(CASE WHEN " + RecordsDbHelper.ENDTIME
-									+ " >= '" + start + "' THEN "
+							"SUM(CASE WHEN " 
+							+ RecordsDbHelper.ENDTIME
+							+ " >= '" + start + "' AND "
+							+ RecordsDbHelper.STARTTIME +" <= '" + String.valueOf(Long.parseLong(start) - 86400000)  + " THEN "
 									+ RecordsDbHelper.LENGHT
 									+ " ELSE '0' END ) AS "
 									+ RecordsDbHelper.LENGHT,
@@ -298,7 +336,7 @@ public class RecordsDbHelper extends ContentProvider {
 		case ALLTIMES: {
 			if (selection != null)
 				selection += " AND (" + RecordsDbHelper.ENDTIME + " >= ? OR "
-						+ RecordsDbHelper.ENDTIME + " IS NULL )";
+						+ RecordsDbHelper.ENDTIME + " IS NULL ) AND " + RecordsDbHelper.STARTTIME + " <= ?";
 			String s = qb.buildQueryString(false, TABLE_TIMERS
 					+ " LEFT OUTER JOIN " + TABLE_TIMES + " ON " + ID + " = "
 					+ TIMERSID, new String[] { RecordsDbHelper.ID,

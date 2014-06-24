@@ -6,6 +6,12 @@
         android:icon="@drawable/ic_startdatefilter"
         android:title="@string/start">
     </item>
+    <item
+        android:id="@+id/item_stop"
+        android:showAsAction="always"
+        android:orderInCategory="3"
+        android:title="конец">
+    </item>
     <item android:id="@+id/item_search"
          android:title="@string/search"
          android:orderInCategory="4"

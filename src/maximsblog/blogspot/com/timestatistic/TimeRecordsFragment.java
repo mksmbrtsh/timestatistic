@@ -99,7 +99,7 @@ public class TimeRecordsFragment extends Fragment implements
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
-		String[] selectionArgs = new String[] { String.valueOf(app.getStartDate(getActivity()).startDate)};
+		String[] selectionArgs = new String[] { String.valueOf(app.getStartDate(getActivity()).startDate), String.valueOf(app.getEndDate(getActivity()).startDate)};
 		CursorLoader loader = new CursorLoader(this.getActivity(),
 				RecordsDbHelper.CONTENT_URI_ALLTIMES, null,
 				RecordsDbHelper.STARTTIME + " IS NOT NULL ", selectionArgs, null);

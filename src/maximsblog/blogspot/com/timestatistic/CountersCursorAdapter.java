@@ -16,11 +16,13 @@ import android.widget.TextView;
 public class CountersCursorAdapter extends SimpleCursorAdapter {
 
 	private long mStartdate;
+	private long mEnddate;
 	
 	public CountersCursorAdapter(Context context, int layout, Cursor c,
-			String[] from, int[] to, int flags, long startdate) {
+			String[] from, int[] to, int flags, long startdate, long enddate) {
 		super(context, layout, c, from, to, flags);
 		mStartdate = startdate;
+		mEnddate = enddate;
 	}
 
 	@Override
@@ -37,7 +39,10 @@ public class CountersCursorAdapter extends SimpleCursorAdapter {
 				if(start < mStartdate)
 					start = mStartdate;
 				long now = new Date().getTime();
-				long lenght = now - start +  cursor.getLong(2);
+				long lenght;
+				if(now > mEnddate)
+					now = mEnddate;
+				lenght = now - start +  cursor.getLong(2);
 
 				setTime(t, lenght);
 				view.findViewById(R.id.selectorLayout).setVisibility(View.VISIBLE);
@@ -89,8 +94,10 @@ public class CountersCursorAdapter extends SimpleCursorAdapter {
 		return s.toString();
 	}
 
-	public void setStartDate(long startdate) {
+
+	public void setDate(long startdate, long enddate) {
 		mStartdate = startdate;
+		mEnddate = enddate;
 	}
 	
 

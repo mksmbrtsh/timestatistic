@@ -162,15 +162,20 @@ public class MainActivity extends SherlockFragmentActivity implements
 		} else {
 			StartDateOption startDateOption = app.getStartDate(this);
 			long startdate = startDateOption.startDate;
-			if(!startDateOption.startDateName.equals(getResources().getStringArray(R.array.StartFilters)[6]))
+			if (!startDateOption.startDateName.equals(getResources()
+					.getStringArray(R.array.StartFilters)[6]))
 				getSupportActionBar().setTitle(startDateOption.startDateName);
-			else
-			{
+			else {
 				SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(
 						"dd/MM/yy HH:mm");
-				getSupportActionBar().setTitle(startDateOption.startDateName + " " + mSimpleDateFormat.format(new Date(startdate)));
+				getSupportActionBar()
+						.setTitle(
+								startDateOption.startDateName
+										+ " "
+										+ mSimpleDateFormat.format(new Date(
+												startdate)));
 			}
-			
+
 			searchMenuItem.setVisible(false);
 			if (mSearchView.isShown())
 				mSearchView.setIconified(true);
@@ -191,11 +196,25 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		FragmentTransaction ft;
 		switch (item.getItemId()) {
-		case R.id.item_starts:
+		case R.id.item_starts: {
 			StartDateSetDialogFragment startDateSetDialogFragment = new StartDateSetDialogFragment();
+			Bundle args = new Bundle();
+			args.putBoolean("start", true);
+			startDateSetDialogFragment.setArguments(args);
 			startDateSetDialogFragment.setDialogListener(this);
 			startDateSetDialogFragment.show(this.getSupportFragmentManager(),
 					"mStartDateSetDialogFragment");
+		}
+			break;
+		case R.id.item_stop: {
+			StartDateSetDialogFragment startDateSetDialogFragment = new StartDateSetDialogFragment();
+			Bundle args = new Bundle();
+			args.putBoolean("start", false);
+			startDateSetDialogFragment.setArguments(args);
+			startDateSetDialogFragment.setDialogListener(this);
+			startDateSetDialogFragment.show(this.getSupportFragmentManager(),
+					"mStartDateSetDialogFragment");
+		}
 			break;
 		case R.id.item_add:
 			CounterEditorDialogFragment counterEditorDialogFragment = new CounterEditorDialogFragment();
@@ -261,11 +280,16 @@ public class MainActivity extends SherlockFragmentActivity implements
 			getContentResolver().insert(RecordsDbHelper.CONTENT_URI_TIMES, cv);
 			reloadFragments();
 		} else if (status == Status.EDIT) {
-			Cursor c = getContentResolver().query(
-					RecordsDbHelper.CONTENT_URI_TIMERS, new String[] { RecordsDbHelper.ID, RecordsDbHelper.SORTID }, RecordsDbHelper.SORTID + " >= ?", new String[] { String.valueOf(sortid) }, RecordsDbHelper.SORTID);
+			Cursor c = getContentResolver()
+					.query(RecordsDbHelper.CONTENT_URI_TIMERS,
+							new String[] { RecordsDbHelper.ID,
+									RecordsDbHelper.SORTID },
+							RecordsDbHelper.SORTID + " >= ?",
+							new String[] { String.valueOf(sortid) },
+							RecordsDbHelper.SORTID);
 			c.moveToFirst();
 			ContentValues cv = new ContentValues();
-			int index = sortid +1;
+			int index = sortid + 1;
 			do {
 				cv.clear();
 				cv.put(RecordsDbHelper.SORTID, index);
@@ -274,7 +298,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 						RecordsDbHelper.CONTENT_URI_RENAMECOUNTER, cv,
 						RecordsDbHelper.ID + "=?",
 						new String[] { String.valueOf(c.getInt(0)) });
-			} while(c.moveToNext());
+			} while (c.moveToNext());
 			c.close();
 			cv.clear();
 			cv.put(RecordsDbHelper.NAME, inputText);
@@ -305,8 +329,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private void reloadFragments() {
 		((MainFragments) findFragmentByPosition(0)).onReload();
 		TimeRecordsFragment timeRecordsFragment = (TimeRecordsFragment) ((MainFragments) findFragmentByPosition(1));
-			timeRecordsFragment.setNormalMode();
-			timeRecordsFragment.onReload();
+		timeRecordsFragment.setNormalMode();
+		timeRecordsFragment.onReload();
 		DiagramFragment diagramFragment = (DiagramFragment) ((MainFragments) findFragmentByPosition(2));
 		if (diagramFragment != null)
 			diagramFragment.onReload();
@@ -382,7 +406,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	@Override
 	public void onDiaryFragmentsRefresh() {
 		DiaryFragment diaryFragment = (DiaryFragment) ((MainFragments) findFragmentByPosition(3));
-			diaryFragment.onReload();
+		diaryFragment.onReload();
 	}
 
 }

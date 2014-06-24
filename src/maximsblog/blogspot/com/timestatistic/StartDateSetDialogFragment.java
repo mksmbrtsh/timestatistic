@@ -19,11 +19,12 @@ public class StartDateSetDialogFragment extends DialogFragment implements
 		IdateChange {
 
 	private IRecordDialog mListener;
+	private boolean mStart;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		mStart = getArguments().getBoolean("start");
 		if (savedInstanceState != null) {
 			CustomDateTimePickerFragment customDateTimePickerFragment = (CustomDateTimePickerFragment) getActivity()
 					.getSupportFragmentManager()
@@ -43,10 +44,20 @@ public class StartDateSetDialogFragment extends DialogFragment implements
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		String[] items = getResources().getStringArray(R.array.StartFilters);
-		long selectItem = PreferenceManager.getDefaultSharedPreferences(
+		String[] items;
+		if(mStart)
+			items = getResources().getStringArray(R.array.StartFilters);
+		else
+			items = getResources().getStringArray(R.array.EndFilters);
+		long selectItem;
+		if(mStart)
+			selectItem = PreferenceManager.getDefaultSharedPreferences(
 				StartDateSetDialogFragment.this.getActivity()).getLong(
 				SettingsActivity.STARTTIMEFILTER, 5);
+		else
+			selectItem = PreferenceManager.getDefaultSharedPreferences(
+					StartDateSetDialogFragment.this.getActivity()).getLong(
+					SettingsActivity.ENDTIMEFILTER, 5);
 		final Date startdate;
 		if (selectItem < 6) {
 			startdate = new Date();
@@ -67,13 +78,18 @@ public class StartDateSetDialogFragment extends DialogFragment implements
 							public void onClick(DialogInterface dialog,
 									int which) {
 								if (which < 6) {
+									String setting;
+									if(mStart)
+										setting = SettingsActivity.STARTTIMEFILTER;
+									else
+										setting = SettingsActivity.ENDTIMEFILTER;
 									Editor editor = PreferenceManager
 											.getDefaultSharedPreferences(
 													StartDateSetDialogFragment.this
 															.getActivity())
 											.edit();
 									editor.putLong(
-											SettingsActivity.STARTTIMEFILTER,
+											setting,
 											which);
 									editor.commit();
 									StartDateSetDialogFragment.this.dismiss();
@@ -100,9 +116,14 @@ public class StartDateSetDialogFragment extends DialogFragment implements
 			Toast.makeText(getActivity(), R.string.more_max, Toast.LENGTH_LONG).show();
 			StartDateSetDialogFragment.this.dismiss();
 		} else {
+			String setting;
+			if(mStart)
+				setting = SettingsActivity.STARTTIMEFILTER;
+			else
+				setting = SettingsActivity.ENDTIMEFILTER;
 			Editor editor = PreferenceManager.getDefaultSharedPreferences(
 					StartDateSetDialogFragment.this.getActivity()).edit();
-			editor.putLong(SettingsActivity.STARTTIMEFILTER, newvalue);
+			editor.putLong(setting, newvalue);
 			editor.commit();
 			StartDateSetDialogFragment.this.dismiss();
 			mListener.onRefreshFragmentsValue();

@@ -99,4 +99,75 @@ public class app extends Application {
 		startDateOption.startDateName = resultName;
 		return startDateOption;
 	}
+	
+	public static StartDateOption getEndDate(Context context) {
+		long checkedItem = PreferenceManager.getDefaultSharedPreferences(
+				context).getLong(SettingsActivity.ENDTIMEFILTER, 5);
+		Calendar calendar = Calendar.getInstance();
+		long result;
+		String resultName;
+		String[] startDateNames = context.getResources().getStringArray(
+				R.array.EndFilters);
+		if (checkedItem < 6) {
+			resultName = startDateNames[(int) checkedItem];
+			switch ((int)checkedItem) {
+
+			case SettingsActivity.STARTTIMEFILTERS.TODAY:
+				calendar.set(Calendar.MILLISECOND, 0);
+				calendar.set(Calendar.SECOND, 0);
+				calendar.set(Calendar.MINUTE, 0);
+				calendar.set(Calendar.HOUR_OF_DAY, 0);
+				calendar.add(Calendar.DATE, 1);
+				result = calendar.getTimeInMillis();
+				break;
+			case SettingsActivity.STARTTIMEFILTERS.YESTERDAY:
+				calendar.set(Calendar.MILLISECOND, 0);
+				calendar.set(Calendar.SECOND, 0);
+				calendar.set(Calendar.MINUTE, 0);
+				calendar.set(Calendar.HOUR_OF_DAY, 0);
+				calendar.add(Calendar.DATE, -1);
+				calendar.add(Calendar.DATE, 2);
+				result = calendar.getTimeInMillis();
+				break;
+			case SettingsActivity.STARTTIMEFILTERS.WEEK:
+				calendar.set(Calendar.MILLISECOND, 0);
+				calendar.set(Calendar.SECOND, 0);
+				calendar.set(Calendar.MINUTE, 0);
+				calendar.set(Calendar.HOUR_OF_DAY, 0);
+				calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
+				calendar.add(Calendar.DATE, 7);
+				result = calendar.getTimeInMillis();
+				break;
+			case SettingsActivity.STARTTIMEFILTERS.MOUNTH:
+				calendar.set(Calendar.MILLISECOND, 0);
+				calendar.set(Calendar.SECOND, 0);
+				calendar.set(Calendar.MINUTE, 0);
+				calendar.set(Calendar.HOUR_OF_DAY, 0);
+				calendar.set(Calendar.DAY_OF_MONTH, 1);
+				result = calendar.getTimeInMillis();
+				break;
+			case SettingsActivity.STARTTIMEFILTERS.YEAR:
+				calendar.set(Calendar.MILLISECOND, 0);
+				calendar.set(Calendar.SECOND, 0);
+				calendar.set(Calendar.MINUTE, 0);
+				calendar.set(Calendar.HOUR_OF_DAY, 0);
+				calendar.set(Calendar.DAY_OF_MONTH, 1);
+				calendar.set(Calendar.MONTH, 0);
+				result = calendar.getTimeInMillis();
+				break;
+			case SettingsActivity.STARTTIMEFILTERS.ALLTIME:
+				result = Long.MAX_VALUE;
+				break;
+			default:
+				result = Long.MAX_VALUE;
+			}
+		} else {
+			result = checkedItem;
+			resultName = startDateNames[6];
+		}
+		StartDateOption startDateOption = new StartDateOption();
+		startDateOption.startDate = result;
+		startDateOption.startDateName = resultName;
+		return startDateOption;
+	}
 }
