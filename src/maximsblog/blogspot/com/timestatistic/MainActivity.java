@@ -67,6 +67,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setTitle("");
+		getSupportActionBar().setIcon(android.R.color.transparent);
 		setContentView(R.layout.activity_main);
 		mTitles = getResources().getStringArray(R.array.TitlePages);
 		// prepare ViewPagerIndicator

@@ -68,7 +68,7 @@
         <item>До конца недели</item>
         <item>До конца месяца</item>
         <item>До конца года</item>
-        <item>Не задан</item>
+        <item>Не задано</item>
         <item>До</item>
     </string-array>
     <string name="start">Начало</string>
