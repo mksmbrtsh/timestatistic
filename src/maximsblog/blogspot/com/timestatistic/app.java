@@ -85,10 +85,10 @@ public class app extends Application {
 				result = calendar.getTimeInMillis();
 				break;
 			case SettingsActivity.STARTTIMEFILTERS.ALLTIME:
-				result = 0;
+				result = 1;
 				break;
 			default:
-				result = 0;
+				result = 1;
 			}
 		} else {
 			result = checkedItem;
@@ -156,10 +156,10 @@ public class app extends Application {
 				result = calendar.getTimeInMillis();
 				break;
 			case SettingsActivity.STARTTIMEFILTERS.ALLTIME:
-				result = Long.MAX_VALUE;
+				result = -1;
 				break;
 			default:
-				result = Long.MAX_VALUE;
+				result = -1;
 			}
 		} else {
 			result = checkedItem;

@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.net.IDN;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -246,10 +247,31 @@ public class RecordsDbHelper extends ContentProvider {
 				stop = selectionArgs[1];
 			}
 			else {
-				start = "0";
-				stop = String.valueOf(Integer.MAX_VALUE);
+				start = "1";
+				stop = "-1";
 			}
-			String e = qb.buildQueryString(false, TABLE_TIMERS
+			String e;
+			if(stop.equals("-1")){
+				e = qb.buildQueryString(false, TABLE_TIMERS
+						+ " LEFT OUTER JOIN " + TABLE_TIMES + " ON " + ID + " = "
+						+ TIMERSID, new String[] {
+						RecordsDbHelper.ID2 + " AS " + RecordsDbHelper.ID,
+						RecordsDbHelper.TIMERSID,
+						"SUM(CASE WHEN " + RecordsDbHelper.ENDTIME + " >= '"
+								+ start + "' AND " + RecordsDbHelper.STARTTIME
+								+ " >= '" + start + "' THEN "
+								+ RecordsDbHelper.LENGHT + " ELSE CASE WHEN "
+								+ RecordsDbHelper.ENDTIME + " >= '" + start
+								+ "' THEN " + RecordsDbHelper.ENDTIME + "- '"
+								+ start + "' ELSE '0' END END ) AS "
+								+ RecordsDbHelper.LENGHT,
+						"MAX(" + RecordsDbHelper.STARTTIME + ") AS "
+								+ RecordsDbHelper.STARTTIME, RecordsDbHelper.ID,
+						RecordsDbHelper.NAME, RecordsDbHelper.ISRUNNING,
+						RecordsDbHelper.COLOR, INTERVAL, SORTID }, selection,
+						RecordsDbHelper.TIMERSID, null, RecordsDbHelper.SORTID, null);
+			} else
+				e = qb.buildQueryString(false, TABLE_TIMERS
 					+ " LEFT OUTER JOIN " + TABLE_TIMES + " ON " + ID + " = "
 					+ TIMERSID, new String[] {
 					RecordsDbHelper.ID2 + " AS " + RecordsDbHelper.ID,
@@ -334,9 +356,18 @@ public class RecordsDbHelper extends ContentProvider {
 			return c;
 		}
 		case ALLTIMES: {
-			if (selection != null)
+			if (selection != null){
+				if(selectionArgs[1].equals("-1")) {
+					String[] newselection = new String[1];
+					newselection[0] = selectionArgs[0];
+					selectionArgs = newselection;
+					selection += " AND (" + RecordsDbHelper.ENDTIME + " >= ? OR "
+							+ RecordsDbHelper.ENDTIME + " IS NULL )";
+				}
+				else
 				selection += " AND (" + RecordsDbHelper.ENDTIME + " >= ? OR "
 						+ RecordsDbHelper.ENDTIME + " IS NULL ) AND " + RecordsDbHelper.STARTTIME + " <= ?";
+			}
 			String s = qb.buildQueryString(false, TABLE_TIMERS
 					+ " LEFT OUTER JOIN " + TABLE_TIMES + " ON " + ID + " = "
 					+ TIMERSID, new String[] { RecordsDbHelper.ID,

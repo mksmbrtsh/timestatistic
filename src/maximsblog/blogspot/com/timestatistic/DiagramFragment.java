@@ -142,7 +142,7 @@ public class DiagramFragment extends Fragment implements
 			boolean isRunning = cursor.getInt(6) == 1;
 			Double sum = 0.0;
 			if(isRunning) {
-				if(now > enddate && enddate != Long.MAX_VALUE){
+				if(now > enddate && enddate != -1){
 					sum = (double)t;
 				} else
 					sum = (double)t + now - start;
@@ -169,7 +169,7 @@ public class DiagramFragment extends Fragment implements
 				isRunning = cursor.getInt(6) == 1;
 				double v;
 				if(isRunning) {
-					if(now > enddate && enddate != Long.MAX_VALUE){
+					if(now > enddate && enddate != -1){
 						v = (double)t;
 					} else
 						v = (double)t + now - start;
@@ -188,7 +188,7 @@ public class DiagramFragment extends Fragment implements
 					mRenderer.addSeriesRenderer(renderer);
 				}
 			}
-			if(now < enddate && enddate != Long.MAX_VALUE)
+			if(now < enddate && enddate != -1)
 			{
 				renderer = new SimpleSeriesRenderer();
 				color = 0;
