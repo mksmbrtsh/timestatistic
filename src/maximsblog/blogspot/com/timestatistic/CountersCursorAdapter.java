@@ -40,10 +40,11 @@ public class CountersCursorAdapter extends SimpleCursorAdapter {
 					start = mStartdate;
 				long now = new Date().getTime();
 				long lenght;
-				if(now > mEnddate)
-					now = mEnddate;
-				lenght = now - start +  cursor.getLong(2);
-
+				if(now > mEnddate){
+					lenght = cursor.getLong(2);
+				} else {
+					lenght = now - start +  cursor.getLong(2);
+				}
 				setTime(t, lenght);
 				view.findViewById(R.id.selectorLayout).setVisibility(View.VISIBLE);
 				

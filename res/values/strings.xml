@@ -54,13 +54,22 @@
     <string name="union">Union</string>
     <string name="startdateset">Since time filter</string>
     <string-array name="StartFilters">
-        <item>Today</item>
-        <item>Yesterday</item>
-        <item>Week</item>
-        <item>Month</item>
-        <item>Year</item>
-        <item>All time</item>
-        <item>Since</item>
+        <item>Since today</item>
+        <item>Since yesterday</item>
+        <item>since week</item>
+        <item>since month</item>
+        <item>since year</item>
+        <item>since app setup</item>
+        <item>since</item>
+    </string-array>
+    <string-array name="EndFilters">
+        <item>to tommorow</item>
+        <item>to begin this day</item>
+        <item>to end this week</item>
+        <item>to end this month</item>
+        <item>to end this wear</item>
+        <item>not set</item>
+        <item>to</item>
     </string-array>
     <string name="start">Since</string>
     <string name="note">Note</string>
@@ -68,4 +77,5 @@
     <dimen name="fragment_border">4dp</dimen>
     <string name="h">h</string>
     <string name="m">m</string>
+    <string name="end">end</string>
 </resources>

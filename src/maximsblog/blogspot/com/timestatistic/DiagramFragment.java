@@ -59,7 +59,7 @@ public class DiagramFragment extends Fragment implements
 		loadermanager = getLoaderManager();
 		super.onCreate(savedInstanceState);
 		mRenderer.setZoomButtonsVisible(false);
-		mRenderer.setStartAngle(180);
+		mRenderer.setStartAngle(270);
 		mRenderer.setDisplayValues(false);
 		mRenderer.setInScroll(false);
 		mRenderer.setClickEnabled(false);
@@ -113,8 +113,8 @@ public class DiagramFragment extends Fragment implements
 	@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
 		String[] selectionArgs = new String[] { String.valueOf(app
-				.getStartDate(getActivity()).startDate), String.valueOf(app
-						.getEndDate(getActivity()).startDate) };
+				.getStartDate(getActivity()).date), String.valueOf(app
+						.getEndDate(getActivity()).date) };
 		CursorLoader loader = new CursorLoader(this.getActivity(),
 				RecordsDbHelper.CONTENT_URI_TIMES, null, null, selectionArgs,
 				null);
@@ -133,14 +133,22 @@ public class DiagramFragment extends Fragment implements
 			long id = cursor.getLong(0);
 			long t = cursor.getLong(2);
 			long start = cursor.getLong(3);
-			long startdate = app.getStartDate(getActivity()).startDate;
+			long startdate = app.getStartDate(getActivity()).date;
+			long enddate = app.getEndDate(getActivity()).date;
+			long now = new Date().getTime();
 			if (start < startdate)
 				start = startdate;
 			String s = cursor.getString(5);
-
 			boolean isRunning = cursor.getInt(6) == 1;
 			Double sum = 0.0;
-			sum = (double) (isRunning ? t + new Date().getTime() - start : t);
+			if(isRunning) {
+				if(now > enddate && enddate != Long.MAX_VALUE){
+					sum = (double)t;
+				} else
+					sum = (double)t + now - start;
+			}
+			else
+				sum = (double)t;
 
 			SimpleSeriesRenderer renderer = new SimpleSeriesRenderer();
 			int color = cursor.getInt(7);
@@ -158,10 +166,16 @@ public class DiagramFragment extends Fragment implements
 				t = cursor.getLong(2);
 				start = cursor.getLong(3);
 				s = cursor.getString(5);
-				
 				isRunning = cursor.getInt(6) == 1;
-				double v = (double) (isRunning ? t + new Date().getTime()
-						- start : t);
+				double v;
+				if(isRunning) {
+					if(now > enddate && enddate != Long.MAX_VALUE){
+						v = (double)t;
+					} else
+						v = (double)t + now - start;
+				}
+				else
+					v = (double)t;
 				sum += v;
 				
 				renderer = new SimpleSeriesRenderer();
@@ -173,6 +187,17 @@ public class DiagramFragment extends Fragment implements
 					values.add(v);
 					mRenderer.addSeriesRenderer(renderer);
 				}
+			}
+			if(now < enddate && enddate != Long.MAX_VALUE)
+			{
+				renderer = new SimpleSeriesRenderer();
+				color = 0;
+				renderer.setColor(color);
+				renderer.setChartValuesFormat(nf);
+				mRenderer.addSeriesRenderer(renderer);
+				nvalues.add("future");
+				values.add((double)enddate - now);
+				sum += enddate - now;
 			}
 			for (int i1 = 0, cnt1 = values.size(); i1 < cnt1; i1++) {
 

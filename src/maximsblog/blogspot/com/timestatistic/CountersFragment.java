@@ -213,18 +213,22 @@ public final class CountersFragment extends Fragment implements
 	}
 
 	private void setActivityTitle() {
-		StartDateOption startDateOption = app.getStartDate(getActivity());
-		mStartdate = startDateOption.startDate;
-		if(!startDateOption.startDateName.equals(getResources().getStringArray(R.array.StartFilters)[6]))
-			((SherlockFragmentActivity)getActivity()).getSupportActionBar().setTitle(startDateOption.startDateName);
-		else
-		{
-			SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(
-					"dd/MM/yy HH:mm");
-			((SherlockFragmentActivity)getActivity()).getSupportActionBar().setTitle(startDateOption.startDateName + " " + mSimpleDateFormat.format(new Date(mStartdate)));
+		SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(
+				"dd/MM/yy HH:mm");
+		FilterDateOption startDateOption = app.getStartDate(getActivity());
+		mStartdate = startDateOption.date;
+		if(!startDateOption.dateName.equals(getResources().getStringArray(R.array.StartFilters)[6]))
+			((SherlockFragmentActivity)getActivity()).getSupportActionBar().setTitle(startDateOption.dateName);
+		else {
+			((SherlockFragmentActivity)getActivity()).getSupportActionBar().setTitle(startDateOption.dateName + " " + mSimpleDateFormat.format(new Date(mStartdate)));
 		}
 		startDateOption = app.getEndDate(getActivity());
-		mEnddate = startDateOption.startDate;
+		mEnddate = startDateOption.date;
+		if(!startDateOption.dateName.equals(getResources().getStringArray(R.array.EndFilters)[6]))
+			((SherlockFragmentActivity)getActivity()).getSupportActionBar().setSubtitle(startDateOption.dateName);
+		else {
+			((SherlockFragmentActivity)getActivity()).getSupportActionBar().setSubtitle(startDateOption.dateName + " " + mSimpleDateFormat.format(new Date(mStartdate)));
+		}
 	}
 
 	@Override

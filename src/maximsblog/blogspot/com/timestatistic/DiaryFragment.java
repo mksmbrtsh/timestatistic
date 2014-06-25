@@ -57,7 +57,7 @@ public class DiaryFragment extends Fragment implements LoaderCallbacks<Cursor>,
 				RecordsDbHelper.STARTTIME, RecordsDbHelper.LENGHT,
 				RecordsDbHelper.NOTE };
 		int[] uiBindTo = { R.id.name, R.id.time, R.id.lenght_record, R.id.note_text };
-		mStartdate = app.getStartDate(getActivity()).startDate;
+		mStartdate = app.getStartDate(getActivity()).date;
 		mAdapter = new DiaryCursorAdapter(this.getActivity(),
 				R.layout.diary_row, null, uiBindFrom, uiBindTo, 0, mStartdate);
 		loadermanager.initLoader(1, null, this);
@@ -130,7 +130,7 @@ public class DiaryFragment extends Fragment implements LoaderCallbacks<Cursor>,
 
 	@Override
 	public void onReload() {
-		mStartdate = app.getStartDate(getActivity()).startDate;
+		mStartdate = app.getStartDate(getActivity()).date;
 		mAdapter.setStartDate(mStartdate);
 		loadermanager.restartLoader(1, null, this);
 	}

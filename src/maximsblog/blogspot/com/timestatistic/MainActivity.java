@@ -96,7 +96,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 					.findFragmentByTag("mUnionRecordDialog");
 			if (unionRecordDialogFragment != null)
 				unionRecordDialogFragment.setDialogListener(this);
-			StartDateSetDialogFragment startDateSetDialogFragment = (StartDateSetDialogFragment) fm
+			FilterDateSetDialogFragment startDateSetDialogFragment = (FilterDateSetDialogFragment) fm
 					.findFragmentByTag("mStartDateSetDialogFragment");
 			if (startDateSetDialogFragment != null)
 				startDateSetDialogFragment.setDialogListener(this);
@@ -158,23 +158,39 @@ public class MainActivity extends SherlockFragmentActivity implements
 		mSearchView = (SearchView) searchMenuItem.getActionView();
 		if (pager.getCurrentItem() == 3) {
 			getSupportActionBar().setTitle("");
+			getSupportActionBar().setSubtitle("");
 			searchMenuItem.setVisible(true);
 		} else {
-			StartDateOption startDateOption = app.getStartDate(this);
-			long startdate = startDateOption.startDate;
-			if (!startDateOption.startDateName.equals(getResources()
+			SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(
+					"dd/MM/yy HH:mm");
+			FilterDateOption startDateOption = app.getStartDate(this);
+			long startdate = startDateOption.date;
+			if (!startDateOption.dateName.equals(getResources()
 					.getStringArray(R.array.StartFilters)[6]))
-				getSupportActionBar().setTitle(startDateOption.startDateName);
+				getSupportActionBar().setTitle(startDateOption.dateName);
 			else {
-				SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(
-						"dd/MM/yy HH:mm");
+				
 				getSupportActionBar()
 						.setTitle(
-								startDateOption.startDateName
+								startDateOption.dateName
 										+ " "
 										+ mSimpleDateFormat.format(new Date(
 												startdate)));
 			}
+			FilterDateOption endDateOption = app.getEndDate(this);
+			long endDate = startDateOption.date;
+			if (!endDateOption.dateName.equals(getResources()
+					.getStringArray(R.array.EndFilters)[6]))
+				getSupportActionBar().setSubtitle(endDateOption.dateName);
+			else {
+				getSupportActionBar()
+						.setSubtitle(
+								endDateOption.dateName
+										+ " "
+										+ mSimpleDateFormat.format(new Date(
+												endDate)));
+			}
+			
 
 			searchMenuItem.setVisible(false);
 			if (mSearchView.isShown())
@@ -197,7 +213,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		FragmentTransaction ft;
 		switch (item.getItemId()) {
 		case R.id.item_starts: {
-			StartDateSetDialogFragment startDateSetDialogFragment = new StartDateSetDialogFragment();
+			FilterDateSetDialogFragment startDateSetDialogFragment = new FilterDateSetDialogFragment();
 			Bundle args = new Bundle();
 			args.putBoolean("start", true);
 			startDateSetDialogFragment.setArguments(args);
@@ -207,7 +223,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		}
 			break;
 		case R.id.item_stop: {
-			StartDateSetDialogFragment startDateSetDialogFragment = new StartDateSetDialogFragment();
+			FilterDateSetDialogFragment startDateSetDialogFragment = new FilterDateSetDialogFragment();
 			Bundle args = new Bundle();
 			args.putBoolean("start", false);
 			startDateSetDialogFragment.setArguments(args);

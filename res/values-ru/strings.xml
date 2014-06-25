@@ -63,12 +63,12 @@
         <item>С</item>
     </string-array>
     <string-array name="EndFilters">
-        <item>По сегодня</item>
         <item>До завтра</item>
+        <item>До начала сегодня</item>
         <item>До конца недели</item>
         <item>До конца месяца</item>
         <item>До конца года</item>
-        <item>До бесконечности</item>
+        <item>Не задан</item>
         <item>До</item>
     </string-array>
     <string name="start">Начало</string>
@@ -76,4 +76,5 @@
     <string name="search">Поиск</string>
     <string name="h">ч</string>
     <string name="m">м</string>
+    <string name="end">конец</string>
 </resources>

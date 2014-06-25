@@ -32,7 +32,7 @@ public class app extends Application {
 		app.alarm.CancelAlarm(context);
 	}
 
-	public static StartDateOption getStartDate(Context context) {
+	public static FilterDateOption getStartDate(Context context) {
 		long checkedItem = PreferenceManager.getDefaultSharedPreferences(
 				context).getLong(SettingsActivity.STARTTIMEFILTER, 5);
 		Calendar calendar = Calendar.getInstance();
@@ -94,13 +94,13 @@ public class app extends Application {
 			result = checkedItem;
 			resultName = startDateNames[6];
 		}
-		StartDateOption startDateOption = new StartDateOption();
-		startDateOption.startDate = result;
-		startDateOption.startDateName = resultName;
+		FilterDateOption startDateOption = new FilterDateOption();
+		startDateOption.date = result;
+		startDateOption.dateName = resultName;
 		return startDateOption;
 	}
 	
-	public static StartDateOption getEndDate(Context context) {
+	public static FilterDateOption getEndDate(Context context) {
 		long checkedItem = PreferenceManager.getDefaultSharedPreferences(
 				context).getLong(SettingsActivity.ENDTIMEFILTER, 5);
 		Calendar calendar = Calendar.getInstance();
@@ -125,8 +125,6 @@ public class app extends Application {
 				calendar.set(Calendar.SECOND, 0);
 				calendar.set(Calendar.MINUTE, 0);
 				calendar.set(Calendar.HOUR_OF_DAY, 0);
-				calendar.add(Calendar.DATE, -1);
-				calendar.add(Calendar.DATE, 2);
 				result = calendar.getTimeInMillis();
 				break;
 			case SettingsActivity.STARTTIMEFILTERS.WEEK:
@@ -144,6 +142,7 @@ public class app extends Application {
 				calendar.set(Calendar.MINUTE, 0);
 				calendar.set(Calendar.HOUR_OF_DAY, 0);
 				calendar.set(Calendar.DAY_OF_MONTH, 1);
+				calendar.add(Calendar.MONTH, 1);
 				result = calendar.getTimeInMillis();
 				break;
 			case SettingsActivity.STARTTIMEFILTERS.YEAR:
@@ -153,6 +152,7 @@ public class app extends Application {
 				calendar.set(Calendar.HOUR_OF_DAY, 0);
 				calendar.set(Calendar.DAY_OF_MONTH, 1);
 				calendar.set(Calendar.MONTH, 0);
+				calendar.add(Calendar.YEAR, 1);
 				result = calendar.getTimeInMillis();
 				break;
 			case SettingsActivity.STARTTIMEFILTERS.ALLTIME:
@@ -165,9 +165,9 @@ public class app extends Application {
 			result = checkedItem;
 			resultName = startDateNames[6];
 		}
-		StartDateOption startDateOption = new StartDateOption();
-		startDateOption.startDate = result;
-		startDateOption.startDateName = resultName;
+		FilterDateOption startDateOption = new FilterDateOption();
+		startDateOption.date = result;
+		startDateOption.dateName = resultName;
 		return startDateOption;
 	}
 }

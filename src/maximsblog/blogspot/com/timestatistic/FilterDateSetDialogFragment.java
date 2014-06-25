@@ -15,7 +15,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.widget.Toast;
 
-public class StartDateSetDialogFragment extends DialogFragment implements
+public class FilterDateSetDialogFragment extends DialogFragment implements
 		IdateChange {
 
 	private IRecordDialog mListener;
@@ -52,11 +52,11 @@ public class StartDateSetDialogFragment extends DialogFragment implements
 		long selectItem;
 		if(mStart)
 			selectItem = PreferenceManager.getDefaultSharedPreferences(
-				StartDateSetDialogFragment.this.getActivity()).getLong(
+				FilterDateSetDialogFragment.this.getActivity()).getLong(
 				SettingsActivity.STARTTIMEFILTER, 5);
 		else
 			selectItem = PreferenceManager.getDefaultSharedPreferences(
-					StartDateSetDialogFragment.this.getActivity()).getLong(
+					FilterDateSetDialogFragment.this.getActivity()).getLong(
 					SettingsActivity.ENDTIMEFILTER, 5);
 		final Date startdate;
 		if (selectItem < 6) {
@@ -85,14 +85,14 @@ public class StartDateSetDialogFragment extends DialogFragment implements
 										setting = SettingsActivity.ENDTIMEFILTER;
 									Editor editor = PreferenceManager
 											.getDefaultSharedPreferences(
-													StartDateSetDialogFragment.this
+													FilterDateSetDialogFragment.this
 															.getActivity())
 											.edit();
 									editor.putLong(
 											setting,
 											which);
 									editor.commit();
-									StartDateSetDialogFragment.this.dismiss();
+									FilterDateSetDialogFragment.this.dismiss();
 									mListener.onRefreshFragmentsValue();
 								} else {
 									CustomDateTimePickerFragment newFragment = new CustomDateTimePickerFragment();
@@ -101,7 +101,7 @@ public class StartDateSetDialogFragment extends DialogFragment implements
 									b.putInt("id", 1);
 									newFragment.setArguments(b);
 									newFragment
-											.setDateChange(StartDateSetDialogFragment.this);
+											.setDateChange(FilterDateSetDialogFragment.this);
 									newFragment.show(getActivity()
 											.getSupportFragmentManager(),
 											"timePicker");
@@ -112,9 +112,9 @@ public class StartDateSetDialogFragment extends DialogFragment implements
 
 	@Override
 	public void timeChange(int id, long newvalue) {
-		if (newvalue > new Date().getTime()) {
+		if (mStart && newvalue > new Date().getTime()) {
 			Toast.makeText(getActivity(), R.string.more_max, Toast.LENGTH_LONG).show();
-			StartDateSetDialogFragment.this.dismiss();
+			FilterDateSetDialogFragment.this.dismiss();
 		} else {
 			String setting;
 			if(mStart)
@@ -122,10 +122,10 @@ public class StartDateSetDialogFragment extends DialogFragment implements
 			else
 				setting = SettingsActivity.ENDTIMEFILTER;
 			Editor editor = PreferenceManager.getDefaultSharedPreferences(
-					StartDateSetDialogFragment.this.getActivity()).edit();
+					FilterDateSetDialogFragment.this.getActivity()).edit();
 			editor.putLong(setting, newvalue);
 			editor.commit();
-			StartDateSetDialogFragment.this.dismiss();
+			FilterDateSetDialogFragment.this.dismiss();
 			mListener.onRefreshFragmentsValue();
 		}
 	}
