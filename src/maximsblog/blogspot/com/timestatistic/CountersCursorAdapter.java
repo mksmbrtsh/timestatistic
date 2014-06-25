@@ -58,7 +58,7 @@ public class CountersCursorAdapter extends SimpleCursorAdapter {
 		t.setTextColor(intColor);
 	}
 	
-	private void setTime(TextView t, long time)
+	public void setTime(TextView t, long time)
 	{
 		int day;
 		int hours;

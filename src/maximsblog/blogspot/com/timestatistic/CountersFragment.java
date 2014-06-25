@@ -40,6 +40,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -54,6 +55,8 @@ public final class CountersFragment extends Fragment implements
 	private GridView mList;
 	private long mStartdate;
 	private long mEnddate;
+	private View mCurrentPanel;
+	private TextView mCurrent;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -69,13 +72,16 @@ public final class CountersFragment extends Fragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		LinearLayout layout = (LinearLayout) inflater.inflate(
+		RelativeLayout layout = (RelativeLayout) inflater.inflate(
 				R.layout.fragment_counters, container, false);
 		mList = (GridView) layout.findViewById(R.id.listView1);
 		mList.setAdapter(mAdapter);
 		mList.setOnItemClickListener(this);
 		mList.setOnItemLongClickListener(this);
 
+		mCurrentPanel = layout.findViewById(R.id.current_panel);
+		mCurrent = (TextView)layout.findViewById(R.id.current);
+		
 		return layout;
 	}
 
@@ -177,6 +183,15 @@ public final class CountersFragment extends Fragment implements
 						int y = mList.getScrollY();
 						mList.invalidateViews();
 						mList.scrollBy(0, y);
+						if(mEnddate == -1)
+							mCurrentPanel.setVisibility(View.GONE);
+						else {
+							mCurrentPanel.setVisibility(View.VISIBLE);
+							long time = mEnddate - new Date().getTime();
+							if(time < 0)
+								time = 0;
+							mAdapter.setTime(mCurrent, time);
+						}
 					}
 				};
 				getActivity().runOnUiThread(update);

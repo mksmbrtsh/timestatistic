@@ -238,6 +238,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			counterEditorDialogFragment.setCounterDialogListener(this);
 			counterEditorDialogFragment.setName("");
 			counterEditorDialogFragment.setInterval(900000);
+			counterEditorDialogFragment.setSortId(1);
 			Random rnd = new Random();
 			int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256),
 					rnd.nextInt(256));
