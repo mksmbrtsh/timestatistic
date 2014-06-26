@@ -113,7 +113,7 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 	public void onResume() {
 		super.onResume();
 		Cursor timers = getActivity().getContentResolver().query(
-				RecordsDbHelper.CONTENT_URI_TIMES, null, null, null, null);
+				RecordsDbHelper.CONTENT_URI_TIMES, null, null, null, RecordsDbHelper.SORTID);
 		((SimpleCursorAdapter) mCurrentCounter.getAdapter()).swapCursor(timers);
 		if (mCurrentPosition == -1)
 			for (int i1 = 0, cnt1 = timers.getCount(); i1 < cnt1; i1++) {
