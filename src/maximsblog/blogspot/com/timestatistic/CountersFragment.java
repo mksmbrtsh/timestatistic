@@ -242,7 +242,7 @@ public final class CountersFragment extends Fragment implements
 		if(!startDateOption.dateName.equals(getResources().getStringArray(R.array.EndFilters)[6]))
 			((SherlockFragmentActivity)getActivity()).getSupportActionBar().setSubtitle(startDateOption.dateName);
 		else {
-			((SherlockFragmentActivity)getActivity()).getSupportActionBar().setSubtitle(startDateOption.dateName + " " + mSimpleDateFormat.format(new Date(mStartdate)));
+			((SherlockFragmentActivity)getActivity()).getSupportActionBar().setSubtitle(startDateOption.dateName + " " + mSimpleDateFormat.format(new Date(mEnddate)));
 		}
 	}
 

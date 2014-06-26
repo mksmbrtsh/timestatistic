@@ -456,12 +456,13 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 				String monthShortName, int monthNumber, int date,
 				String weekDayFullName, String weekDayShortName, int hour24,
 				int hour12, int min, int sec, String AM_PM) {
-			mIdateChange.timeChange(id, dateSelected.getTime());
 			super.dismiss();
+			mIdateChange.timeChange(id, dateSelected.getTime());
 		}
 
 		@Override
 		public void onCancel() {
+			mIdateChange.cancel();
 			super.dismiss();
 		}
 	}
@@ -564,5 +565,11 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 		}
 
 		return 0;
+	}
+
+	@Override
+	public void cancel() {
+		// TODO Auto-generated method stub
+		
 	}
 }

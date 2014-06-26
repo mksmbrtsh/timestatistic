@@ -52,7 +52,7 @@
     <string name="interval">Remember interval</string>
     <string name="help">Help</string>
     <string name="union">Union</string>
-    <string name="startdateset">Since time filter</string>
+    <string name="filterdateset">Filter</string>
     <string-array name="StartFilters">
         <item>Since today</item>
         <item>Since yesterday</item>

@@ -52,7 +52,7 @@
     <string name="interval">Интервал напоминания</string>
     <string name="help">Помощь</string>
     <string name="union">Объединить</string>
-    <string name="startdateset">Показать данные</string>
+    <string name="filterdateset">Установить фильтр</string>
     <string-array name="StartFilters">
         <item>C сегодня</item>
         <item>Cо вчера</item>

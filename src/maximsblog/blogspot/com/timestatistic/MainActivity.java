@@ -166,11 +166,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 					"dd/MM/yy HH:mm");
 			FilterDateOption startDateOption = app.getStartDate(this);
 			long startdate = startDateOption.date;
-			if (!startDateOption.dateName.equals(getResources()
-					.getStringArray(R.array.StartFilters)[6]))
+			if (!startDateOption.dateName.equals(getResources().getStringArray(
+					R.array.StartFilters)[6]))
 				getSupportActionBar().setTitle(startDateOption.dateName);
 			else {
-				
+
 				getSupportActionBar()
 						.setTitle(
 								startDateOption.dateName
@@ -179,19 +179,15 @@ public class MainActivity extends SherlockFragmentActivity implements
 												startdate)));
 			}
 			FilterDateOption endDateOption = app.getEndDate(this);
-			long endDate = startDateOption.date;
-			if (!endDateOption.dateName.equals(getResources()
-					.getStringArray(R.array.EndFilters)[6]))
+			long endDate = endDateOption.date;
+			if (!endDateOption.dateName.equals(getResources().getStringArray(
+					R.array.EndFilters)[6]))
 				getSupportActionBar().setSubtitle(endDateOption.dateName);
 			else {
-				getSupportActionBar()
-						.setSubtitle(
-								endDateOption.dateName
-										+ " "
-										+ mSimpleDateFormat.format(new Date(
-												endDate)));
+				getSupportActionBar().setSubtitle(
+						endDateOption.dateName + " "
+								+ mSimpleDateFormat.format(new Date(endDate)));
 			}
-			
 
 			searchMenuItem.setVisible(false);
 			if (mSearchView.isShown())
@@ -213,25 +209,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		FragmentTransaction ft;
 		switch (item.getItemId()) {
-		case R.id.item_starts: {
+		case R.id.item_starts: 
 			FilterDateSetDialogFragment startDateSetDialogFragment = new FilterDateSetDialogFragment();
-			Bundle args = new Bundle();
-			args.putBoolean("start", true);
-			startDateSetDialogFragment.setArguments(args);
 			startDateSetDialogFragment.setDialogListener(this);
 			startDateSetDialogFragment.show(this.getSupportFragmentManager(),
 					"mStartDateSetDialogFragment");
-		}
-			break;
-		case R.id.item_stop: {
-			FilterDateSetDialogFragment startDateSetDialogFragment = new FilterDateSetDialogFragment();
-			Bundle args = new Bundle();
-			args.putBoolean("start", false);
-			startDateSetDialogFragment.setArguments(args);
-			startDateSetDialogFragment.setDialogListener(this);
-			startDateSetDialogFragment.show(this.getSupportFragmentManager(),
-					"mStartDateSetDialogFragment");
-		}
 			break;
 		case R.id.item_add:
 			CounterEditorDialogFragment counterEditorDialogFragment = new CounterEditorDialogFragment();
