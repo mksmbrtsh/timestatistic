@@ -25,16 +25,14 @@ import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class FilterDateSetDialogFragment extends DialogFragment implements
-		IdateChange, android.view.View.OnClickListener, OnItemSelectedListener {
+public class FilterDateSetDialogFragment extends DialogFragment implements android.view.View.OnClickListener, IdateChange {
 
 	private IRecordDialog mListener;
-	private Spinner mStart;
-	private Spinner mEnd;
+	private Button mStart;
+	private Button mEnd;
 	private Button mOk;
 	private Button mCancel;
-	private Date startdate;
-	private Date enddate;
+
 	private SimpleDateFormat mSimpleDateFormat;
 	private long mSelectStartItem;
 	private long mSelectEndItem;
@@ -43,16 +41,30 @@ public class FilterDateSetDialogFragment extends DialogFragment implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (savedInstanceState != null) {
-			CustomDateTimePickerFragment customDateTimePickerFragment = (CustomDateTimePickerFragment) getActivity()
+			mSelectStartItem = savedInstanceState.getLong("mSelectStartItem");
+			mSelectEndItem = savedInstanceState.getLong("mSelectEndItem");
+			FilterDialogFragment filterDialogFragment = (FilterDialogFragment) getActivity()
 					.getSupportFragmentManager()
-					.findFragmentByTag("timePicker");
-			if (customDateTimePickerFragment != null) {
-				customDateTimePickerFragment.setDateChange(this);
+					.findFragmentByTag("filterPicker");
+			if (filterDialogFragment != null) {
+				filterDialogFragment.setDialogListener(this);
 			}
 		} else {
-
+			mSelectStartItem = PreferenceManager.getDefaultSharedPreferences(
+					FilterDateSetDialogFragment.this.getActivity()).getLong(
+					SettingsActivity.STARTTIMEFILTER, 5);
+			mSelectEndItem = PreferenceManager.getDefaultSharedPreferences(
+					FilterDateSetDialogFragment.this.getActivity()).getLong(
+					SettingsActivity.ENDTIMEFILTER, 5);
 		}
 
+	};
+	
+	@Override
+	public void onSaveInstanceState(Bundle arg0) {
+		super.onSaveInstanceState(arg0);
+		arg0.putLong("mSelectStartItem", mSelectStartItem);
+		arg0.putLong("mSelectEndItem", mSelectEndItem);
 	};
 
 	@Override
@@ -61,49 +73,15 @@ public class FilterDateSetDialogFragment extends DialogFragment implements
 		getDialog().setTitle(R.string.filterdateset);
 		View v = inflater.inflate(R.layout.fragment_filter_date_set_dialog,
 				null);
-		mStart = (Spinner) v.findViewById(R.id.spinner1);
-		mEnd = (Spinner) v.findViewById(R.id.spinner2);
+		mStart = (Button) v.findViewById(R.id.start_Button);
+		mEnd = (Button) v.findViewById(R.id.end_Button);
 		mOk = (Button) v.findViewById(R.id.filter_ok);
 		mCancel = (Button) v.findViewById(R.id.filter_cancel);
+		mStart.setOnClickListener(this);
+		mEnd.setOnClickListener(this);
 		mOk.setOnClickListener(this);
 		mCancel.setOnClickListener(this);
-		String[] items = getResources().getStringArray(R.array.StartFilters);
-		mSelectStartItem = PreferenceManager.getDefaultSharedPreferences(
-				FilterDateSetDialogFragment.this.getActivity()).getLong(
-				SettingsActivity.STARTTIMEFILTER, 5);
-		if (mSelectStartItem < 6) {
-			startdate = new Date();
-		} else {
-			startdate = new Date(mSelectStartItem);
-			mSelectStartItem = 6;
-		}
-		mSimpleDateFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
-		items[6] = items[6] + " " + mSimpleDateFormat.format(startdate);
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-				android.R.layout.simple_spinner_item, items);
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		mStart.setAdapter(adapter);
-		mStart.setTag(1);
-		mStart.setSelection((int) mSelectStartItem);
-		mStart.setOnItemSelectedListener(this);
-		items = getResources().getStringArray(R.array.EndFilters);
-		mSelectEndItem = PreferenceManager.getDefaultSharedPreferences(
-				FilterDateSetDialogFragment.this.getActivity()).getLong(
-				SettingsActivity.ENDTIMEFILTER, 5);
-		if (mSelectEndItem < 6) {
-			enddate = new Date();
-		} else {
-			enddate = new Date(mSelectEndItem);
-			mSelectEndItem = 6;
-		}
-		items[6] = items[6] + " " + mSimpleDateFormat.format(enddate);
-		adapter = new ArrayAdapter<String>(getActivity(),
-				android.R.layout.simple_spinner_item, items);
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		mEnd.setAdapter(adapter);
-		mEnd.setTag(1);
-		mEnd.setSelection((int) mSelectEndItem);
-		mEnd.setOnItemSelectedListener(this);
+		setValues();
 		return v;
 	};
 
@@ -111,100 +89,85 @@ public class FilterDateSetDialogFragment extends DialogFragment implements
 		mListener = listener;
 	}
 
-	@Override
-	public void timeChange(int id, long newvalue) {
-		if (id == R.id.spinner1 && newvalue > new Date().getTime()) {
-			Toast.makeText(getActivity(), R.string.more_max, Toast.LENGTH_LONG)
-					.show();
-			cancel();
-		} else if (id == R.id.spinner1) {
-			startdate = new Date(newvalue);
-			String[] items = getResources()
-					.getStringArray(R.array.StartFilters);
-			items[6] = items[6] + " " + mSimpleDateFormat.format(startdate);
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-					getActivity(), android.R.layout.simple_spinner_item, items);
-			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-			mStart.setAdapter(adapter);
-			mStart.setTag(1);
-			mStart.setSelection(6);
+	private void setValues() {
+
+		Date startdate;
+		if (mSelectStartItem < 6) {
+			startdate = new Date();
 		} else {
-			enddate = new Date(newvalue);
-			String[] items = getResources().getStringArray(R.array.EndFilters);
-			items[6] = items[6] + " " + mSimpleDateFormat.format(enddate);
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-					getActivity(), android.R.layout.simple_spinner_item, items);
-			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-			mEnd.setAdapter(adapter);
-			mEnd.setTag(1);
-			mEnd.setSelection(6);
+			startdate = new Date(mSelectStartItem);
+			mSelectStartItem = 6;
 		}
+		String[] items = getResources().getStringArray(R.array.StartFilters);
+		mSimpleDateFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
+		items[6] = items[6] + " " + mSimpleDateFormat.format(startdate);
+		mStart.setText(items[(int)mSelectStartItem]);
+		
+		items = getResources().getStringArray(R.array.EndFilters);
+		
+		Date enddate;
+		if (mSelectEndItem < 6) {
+			enddate = new Date();
+		} else {
+			enddate = new Date(mSelectEndItem);
+			mSelectEndItem = 6;
+		}
+		items[6] = items[6] + " " + mSimpleDateFormat.format(enddate);
+		mEnd.setText(items[(int)mSelectEndItem]);
 	}
+	
 
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == R.id.filter_ok) {
 			String setting = SettingsActivity.STARTTIMEFILTER;
-			long newValue;
-			if (mStart.getSelectedItemPosition() == 6)
-				newValue = startdate.getTime();
-			else
-				newValue = mStart.getSelectedItemPosition();
 			Editor editor = PreferenceManager.getDefaultSharedPreferences(
 					FilterDateSetDialogFragment.this.getActivity()).edit();
-			editor.putLong(setting, newValue);
-			if (mEnd.getSelectedItemPosition() == 6)
-				newValue = enddate.getTime();
-			else
-				newValue = mEnd.getSelectedItemPosition();
+			editor.putLong(setting, mSelectStartItem);
 			setting = SettingsActivity.ENDTIMEFILTER;
-			editor.putLong(setting, newValue);
+			editor.putLong(setting, mSelectEndItem);
 			editor.commit();
 			FilterDateSetDialogFragment.this.dismiss();
 			mListener.onRefreshFragmentsValue();
-		} else {
+		} else if(v.getId() == R.id.filter_cancel) {
 			FilterDateSetDialogFragment.this.dismiss();
+		} else if(v.getId() == R.id.start_Button) {
+			FilterDialogFragment filterDialogFragment = new FilterDialogFragment();
+			Bundle args = new Bundle();
+			args.putBoolean("start", true);
+			args.putLong("f", mSelectStartItem);
+			filterDialogFragment.setArguments(args);
+			filterDialogFragment.setDialogListener(this);
+			filterDialogFragment.show(getActivity()
+											.getSupportFragmentManager(),
+											"filterPicker");
+		} else if(v.getId() == R.id.end_Button) {
+			FilterDialogFragment filterDialogFragment = new FilterDialogFragment();
+			Bundle args = new Bundle();
+			args.putBoolean("start", false);
+			args.putLong("f", mSelectEndItem);
+			filterDialogFragment.setArguments(args);
+			filterDialogFragment.setDialogListener(this);
+			filterDialogFragment.show(getActivity()
+											.getSupportFragmentManager(),
+											"filterPicker");
 		}
 	}
 
 	@Override
-	public void onItemSelected(AdapterView<?> spinner, View arg1, int which,
-			long arg3) {
-		if (spinner.getTag() != null) {
-			spinner.setTag(null);
-		} else if (which < 6) {
-
+	public void timeChange(int id, long newvalue) {
+		if(id==1) {
+			mSelectStartItem = newvalue;
 		} else {
-			
-			int id;
-			if (spinner.getId() == R.id.spinner1) {
-				id = R.id.spinner1;
-			} else {
-				id = R.id.spinner2;
-			}
-			CustomDateTimePickerFragment newFragment = new CustomDateTimePickerFragment();
-			Bundle b = new Bundle();
-			b.putLong("time", startdate.getTime());
-			b.putInt("id", id);
-			newFragment.setArguments(b);
-			newFragment.setDateChange(FilterDateSetDialogFragment.this);
-			newFragment.show(getActivity().getSupportFragmentManager(),
-					"timePicker");
+			mSelectEndItem = newvalue;
 		}
-	}
-
-	@Override
-	public void onNothingSelected(AdapterView<?> spinner) {
-
+		setValues();
 	}
 
 	@Override
 	public void cancel() {
-		mStart.setTag(null);
-		mEnd.setTag(null);
-		mStart.setSelection((int) mSelectStartItem);
-		mEnd.setSelection((int) mSelectEndItem);
+		// TODO Auto-generated method stub
+		
 	}
-	
 	
 }

@@ -33,6 +33,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:gravity="center"
+        android:layout_marginBottom="@dimen/fragment_border"
         android:orientation="vertical" >
 
         <TextView
