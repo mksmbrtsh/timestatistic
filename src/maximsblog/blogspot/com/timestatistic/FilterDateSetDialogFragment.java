@@ -162,6 +162,8 @@ public class FilterDateSetDialogFragment extends DialogFragment implements
 			editor.commit();
 			FilterDateSetDialogFragment.this.dismiss();
 			mListener.onRefreshFragmentsValue();
+		} else {
+			FilterDateSetDialogFragment.this.dismiss();
 		}
 	}
 
