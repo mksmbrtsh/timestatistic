@@ -67,7 +67,7 @@
         <item>to begin this day</item>
         <item>to end this week</item>
         <item>to end this month</item>
-        <item>to end this wear</item>
+        <item>to end this year</item>
         <item>not set</item>
         <item>to</item>
     </string-array>
@@ -78,4 +78,5 @@
     <string name="h">h</string>
     <string name="m">m</string>
     <string name="end">end</string>
+    <string name="future">future</string>
 </resources>

@@ -195,7 +195,7 @@ public class DiagramFragment extends Fragment implements
 				renderer.setColor(color);
 				renderer.setChartValuesFormat(nf);
 				mRenderer.addSeriesRenderer(renderer);
-				nvalues.add("future");
+				nvalues.add(getString(R.string.future));
 				values.add((double)enddate - now);
 				sum += enddate - now;
 			}

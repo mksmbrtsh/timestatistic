@@ -17,7 +17,7 @@
          </item>
     <item
         android:id="@+id/item_add"
-        android:showAsAction="always"
+        android:showAsAction="never"
         android:orderInCategory="1"
         android:icon="@drawable/ic_plus"
         android:title="@string/add">
@@ -25,7 +25,7 @@
     <item
         android:id="@+id/item_reset_all"
         android:orderInCategory="2"
-        android:showAsAction="always"
+        android:showAsAction="never"
         android:icon="@drawable/ic_action_reset_all_dark"
         android:title="@string/reset_all">
     </item>
