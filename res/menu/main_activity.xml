@@ -3,7 +3,7 @@
         android:id="@+id/item_starts"
         android:showAsAction="always"
         android:orderInCategory="3"
-        android:icon="@drawable/ic_filter_light"
+        android:icon="@drawable/ic_filter_dark"
         android:title="@string/filterdateset">
     </item>
      <item android:id="@+id/item_search"

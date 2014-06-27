@@ -136,7 +136,7 @@ public class CounterEditorDialogFragment extends DialogFragment implements
 		mColorButton.setOnClickListener(this);
 		mNameEditor = (EditText) v.findViewById(R.id.name_editor);
 		mSortidEditor = (EditText) v.findViewById(R.id.sortid);
-		mSortidEditor.setFilters(new InputFilter[] { new PartialRegexInputFilter(mIntervalHoursEditor,
+		mSortidEditor.setFilters(new InputFilter[] { new PartialRegexInputFilter(mSortidEditor,
 				"\\d{1,}") });
 		mSortidEditor.addTextChangedListener(new TextWatcher() {
 			
