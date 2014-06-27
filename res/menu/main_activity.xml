@@ -3,8 +3,8 @@
         android:id="@+id/item_starts"
         android:showAsAction="always"
         android:orderInCategory="3"
-        android:icon="@drawable/ic_startdatefilter"
-        android:title="@string/start">
+        android:icon="@drawable/ic_filter_light"
+        android:title="@string/filterdateset">
     </item>
      <item android:id="@+id/item_search"
          android:title="@string/search"
@@ -19,7 +19,7 @@
         android:id="@+id/item_add"
         android:showAsAction="never"
         android:orderInCategory="1"
-        android:icon="@drawable/ic_plus"
+        android:icon="@drawable/ic_plus_light"
         android:title="@string/add">
     </item>
     <item
