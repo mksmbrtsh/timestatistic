@@ -208,7 +208,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		FragmentTransaction ft;
 		switch (item.getItemId()) {
-		case R.id.item_starts: 
+		case R.id.item_starts:
 			FilterDateSetDialogFragment startDateSetDialogFragment = new FilterDateSetDialogFragment();
 			startDateSetDialogFragment.setDialogListener(this);
 			startDateSetDialogFragment.show(this.getSupportFragmentManager(),
@@ -286,18 +286,21 @@ public class MainActivity extends SherlockFragmentActivity implements
 							RecordsDbHelper.SORTID + " >= ?",
 							new String[] { String.valueOf(sortid) },
 							RecordsDbHelper.SORTID);
-			c.moveToFirst();
 			ContentValues cv = new ContentValues();
-			int index = sortid + 1;
-			do {
-				cv.clear();
-				cv.put(RecordsDbHelper.SORTID, index);
-				index++;
-				getContentResolver().update(
-						RecordsDbHelper.CONTENT_URI_RENAMECOUNTER, cv,
-						RecordsDbHelper.ID + "=?",
-						new String[] { String.valueOf(c.getInt(0)) });
-			} while (c.moveToNext());
+			if (c.getCount() > 0) {
+				c.moveToFirst();
+				
+				int index = sortid + 1;
+				do {
+					cv.clear();
+					cv.put(RecordsDbHelper.SORTID, index);
+					index++;
+					getContentResolver().update(
+							RecordsDbHelper.CONTENT_URI_RENAMECOUNTER, cv,
+							RecordsDbHelper.ID + "=?",
+							new String[] { String.valueOf(c.getInt(0)) });
+				} while (c.moveToNext());
+			}
 			c.close();
 			cv.clear();
 			cv.put(RecordsDbHelper.NAME, inputText);
