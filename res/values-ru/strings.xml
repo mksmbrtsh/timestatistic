@@ -78,4 +78,6 @@
     <string name="m">м</string>
     <string name="end">конец</string>
     <string name="future">Осталось</string>
+    <string name="not_found_diary">Не найдено ни одной записи дневника</string>
+    <string name="not_found_records">Не найдено ни одной записи времени</string>
 </resources>

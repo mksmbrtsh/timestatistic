@@ -33,6 +33,8 @@ import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.support.v4.widget.SimpleCursorAdapter;
 
 public class DiaryFragment extends Fragment implements LoaderCallbacks<Cursor>,
@@ -70,6 +72,7 @@ public class DiaryFragment extends Fragment implements LoaderCallbacks<Cursor>,
 			mAdapter.setSelected(new HashMap<Integer, Boolean>());
 			mAdapter.setSelectedPosition(TimesCursorAdapter.NORMAL_MODE);
 		}
+		
 	}
 
 	@Override
@@ -82,11 +85,12 @@ public class DiaryFragment extends Fragment implements LoaderCallbacks<Cursor>,
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		LinearLayout layout = (LinearLayout) inflater.inflate(
+		RelativeLayout layout = (RelativeLayout) inflater.inflate(
 				R.layout.fragment_diary, container, false);
 		mList = (ListView) layout.findViewById(R.id.listView1);
 		mList.setAdapter(mAdapter);
 		mList.setOnItemClickListener(this);
+		mList.setEmptyView(layout.findViewById(R.id.empty));
 		return layout;
 	}
 
