@@ -92,28 +92,31 @@ public class FilterDateSetDialogFragment extends DialogFragment implements andro
 	private void setValues() {
 
 		Date startdate;
+		int index;
 		if (mSelectStartItem < 6) {
 			startdate = new Date();
+			index = (int)mSelectStartItem;
 		} else {
 			startdate = new Date(mSelectStartItem);
-			mSelectStartItem = 6;
+			index = 6;
 		}
 		String[] items = getResources().getStringArray(R.array.StartFilters);
 		mSimpleDateFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
 		items[6] = items[6] + " " + mSimpleDateFormat.format(startdate);
-		mStart.setText(items[(int)mSelectStartItem]);
+		mStart.setText(items[index]);
 		
 		items = getResources().getStringArray(R.array.EndFilters);
 		
 		Date enddate;
 		if (mSelectEndItem < 6) {
 			enddate = new Date();
+			index = (int)mSelectEndItem;
 		} else {
 			enddate = new Date(mSelectEndItem);
-			mSelectEndItem = 6;
+			index = 6;
 		}
 		items[6] = items[6] + " " + mSimpleDateFormat.format(enddate);
-		mEnd.setText(items[(int)mSelectEndItem]);
+		mEnd.setText(items[index]);
 	}
 	
 
