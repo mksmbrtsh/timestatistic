@@ -40,7 +40,7 @@ public class CountersCursorAdapter extends SimpleCursorAdapter {
 					start = mStartdate;
 				long now = new Date().getTime();
 				long lenght;
-				if(now > mEnddate){
+				if(now > mEnddate && mEnddate != -1){
 					lenght = cursor.getLong(2);
 				} else {
 					lenght = now - start +  cursor.getLong(2);
