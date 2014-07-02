@@ -22,6 +22,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -38,6 +39,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -86,36 +88,33 @@ public class DiagramFragment extends Fragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		mLayout = inflater.inflate(R.layout.fragment_diagram, container, false);
-		if (mChartView == null) {
-			ViewGroup layout = (ViewGroup) mLayout.findViewById(R.id.chart);
-			mChartView = ChartFactory.getPieChartView(this.getActivity(),
-					mSeries, mRenderer);
-			int width = getActivity().findViewById(R.id.pager).getWidth();
-			int height = getActivity().findViewById(R.id.pager).getHeight()
-					- 2
-					* ((SherlockFragmentActivity) getActivity())
-							.getSupportActionBar().getHeight();
-
-			layout.addView(mChartView, new LayoutParams(width, height));
-		}
 		mLegendText = (TextView)mLayout.findViewById(R.id.legend);
+		mLayout.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
 		return mLayout;
 	}
+	private OnGlobalLayoutListener mGlobalLayoutListener = new OnGlobalLayoutListener() {
+	    public void onGlobalLayout() {
+	        mLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+	        if (mChartView == null) {
+				ViewGroup layout = (ViewGroup) mLayout.findViewById(R.id.chart);
+				mChartView = ChartFactory.getPieChartView(getActivity(),
+						mSeries, mRenderer);
+		        int height = mLayout.getHeight() - 2
+						* ((SherlockFragmentActivity) getActivity())
+						.getSupportActionBar().getHeight();;
+		        int width = mLayout.getWidth();
+				
 
+				layout.addView(mChartView, new LayoutParams(width, height));
+			}
+	    }
+	};
+	
 	@Override
 	public void onResume() {
 		super.onResume();
 		if (mChartView == null) {
-			ViewGroup layout = (ViewGroup) mLayout.findViewById(R.id.chart);
-			mChartView = ChartFactory.getPieChartView(this.getActivity(),
-					mSeries, mRenderer);
-			int width = getActivity().findViewById(R.id.pager).getWidth();
-			int height = getActivity().findViewById(R.id.pager).getHeight()
-					- 2
-					* ((SherlockFragmentActivity) getActivity())
-							.getSupportActionBar().getHeight();
-
-			layout.addView(mChartView, new LayoutParams(width, height));
+			mLayout.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
 		}
 		loadermanager.initLoader(1, null, this);
 	}
