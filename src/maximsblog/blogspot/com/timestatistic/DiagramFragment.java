@@ -29,6 +29,9 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -39,7 +42,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 public class DiagramFragment extends Fragment implements
 		LoaderCallbacks<Cursor>, MainFragments {
@@ -53,6 +58,7 @@ public class DiagramFragment extends Fragment implements
 	private GraphicalView mChartView;
 	private View mLayout;
 	private LoaderManager loadermanager;
+	private TextView mLegendText;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -66,6 +72,8 @@ public class DiagramFragment extends Fragment implements
 		mRenderer.setPanEnabled(false);
 		mRenderer.setZoomEnabled(false);
 		mRenderer.setShowLabels(true);
+		mRenderer.setFitLegend(false);
+		mRenderer.setShowLegend(false);
 		DisplayMetrics metrics = getActivity().getResources()
 				.getDisplayMetrics();
 		float val = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 15,
@@ -82,9 +90,15 @@ public class DiagramFragment extends Fragment implements
 			ViewGroup layout = (ViewGroup) mLayout.findViewById(R.id.chart);
 			mChartView = ChartFactory.getPieChartView(this.getActivity(),
 					mSeries, mRenderer);
-			layout.addView(mChartView, new LayoutParams(
-					LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+			int width = getActivity().findViewById(R.id.pager).getWidth();
+			int height = getActivity().findViewById(R.id.pager).getHeight()
+					- 2
+					* ((SherlockFragmentActivity) getActivity())
+							.getSupportActionBar().getHeight();
+
+			layout.addView(mChartView, new LayoutParams(width, height));
 		}
+		mLegendText = (TextView)mLayout.findViewById(R.id.legend);
 		return mLayout;
 	}
 
@@ -95,8 +109,13 @@ public class DiagramFragment extends Fragment implements
 			ViewGroup layout = (ViewGroup) mLayout.findViewById(R.id.chart);
 			mChartView = ChartFactory.getPieChartView(this.getActivity(),
 					mSeries, mRenderer);
-			layout.addView(mChartView, new LayoutParams(
-					LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+			int width = getActivity().findViewById(R.id.pager).getWidth();
+			int height = getActivity().findViewById(R.id.pager).getHeight()
+					- 2
+					* ((SherlockFragmentActivity) getActivity())
+							.getSupportActionBar().getHeight();
+
+			layout.addView(mChartView, new LayoutParams(width, height));
 		}
 		loadermanager.initLoader(1, null, this);
 	}
@@ -112,9 +131,9 @@ public class DiagramFragment extends Fragment implements
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
-		String[] selectionArgs = new String[] { String.valueOf(app
-				.getStartDate(getActivity()).date), String.valueOf(app
-						.getEndDate(getActivity()).date) };
+		String[] selectionArgs = new String[] {
+				String.valueOf(app.getStartDate(getActivity()).date),
+				String.valueOf(app.getEndDate(getActivity()).date) };
 		CursorLoader loader = new CursorLoader(this.getActivity(),
 				RecordsDbHelper.CONTENT_URI_TIMES, null, null, selectionArgs,
 				null);
@@ -126,7 +145,7 @@ public class DiagramFragment extends Fragment implements
 		mRenderer.removeAllRenderers();
 		if (cursor != null) {
 			mSeries.clear();
-			ArrayList<Color> c = new ArrayList<Color>();
+			ArrayList<Integer> c = new ArrayList<Integer>();
 			cursor.moveToFirst();
 			ArrayList<Double> values = new ArrayList<Double>();
 			ArrayList<String> nvalues = new ArrayList<String>();
@@ -141,17 +160,17 @@ public class DiagramFragment extends Fragment implements
 			String s = cursor.getString(5);
 			boolean isRunning = cursor.getInt(6) == 1;
 			Double sum = 0.0;
-			if(isRunning) {
-				if(now > enddate && enddate != -1){
-					sum = (double)t;
+			if (isRunning) {
+				if (now > enddate && enddate != -1) {
+					sum = (double) t;
 				} else
-					sum = (double)t + now - start;
-			}
-			else
-				sum = (double)t;
+					sum = (double) t + now - start;
+			} else
+				sum = (double) t;
 
 			SimpleSeriesRenderer renderer = new SimpleSeriesRenderer();
 			int color = cursor.getInt(7);
+			
 			renderer.setColor(color);
 			NumberFormat nf = NumberFormat.getPercentInstance();
 			nf.setMaximumFractionDigits(1);
@@ -159,6 +178,7 @@ public class DiagramFragment extends Fragment implements
 			if (sum != 0.0) {
 				nvalues.add(s);
 				values.add(sum);
+				c.add(color);
 				mRenderer.addSeriesRenderer(renderer);
 			}
 			while (cursor.moveToNext()) {
@@ -168,16 +188,15 @@ public class DiagramFragment extends Fragment implements
 				s = cursor.getString(5);
 				isRunning = cursor.getInt(6) == 1;
 				double v;
-				if(isRunning) {
-					if(now > enddate && enddate != -1){
-						v = (double)t;
+				if (isRunning) {
+					if (now > enddate && enddate != -1) {
+						v = (double) t;
 					} else
-						v = (double)t + now - start;
-				}
-				else
-					v = (double)t;
+						v = (double) t + now - start;
+				} else
+					v = (double) t;
 				sum += v;
-				
+
 				renderer = new SimpleSeriesRenderer();
 				color = cursor.getInt(7);
 				renderer.setColor(color);
@@ -185,29 +204,82 @@ public class DiagramFragment extends Fragment implements
 				if (v != 0.0) {
 					nvalues.add(s);
 					values.add(v);
+					c.add(color);
 					mRenderer.addSeriesRenderer(renderer);
 				}
 			}
-			if(now < enddate && enddate != -1)
-			{
+			if (now < enddate && enddate != -1) {
 				renderer = new SimpleSeriesRenderer();
 				color = 0;
+				c.add(color);
 				renderer.setColor(color);
 				renderer.setChartValuesFormat(nf);
 				mRenderer.addSeriesRenderer(renderer);
 				nvalues.add(getString(R.string.future));
-				values.add((double)enddate - now);
+				values.add((double) enddate - now);
 				sum += enddate - now;
 			}
+			StringBuilder sb = new StringBuilder();
 			for (int i1 = 0, cnt1 = values.size(); i1 < cnt1; i1++) {
-
+				sb.append("<font color=\"#");
+				sb.append(String.format("%08X", c.get(i1)).substring(2));
+				sb.append("\">");
+				sb.append("<big>&#9679;</big> ");
+				sb.append("</font>");
+				sb.append(nvalues.get(i1));
+				sb.append(':');
+					sb.append(' ');
+				sb.append(nf.format(values.get(i1) / sum));
+				sb.append(' ');
+				sb.append('(');
+				sb.append(getTime(values.get(i1)));
+				sb.append(')');
+				sb.append("<br>");
 				mSeries.add(nvalues.get(i1), values.get(i1) / sum);
 			}
 
 			if (mChartView != null) {
 				mChartView.repaint();
 			}
+			mLegendText.setText(Html.fromHtml(sb.toString()));
 		}
+	}
+
+	public String getTime(double time)
+	{
+		int day;
+		int hours;
+		int minutes;
+		int seconds;
+		day = (int) (time / (24 * 60 * 60 * 1000));
+		hours = (int) (time / (60 * 60 * 1000)) - day * 24;
+		minutes = (int) (time / (60 * 1000)) - day * 24 * 60 - 60* hours;
+		seconds = (int) (time / 1000) - day * 24 * 60 * 60 - 60 * 60
+				* hours - 60 * minutes;
+		String s = new String();
+		if(day>0)
+		{
+			s = String.format("%s\n%02d:%02d:%02d",getTimeString("day", day), hours, minutes, seconds);
+		} else
+			s = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+		return s;
+	}
+	
+	private String getTimeString(String res, int l) {
+		StringBuilder s = new StringBuilder();
+		s.append(l);
+		s.append(' ');
+		if (l == 1 || (l % 10 == 1 && l != 11)) {
+			s.append(getString(getResources().getIdentifier(
+					res + "1", "string", getActivity().getPackageName())));
+		} else if ((l % 10 == 2 || l % 10 == 3 || l % 10 == 4) && l != 12
+				&& l != 13 && l != 14) {
+			s.append(getString(getResources().getIdentifier(
+					res + "234", "string", getActivity().getPackageName())));
+		} else
+			s.append(getString(getResources().getIdentifier(
+					res + "s", "string", getActivity().getPackageName())));
+		return s.toString();
 	}
 
 	@Override
