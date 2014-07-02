@@ -153,7 +153,7 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 			Toast.makeText(getApplicationContext(), d, Toast.LENGTH_LONG)
 					.show();
 
-		} if(preference.getKey().equals("google_drive")) {
+		} else if(preference.getKey().equals("google_drive")) {
 			startActivity(new Intent(this, GdriveUpload.class ));
 		} else {
 			Intent intent = new Intent(this, FileDialog.class);
