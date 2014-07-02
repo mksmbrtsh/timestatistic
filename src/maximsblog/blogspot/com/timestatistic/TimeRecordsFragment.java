@@ -87,6 +87,7 @@ public class TimeRecordsFragment extends Fragment implements
 		mList.setOnItemClickListener(this);
 		mList.setOnItemLongClickListener(this);
 		mList.setOnScrollListener(mAdapter);
+		mList.setEmptyView(layout.findViewById(R.id.empty_records));
 		mUnionPanel = layout.findViewById(R.id.union_panel);
 		mUnionPanel.setVisibility(View.GONE);
 		Button mUnionButton = (Button) mUnionPanel.findViewById(R.id.ok);

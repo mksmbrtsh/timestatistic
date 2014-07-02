@@ -3,28 +3,43 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingLeft="@dimen/fragment_border"
-    android:paddingRight="@dimen/fragment_border"
-    android:orientation="vertical" >
+    android:paddingRight="@dimen/fragment_border" >
 
-    <ListView
-        android:id="@+id/listView1"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:layout_weight="1"
-        android:verticalSpacing="2dp"
-        android:stackFromBottom="true"
-		android:transcriptMode="alwaysScroll"
-        tools:listitem="@android:layout/simple_list_item_2" >
+        android:layout_weight="1" >
 
-    </ListView>
+        <ListView
+            android:id="@+id/listView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_weight="1"
+            android:stackFromBottom="true"
+            android:transcriptMode="alwaysScroll"
+            android:verticalSpacing="2dp"
+            tools:listitem="@android:layout/simple_list_item_2" >
+        </ListView>
+
+        <TextView
+            android:id="@+id/empty_records"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/not_found_records"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/union_panel"
-        android:weightSum="2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:weightSum="2" >
 
         <Button
             android:id="@+id/cancel"

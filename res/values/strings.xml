@@ -79,4 +79,6 @@
     <string name="m">m</string>
     <string name="end">end</string>
     <string name="future">future</string>
+    <string name="not_found_diary">Not found diary notes</string>
+    <string name="not_found_records">Not found time records</string>
 </resources>
