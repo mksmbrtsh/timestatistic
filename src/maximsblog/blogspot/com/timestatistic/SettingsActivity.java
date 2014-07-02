@@ -57,6 +57,8 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 		p.setOnPreferenceClickListener(this);
 		p = findPreference("import");
 		p.setOnPreferenceClickListener(this);
+		p = findPreference("google_drive");
+		p.setOnPreferenceClickListener(this);
 	}
 
 	@Override
