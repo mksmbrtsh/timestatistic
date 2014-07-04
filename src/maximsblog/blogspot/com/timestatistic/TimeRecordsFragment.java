@@ -38,6 +38,9 @@ import android.support.v4.widget.SimpleCursorAdapter;
 public class TimeRecordsFragment extends Fragment implements
 		LoaderCallbacks<Cursor>, MainFragments, OnItemClickListener,
 		OnItemLongClickListener, OnClickListener {
+	
+	private final int LOADER_ID = 2;
+	
 	public static TimeRecordsFragment newInstance() {
 
 		return new TimeRecordsFragment();
@@ -59,7 +62,7 @@ public class TimeRecordsFragment extends Fragment implements
 		mStartdate = app.getStartDate(getActivity()).date;
 		mAdapter = new TimesCursorAdapter(this.getActivity(),
 				R.layout.time_row, null, uiBindFrom, uiBindTo, 0, mStartdate);
-		loadermanager.initLoader(1, null, this);
+		loadermanager.initLoader(LOADER_ID, null, this);
 		if (savedInstanceState != null) {
 			mAdapter.setSelectedPosition(savedInstanceState.getInt("mChoiceUnionMode"));
 			mAdapter.setSelected((HashMap<Integer, Boolean>) savedInstanceState
@@ -132,7 +135,7 @@ public class TimeRecordsFragment extends Fragment implements
 	public void onReload() {
 		mStartdate = app.getStartDate(getActivity()).date;
 		mAdapter.setStartDate(mStartdate);
-		loadermanager.restartLoader(1, null, this);
+		loadermanager.restartLoader(LOADER_ID, null, this);
 	}
 
 	@Override

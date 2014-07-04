@@ -50,7 +50,8 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 public class DiagramFragment extends Fragment implements
 		LoaderCallbacks<Cursor>, MainFragments {
-
+	private final int LOADER_ID = 3;
+	
 	/** The main series that will include all the data. */
 	private CategorySeries mSeries = new CategorySeries("");
 	/** The main renderer for the main dataset. */
@@ -116,7 +117,7 @@ public class DiagramFragment extends Fragment implements
 		if (mChartView == null) {
 			mLayout.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
 		}
-		loadermanager.initLoader(1, null, this);
+		loadermanager.initLoader(LOADER_ID, null, this);
 	}
 
 	@Override
@@ -289,7 +290,7 @@ public class DiagramFragment extends Fragment implements
 
 	@Override
 	public void onReload() {
-		loadermanager.restartLoader(1, null, this);
+		loadermanager.restartLoader(LOADER_ID, null, this);
 	}
 
 	public static DiagramFragment newInstance() {
