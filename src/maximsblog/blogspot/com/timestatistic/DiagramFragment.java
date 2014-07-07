@@ -154,6 +154,8 @@ public class DiagramFragment extends Fragment implements
 			long start = cursor.getLong(3);
 			long startdate = app.getStartDate(getActivity()).date;
 			long enddate = app.getEndDate(getActivity()).date;
+			if(enddate < startdate)
+				return;
 			long now = new Date().getTime();
 			if (start < startdate)
 				start = startdate;
@@ -162,11 +164,15 @@ public class DiagramFragment extends Fragment implements
 			Double sum = 0.0;
 			if (isRunning) {
 				if (now > enddate && enddate != -1) {
-					sum = (double) t;
+					sum = (double) enddate - start;
 				} else
 					sum = (double) t + now - start;
-			} else
-				sum = (double) t;
+			} else {
+				if(start + t < enddate || enddate == -1)
+					sum = (double) t;
+				else
+					sum = (double) (enddate - start);
+			}
 
 			SimpleSeriesRenderer renderer = new SimpleSeriesRenderer();
 			int color = cursor.getInt(7);
@@ -190,11 +196,15 @@ public class DiagramFragment extends Fragment implements
 				double v;
 				if (isRunning) {
 					if (now > enddate && enddate != -1) {
-						v = (double) t;
+						v = (double) enddate - start;
 					} else
 						v = (double) t + now - start;
-				} else
-					v = (double) t;
+				} else {
+					if(start + t < enddate || enddate == -1)
+						v = (double) t;
+					else
+						v = (double) (enddate - start);
+				}
 				sum += v;
 
 				renderer = new SimpleSeriesRenderer();
