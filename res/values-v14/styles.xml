@@ -8,6 +8,7 @@
     <style name="AppBaseTheme" parent="@style/Theme.Sherlock">
         <!-- API 14 theme customizations can go here. -->
         <item name="vpiTabPageIndicatorStyle">@style/CustomTabPageIndicator</item>
+        <item name="vpiIconPageIndicatorStyle">@style/IconPageIndicatorStyle</item>
     </style>
 <style name="CustomTabPageIndicator" parent="Widget.TabPageIndicator">
  <!--       <item name="android:background">@drawable/custom_tab_indicator</item>
@@ -20,11 +21,18 @@
         <item name="android:showDividers">middle</item>
         <item name="android:paddingLeft">2dp</item>
         <item name="android:paddingRight">2dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">6dp</item>
         <item name="android:fadingEdge">horizontal</item>
         <item name="android:fadingEdgeLength">2dp</item>
     </style>
 
     <style name="CustomTabPageIndicator.Text" parent="android:TextAppearance.Medium">
         <item name="android:typeface">monospace</item>
+    </style>
+    
+    <style name="IconPageIndicatorStyle" parent="Widget.IconPageIndicator">
+        <item name="android:layout_marginLeft">0dp</item>
+        <item name="android:layout_marginRight">0dp</item>
     </style>
 </resources>

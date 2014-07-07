@@ -70,7 +70,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		setTitle("");
 		setContentView(R.layout.activity_main);
 		mTitles = getResources().getStringArray(R.array.TitlePages);
-		mIcons = new int[] {R.drawable.ic_counter_title_hdpi, R.drawable.ic_interval_title_hdpi, R.drawable.ic_diagram_title_hdpi, R.drawable.ic_diary_title_hdpi};
+		mIcons = new int[] {R.drawable.ic_counter_title, R.drawable.ic_interval_title, R.drawable.ic_diagram_title, R.drawable.ic_diary_title};
 		// prepare ViewPagerIndicator
 		adapter = new PagesAdapter(getSupportFragmentManager());
 		pager = (ViewPager) findViewById(R.id.pager);
