@@ -154,8 +154,10 @@ public class DiagramFragment extends Fragment implements
 			long start = cursor.getLong(3);
 			long startdate = app.getStartDate(getActivity()).date;
 			long enddate = app.getEndDate(getActivity()).date;
-			if(enddate < startdate)
+			if(enddate < startdate && enddate != -1) {
+				
 				return;
+			}
 			long now = new Date().getTime();
 			if (start < startdate)
 				start = startdate;
