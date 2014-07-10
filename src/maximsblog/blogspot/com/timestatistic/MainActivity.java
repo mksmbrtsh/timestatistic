@@ -74,6 +74,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		// prepare ViewPagerIndicator
 		adapter = new PagesAdapter(getSupportFragmentManager());
 		pager = (ViewPager) findViewById(R.id.pager);
+		pager.setOffscreenPageLimit(3);// all fragments upload, fix not switch counters
 		pager.setAdapter(adapter);
 		TabPageIndicator  indicator = (TabPageIndicator ) findViewById(R.id.indicator);
 		indicator.setViewPager(pager);

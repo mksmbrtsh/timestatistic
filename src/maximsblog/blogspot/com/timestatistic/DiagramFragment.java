@@ -30,11 +30,13 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +65,12 @@ public class DiagramFragment extends Fragment implements
 	private LoaderManager loadermanager;
 	private TextView mLegendText;
 
+	private SimpleCursorAdapter sca;
+
+	private TextView mNotFoundText;
+
+	private View mDiagramLayout;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		loadermanager = getLoaderManager();
@@ -83,6 +91,7 @@ public class DiagramFragment extends Fragment implements
 				metrics);
 		mRenderer.setLegendTextSize(val);
 		mRenderer.setLabelsTextSize(val);
+		sca = new SimpleCursorAdapter(getActivity(), android.R.id.list, null, new String[] { RecordsDbHelper.NAME }, new int[] { android.R.id.text1}, 0);
 	}
 
 	@Override
@@ -90,34 +99,17 @@ public class DiagramFragment extends Fragment implements
 			Bundle savedInstanceState) {
 		mLayout = inflater.inflate(R.layout.fragment_diagram, container, false);
 		mLegendText = (TextView)mLayout.findViewById(R.id.legend);
-		mLayout.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
+		mNotFoundText = (TextView)mLayout.findViewById(R.id.not_found);
+		mDiagramLayout = mLayout.findViewById(R.id.ScrollView1);
+		mDiagramLayout.setVisibility(View.GONE);
 		return mLayout;
 	}
-	private OnGlobalLayoutListener mGlobalLayoutListener = new OnGlobalLayoutListener() {
-	    public void onGlobalLayout() {
-	        mLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-	        if (mChartView == null) {
-				ViewGroup layout = (ViewGroup) mLayout.findViewById(R.id.chart);
-				mChartView = ChartFactory.getPieChartView(getActivity(),
-						mSeries, mRenderer);
-		        int height = mLayout.getHeight() - 2
-						* ((SherlockFragmentActivity) getActivity())
-						.getSupportActionBar().getHeight();;
-		        int width = mLayout.getWidth();
-				
 
-				layout.addView(mChartView, new LayoutParams(width, height));
-			}
-	    }
-	};
-	
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (mChartView == null) {
-			mLayout.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
-		}
 		loadermanager.initLoader(LOADER_ID, null, this);
+		
 	}
 
 	@Override
@@ -142,8 +134,19 @@ public class DiagramFragment extends Fragment implements
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+		if (mChartView == null) {
+			ViewGroup layout = (ViewGroup) mLayout.findViewById(R.id.chart);
+			mChartView = ChartFactory.getPieChartView(getActivity(),
+					mSeries, mRenderer);
+	        int height = mLayout.getHeight() - 2
+					* ((SherlockFragmentActivity) getActivity())
+					.getSupportActionBar().getHeight();;
+	        int width = mLayout.getWidth();
+			layout.addView(mChartView, new LayoutParams(width, height));
+		}
 		mRenderer.removeAllRenderers();
 		if (cursor != null) {
+			sca.swapCursor(cursor);
 			mSeries.clear();
 			ArrayList<Integer> c = new ArrayList<Integer>();
 			cursor.moveToFirst();
@@ -154,26 +157,33 @@ public class DiagramFragment extends Fragment implements
 			long start = cursor.getLong(3);
 			long startdate = app.getStartDate(getActivity()).date;
 			long enddate = app.getEndDate(getActivity()).date;
-			if(enddate < startdate && enddate != -1) {
-				
+			if(enddate <= startdate && enddate != -1) {
+				mNotFoundText.setVisibility(View.VISIBLE);
+				mDiagramLayout.setVisibility(View.GONE);
 				return;
+			} else {
+				mNotFoundText.setVisibility(View.GONE);
+				mDiagramLayout.setVisibility(View.VISIBLE);
 			}
 			long now = new Date().getTime();
-			if (start < startdate)
-				start = startdate;
+			
 			String s = cursor.getString(5);
 			boolean isRunning = cursor.getInt(6) == 1;
 			Double sum = 0.0;
 			if (isRunning) {
 				if (now > enddate && enddate != -1) {
-					sum = (double) enddate - start;
-				} else
+					sum = (double) t;//enddate - start;
+				} else {
+					if (start < startdate)
+						start = startdate;
 					sum = (double) t + now - start;
+				}
 			} else {
-				if(start + t < enddate || enddate == -1)
+				sum = (double) t;
+				/*if(start + t < enddate || enddate == -1)
 					sum = (double) t;
 				else
-					sum = (double) (enddate - start);
+					sum = (double) (enddate - start);*/
 			}
 
 			SimpleSeriesRenderer renderer = new SimpleSeriesRenderer();
@@ -196,16 +206,21 @@ public class DiagramFragment extends Fragment implements
 				s = cursor.getString(5);
 				isRunning = cursor.getInt(6) == 1;
 				double v;
+				
 				if (isRunning) {
 					if (now > enddate && enddate != -1) {
-						v = (double) enddate - start;
-					} else
+						v = (double)t;//(double) enddate - start;
+					} else {
+						if (start < startdate)
+							start = startdate;
 						v = (double) t + now - start;
+					}
 				} else {
-					if(start + t < enddate || enddate == -1)
+					v = (double) t;
+					/*if(start + t < enddate || enddate == -1)
 						v = (double) t;
 					else
-						v = (double) (enddate - start);
+						v = (double) (enddate - start);*/
 				}
 				sum += v;
 
@@ -230,7 +245,8 @@ public class DiagramFragment extends Fragment implements
 				nvalues.add(getString(R.string.future));
 				values.add((double) enddate - now);
 				sum += enddate - now;
-			}
+			} if(enddate != -1)
+				sum = (double)(enddate - startdate);
 			StringBuilder sb = new StringBuilder();
 			for (int i1 = 0, cnt1 = values.size(); i1 < cnt1; i1++) {
 				sb.append("<font color=\"#");
@@ -296,10 +312,14 @@ public class DiagramFragment extends Fragment implements
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> arg0) {
-		// TODO Auto-generated method stub
-
+		
 	}
 
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+	};
+	
 	@Override
 	public void onReload() {
 		loadermanager.restartLoader(LOADER_ID, null, this);

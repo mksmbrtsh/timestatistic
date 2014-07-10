@@ -1,32 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/ScrollView1"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:paddingLeft="@dimen/fragment_border"
-    android:paddingRight="@dimen/fragment_border" >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
+    <ScrollView
+        android:id="@+id/ScrollView1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:paddingLeft="@dimen/fragment_border"
+        android:paddingRight="@dimen/fragment_border" >
 
         <LinearLayout
-            android:id="@+id/chart"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clickable="false"
-            android:descendantFocusability="blocksDescendants"
-            android:orientation="horizontal" >
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/chart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="false"
+                android:descendantFocusability="blocksDescendants"
+                android:orientation="horizontal" >
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/legend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:textSize="14sp"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
         </LinearLayout>
+    </ScrollView>
 
-        <TextView
-            android:id="@+id/legend"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:textSize="14sp" />
+    <TextView
+        android:id="@+id/not_found"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:background="@android:color/transparent"
+        android:text="@string/not_found_records"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    </LinearLayout>
-
-</ScrollView>
+</RelativeLayout>
