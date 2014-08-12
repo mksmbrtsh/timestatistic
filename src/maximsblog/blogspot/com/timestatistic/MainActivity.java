@@ -13,8 +13,8 @@ import maximsblog.blogspot.com.timestatistic.MainActivity.MainFragments;
 import maximsblog.blogspot.com.timestatistic.MainActivity.PagesAdapter;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.viewpagerindicator.IconPagerAdapter;
 import com.viewpagerindicator.TabPageIndicator;
-import com.viewpagerindicator.TitlePageIndicator;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -55,9 +55,10 @@ public class MainActivity extends SherlockFragmentActivity implements
 		IRecordDialog, OnQueryTextListener, OnSuggestionListener {
 
 	private String[] mTitles;
-	private PagesAdapter adapter;
+	private FragmentPagerAdapter adapter;
 	private ViewPager pager;
 	private SearchView mSearchView;
+	private int[] mIcons;
 
 	public interface MainFragments {
 		void onReload();
@@ -69,11 +70,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 		setTitle("");
 		setContentView(R.layout.activity_main);
 		mTitles = getResources().getStringArray(R.array.TitlePages);
+		mIcons = new int[] {R.drawable.ic_counter_title, R.drawable.ic_interval_title, R.drawable.ic_diagram_title, R.drawable.ic_diary_title};
 		// prepare ViewPagerIndicator
 		adapter = new PagesAdapter(getSupportFragmentManager());
 		pager = (ViewPager) findViewById(R.id.pager);
+		pager.setOffscreenPageLimit(3);// all fragments upload, fix not switch counters
 		pager.setAdapter(adapter);
-		TitlePageIndicator indicator = (TitlePageIndicator) findViewById(R.id.indicator);
+		TabPageIndicator  indicator = (TabPageIndicator ) findViewById(R.id.indicator);
 		indicator.setViewPager(pager);
 		indicator.setOnPageChangeListener(this);
 		if (savedInstanceState == null) {
@@ -114,7 +117,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 						+ adapter.getItemId(position));
 	}
 
-	class PagesAdapter extends FragmentPagerAdapter {
+	class PagesAdapter extends FragmentPagerAdapter implements IconPagerAdapter  {
 		public PagesAdapter(FragmentManager fm) {
 			super(fm);
 		}
@@ -146,6 +149,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 		@Override
 		public int getCount() {
 			return mTitles.length;
+		}
+
+		@Override
+		public int getIconResId(int index) {
+			
+			return mIcons[index];
 		}
 
 	}
