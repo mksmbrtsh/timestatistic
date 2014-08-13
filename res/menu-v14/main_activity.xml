@@ -48,6 +48,11 @@
         android:showAsAction="never"
         android:title="@string/about">
     </item>
-   
+   <item
+        android:id="@+id/item_periods"
+        android:orderInCategory="8"
+        android:showAsAction="never"
+        android:title="periods">
+    </item>
 
 </menu>
