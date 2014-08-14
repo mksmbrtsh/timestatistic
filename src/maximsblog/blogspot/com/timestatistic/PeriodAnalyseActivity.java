@@ -73,7 +73,7 @@ public class PeriodAnalyseActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.main_activity, menu);
+		getSupportMenuInflater().inflate(R.menu.period_activity, menu);
 		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 		MenuItem searchMenuItem = ((MenuItem) menu.findItem(R.id.item_search));
 		SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(

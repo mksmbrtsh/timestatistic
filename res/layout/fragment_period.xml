@@ -3,18 +3,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
+    <ScrollView android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
         <LinearLayout
             android:id="@+id/ScrollView1"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical" >
 
             <LinearLayout
                 android:id="@+id/chart"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:clickable="false"
-                android:descendantFocusability="blocksDescendants"
                 android:orientation="horizontal" >
             </LinearLayout>
 
@@ -26,6 +27,7 @@
                 android:textSize="14sp"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
         </LinearLayout>
+        </ScrollView>
     <TextView
         android:id="@+id/not_found"
         android:layout_width="wrap_content"

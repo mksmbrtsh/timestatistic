@@ -14,6 +14,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 
 public class XYMultipleSeriesDatasetLoader extends
 	AsyncTaskLoader<PeriodData> {
@@ -118,6 +120,7 @@ public class XYMultipleSeriesDatasetLoader extends
 			ids.add(item.id);
 			names.add(item.name);
 			colors.add(item.color);
+			StringBuilder sb = new StringBuilder();
 			while (cursor.moveToNext()) {
 				item = new Item();
 				item.start = cursor.getLong(2);
@@ -137,9 +140,17 @@ public class XYMultipleSeriesDatasetLoader extends
 					ids.add(item.id);
 					names.add(item.name);
 					colors.add(item.color);
+					sb.append("<font color=\"#");
+					sb.append(String.format("%08X", item.color).substring(2));
+					sb.append("\">");
+					sb.append("<big>&#9679;</big> ");
+					sb.append("</font>");
+					sb.append(item.name);
+					sb.append("<br>");
 				}
 			}
 			cursor.close();
+			data.legend = sb.toString();
 			for (int i1 = 0; i1 < ids.size(); i1++) {
 				int id = ids.get(i1);
 				List<Item> currentItems = getItems(items, id);
@@ -169,7 +180,6 @@ public class XYMultipleSeriesDatasetLoader extends
 					series.add(new Date(current), sum);
 				} while (current < mEndDate);
 				XYSeriesRenderer r = new XYSeriesRenderer();
-				//r.setPointStyle(PointStyle.);
 				r.setColor(colors.get(i1));
 				r.setFillPoints(true);
 				mRenderer.addSeriesRenderer(r);
@@ -178,7 +188,17 @@ public class XYMultipleSeriesDatasetLoader extends
 
 		}
 		mRenderer.setYAxisMax(max);
-		mRenderer.setPanLimits(new double[] {(double) mStartDate - PERIOD, (double) mEndDate + PERIOD, 0.0, max});
+		mRenderer.setShowLabels(true);
+		mRenderer.setShowLegend(false);
+		mRenderer.setInScroll(true);
+		DisplayMetrics metrics = mContext.getResources()
+				.getDisplayMetrics();
+		float val = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 15,
+				metrics);
+		mRenderer.setLegendTextSize(val);
+		mRenderer.setLabelsTextSize(val);
+		mRenderer.setDisplayValues(true);
+		//mRenderer.setPanLimits(new double[] {(double) mStartDate - PERIOD, (double) mEndDate + PERIOD, 0.0, max});
 		
 		return data;
 	}
