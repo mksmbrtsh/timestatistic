@@ -1,5 +1,6 @@
 package maximsblog.blogspot.com.timestatistic;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -121,6 +122,13 @@ public class XYMultipleSeriesDatasetLoader extends
 			names.add(item.name);
 			colors.add(item.color);
 			StringBuilder sb = new StringBuilder();
+			sb.append("<font color=\"#");
+			sb.append(String.format("%08X", item.color).substring(2));
+			sb.append("\">");
+			sb.append("<big>&#9679;</big> ");
+			sb.append("</font>");
+			sb.append(item.name);
+			sb.append("<br>");
 			while (cursor.moveToNext()) {
 				item = new Item();
 				item.start = cursor.getLong(2);
@@ -150,12 +158,14 @@ public class XYMultipleSeriesDatasetLoader extends
 				}
 			}
 			cursor.close();
-			data.legend = sb.toString();
+			
+			int index = -1;
 			for (int i1 = 0; i1 < ids.size(); i1++) {
 				int id = ids.get(i1);
 				List<Item> currentItems = getItems(items, id);
 				TimeSeries series = new TimeSeries(names.get(i1));
 				long current = mStartDate;
+				double sd = 0.0;
 				do {
 					double sum = 0.0;
 					for (int i2 = 0; i2 < currentItems.size(); i2++) {
@@ -175,17 +185,22 @@ public class XYMultipleSeriesDatasetLoader extends
 					}
 					if (max < sum)
 						max = (double) sum;
-					series.add(new Date(current), sum);
+					sd+=sum;
+					series.add(new Date((current + current + PERIOD) / 2), sum);
 					current += PERIOD;
-					series.add(new Date(current), sum);
 				} while (current < mEndDate);
 				XYSeriesRenderer r = new XYSeriesRenderer();
 				r.setColor(colors.get(i1));
 				r.setFillPoints(true);
+				r.setLineWidth(2);
 				mRenderer.addSeriesRenderer(r);
 				mDataset.addSeries(series);
+				index = sb.indexOf("<br>", index);
+				String s = ": " + getLabel( (double)(sd / series.getItemCount())) + "<br>";
+				sb.replace(index, index + "<br>".length(), s);
+				index += s.length();
 			}
-
+			data.legend = sb.toString();
 		}
 		mRenderer.setYAxisMax(max);
 		mRenderer.setShowLabels(true);
@@ -193,13 +208,14 @@ public class XYMultipleSeriesDatasetLoader extends
 		mRenderer.setInScroll(true);
 		DisplayMetrics metrics = mContext.getResources()
 				.getDisplayMetrics();
-		float val = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 15,
+		float val = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12,
 				metrics);
 		mRenderer.setLegendTextSize(val);
 		mRenderer.setLabelsTextSize(val);
 		mRenderer.setDisplayValues(true);
-		//mRenderer.setPanLimits(new double[] {(double) mStartDate - PERIOD, (double) mEndDate + PERIOD, 0.0, max});
 		
+		//mRenderer.setPanLimits(new double[] {(double) mStartDate, (double) mEndDate, 0.0, max});
+		//mRenderer.setZoomLimits(new double[] {(double) mStartDate, (double) mEndDate, 0.0, max});
 		return data;
 	}
 	private List<Item> getItems(List<Item> items, int id) {
@@ -211,5 +227,18 @@ public class XYMultipleSeriesDatasetLoader extends
 		return i;
 	}
 
-
+	  private String getLabel(double time) {
+	    int day;
+	    int hours;
+	    int minutes;
+	    int seconds;
+	    day = (int) (time / (24 * 60 * 60 * 1000));
+	    hours = (int) (time / (60 * 60 * 1000)) - day * 24;
+	    minutes = (int) (time / (60 * 1000)) - day * 24 * 60 - 60 * hours;
+	    seconds = (int) (time / 1000) - day * 24 * 60 * 60 - 60 * 60
+	            * hours - 60 * minutes;
+	    String s = new String();
+	        s = String.format("%10d:%02d:%02d", hours + day*24, minutes, seconds);
+	    return s;
+	  }
 }
