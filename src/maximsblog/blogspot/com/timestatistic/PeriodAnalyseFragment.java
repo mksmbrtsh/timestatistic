@@ -1,8 +1,10 @@
 package maximsblog.blogspot.com.timestatistic;
 
 import java.math.RoundingMode;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -12,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.zip.DataFormatException;
 
 import maximsblog.blogspot.com.timestatistic.MainActivity.MainFragments;
 
@@ -23,6 +26,7 @@ import org.achartengine.model.CategorySeries;
 import org.achartengine.model.SeriesSelection;
 import org.achartengine.model.TimeSeries;
 import org.achartengine.model.XYMultipleSeriesDataset;
+import org.achartengine.model.XYSeries;
 import org.achartengine.renderer.DefaultRenderer;
 import org.achartengine.renderer.SimpleSeriesRenderer;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
@@ -190,10 +194,40 @@ public class PeriodAnalyseFragment extends Fragment implements
 			}
 		});
 		
-		mLegendText.setText(Html.fromHtml(arg1.legend));
+		//mLegendText.setText(Html.fromHtml(arg1.legend));
 		mPeriodData = arg1;
+		StringBuilder sb = new StringBuilder();
+		SimpleDateFormat df = new SimpleDateFormat("d MMMM");
+		for(int i1 = 0, cnt = mPeriodData.dataset.getSeriesCount(); i1 < cnt; i1++) {
+			XYSeries m = mPeriodData.dataset.getSeriesAt(i1);
+			sb.append(m.getTitle()+"\n");
+			for(int i2 = 0, cnt2 = m.getItemCount(); i2 < cnt2; i2++) {
+				sb.append("x=");
+				sb.append(df.format(new Date((long)m.getX(i2))));
+				sb.append(" y=");
+				sb.append(getLabel(m.getY(i2)));
+				sb.append("\n");
+			}
+			sb.append("\n");
+		}
+		mLegendText.setText(sb.toString());
 	}
 
+	private String getLabel(double time) {
+	    int day;
+	    int hours;
+	    int minutes;
+	    int seconds;
+	    day = (int) (time / (24 * 60 * 60 * 1000));
+	    hours = (int) (time / (60 * 60 * 1000)) - day * 24;
+	    minutes = (int) (time / (60 * 1000)) - day * 24 * 60 - 60 * hours;
+	    seconds = (int) (time / 1000) - day * 24 * 60 * 60 - 60 * 60
+	            * hours - 60 * minutes;
+	    String s = new String();
+	        s = String.format("%d:%02d", hours + day*24, minutes);
+	    return s;
+	  }
+	
 	@Override
 	public void onLoaderReset(Loader<PeriodData> arg0) {
 		// TODO Auto-generated method stub
