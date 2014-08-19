@@ -19,13 +19,88 @@
                 android:orientation="horizontal" >
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/legend"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:textSize="14sp"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <RelativeLayout
+                    android:layout_width="200dp"
+                    android:layout_height="100dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true" >
+
+                    <Button
+                        android:id="@+id/pad_left"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_below="@+id/pad_up"
+                        android:layout_alignParentLeft="true"
+                        android:text="&#8592;" />
+
+                    <Button
+                        android:id="@+id/pad_down"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_toRightOf="@+id/pad_left"
+                        android:text="↓" />
+
+                    <Button
+                        android:id="@+id/pad_right"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_toRightOf="@+id/pad_down"
+                        android:text="→" />
+
+                    <Button
+                        android:id="@+id/pad_up"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_toLeftOf="@+id/pad_right"
+                        android:text="↑" />
+
+                    <Button
+                        android:id="@+id/pad_minus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignTop="@+id/pad_right"
+                        android:layout_toRightOf="@+id/pad_right"
+                        android:text="-" />
+
+                    <Button
+                        android:id="@+id/pad_reset"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/pad_down"
+                        android:layout_alignRight="@+id/pad_right"
+                        android:layout_toRightOf="@+id/pad_down"
+                        android:text="R" />
+
+                    <Button
+                        android:id="@+id/pad_plus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/pad_reset"
+                        android:layout_alignLeft="@+id/pad_plus"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:text="+" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/legend"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="14sp" />
+
+            </RelativeLayout>
         </LinearLayout>
         </ScrollView>
     <TextView

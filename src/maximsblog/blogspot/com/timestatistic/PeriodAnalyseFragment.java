@@ -31,6 +31,7 @@ import org.achartengine.renderer.DefaultRenderer;
 import org.achartengine.renderer.SimpleSeriesRenderer;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
+import org.achartengine.util.MathHelper;
 
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -48,11 +49,14 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
+import android.text.method.MovementMethod;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
@@ -66,7 +70,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 public class PeriodAnalyseFragment extends Fragment implements
-		LoaderCallbacks<PeriodData>, MainFragments {
+		LoaderCallbacks<PeriodData>, MainFragments, OnClickListener {
 	private final int LOADER_ID = 3;
 	private final long PERIOD = 1000 * 60 * 60 * 24;
 
@@ -84,6 +88,7 @@ public class PeriodAnalyseFragment extends Fragment implements
 	private long mStartDate;
 	private long mEndDate;
 	private PeriodData mPeriodData;
+	private XYMultipleSeriesRenderer mRenderer;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -91,6 +96,9 @@ public class PeriodAnalyseFragment extends Fragment implements
 		super.onCreate(savedInstanceState);
 		mStartDate = app.getStartDate(getActivity()).date;
 		mEndDate = app.getEndDate(getActivity()).date;
+		if (mEndDate == -1) {
+			mEndDate = new Date().getTime();
+		}
 	}
 
 	@Override
@@ -103,13 +111,20 @@ public class PeriodAnalyseFragment extends Fragment implements
 		mDiagramLayout = mLayout.findViewById(R.id.ScrollView1);
 		mDiagramLayout.setVisibility(View.GONE);
 		mNotFoundText.setVisibility(View.GONE);
+		mLayout.findViewById(R.id.pad_up).setOnClickListener(this);
+		mLayout.findViewById(R.id.pad_down).setOnClickListener(this);
+		mLayout.findViewById(R.id.pad_left).setOnClickListener(this);
+		mLayout.findViewById(R.id.pad_right).setOnClickListener(this);
+		mLayout.findViewById(R.id.pad_plus).setOnClickListener(this);
+		mLayout.findViewById(R.id.pad_minus).setOnClickListener(this);
+		mLayout.findViewById(R.id.pad_reset).setOnClickListener(this);
 		return mLayout;
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
+
 	};
 
 	@Override
@@ -175,10 +190,11 @@ public class PeriodAnalyseFragment extends Fragment implements
 		}
 
 		final ViewGroup layout = (ViewGroup) mLayout.findViewById(R.id.chart);
+		mRenderer = arg1.renderer;
 		mChartView = ChartFactory.getTimeChartView(getActivity(), arg1.dataset,
 				arg1.renderer, null);
 		layout.post(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				int height = mLayout.getHeight()
@@ -193,44 +209,93 @@ public class PeriodAnalyseFragment extends Fragment implements
 				}
 			}
 		});
-		
-		//mLegendText.setText(Html.fromHtml(arg1.legend));
+
+		// mLegendText.setText(Html.fromHtml(arg1.legend));
 		mPeriodData = arg1;
 		StringBuilder sb = new StringBuilder();
 		SimpleDateFormat df = new SimpleDateFormat("d MMMM");
-		for(int i1 = 0, cnt = mPeriodData.dataset.getSeriesCount(); i1 < cnt; i1++) {
+		for (int i1 = 0, cnt = mPeriodData.dataset.getSeriesCount(); i1 < cnt; i1++) {
 			XYSeries m = mPeriodData.dataset.getSeriesAt(i1);
-			sb.append(m.getTitle()+"\n");
-			for(int i2 = 0, cnt2 = m.getItemCount(); i2 < cnt2; i2++) {
+			sb.append(m.getTitle() + "\n");
+			for (int i2 = 0, cnt2 = m.getItemCount(); i2 < cnt2; i2++) {
 				sb.append("x=");
-				sb.append(df.format(new Date((long)m.getX(i2))));
+				sb.append(df.format(new Date((long) m.getX(i2))));
 				sb.append(" y=");
-				sb.append(getLabel(m.getY(i2)));
+				sb.append(getLabel(m.getY(i2) == MathHelper.NULL_VALUE ? 0 : m.getY(i2)));
 				sb.append("\n");
 			}
 			sb.append("\n");
 		}
 		mLegendText.setText(sb.toString());
+
 	}
 
 	private String getLabel(double time) {
-	    int day;
-	    int hours;
-	    int minutes;
-	    int seconds;
-	    day = (int) (time / (24 * 60 * 60 * 1000));
-	    hours = (int) (time / (60 * 60 * 1000)) - day * 24;
-	    minutes = (int) (time / (60 * 1000)) - day * 24 * 60 - 60 * hours;
-	    seconds = (int) (time / 1000) - day * 24 * 60 * 60 - 60 * 60
-	            * hours - 60 * minutes;
-	    String s = new String();
-	        s = String.format("%d:%02d", hours + day*24, minutes);
-	    return s;
-	  }
-	
+		int day;
+		int hours;
+		int minutes;
+		int seconds;
+		day = (int) (time / (24 * 60 * 60 * 1000));
+		hours = (int) (time / (60 * 60 * 1000)) - day * 24;
+		minutes = (int) (time / (60 * 1000)) - day * 24 * 60 - 60 * hours;
+		seconds = (int) (time / 1000) - day * 24 * 60 * 60 - 60 * 60 * hours
+				- 60 * minutes;
+		String s = new String();
+		s = String.format("%d:%02d", hours + day * 24, minutes);
+		return s;
+	}
+
 	@Override
 	public void onLoaderReset(Loader<PeriodData> arg0) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void onClick(View v) {
+		double oldMaxX = mRenderer.getXAxisMax();
+		double oldMinX = mRenderer.getXAxisMin();
+		double oldMaxY = mRenderer.getYAxisMax();
+		double oldMinY = mRenderer.getYAxisMin();
+		double deltaX = oldMaxX - oldMinX;
+		double deltaY = oldMaxY - oldMinY;
+		double maxX = oldMaxX;
+		double minX = oldMinX;
+		double maxY = oldMaxY;
+		double minY = oldMinY;
+		switch (v.getId()) {
+		case R.id.pad_left:
+			maxX -= deltaX / 3;
+			minX -= deltaX / 3;
+			break;
+		case R.id.pad_right:
+			maxX += deltaX / 3;
+			minX += deltaX / 3;
+			break;
+		case R.id.pad_down:
+			maxY -= deltaY / 3;
+			minY -= deltaY / 3;
+			break;
+		case R.id.pad_up:
+			maxY += deltaY / 3;
+			minY += deltaY / 3;
+			break;
+		case R.id.pad_plus:
+			mChartView.zoomOut();
+			return;
+		case R.id.pad_minus:
+			mChartView.zoomIn();
+			return;
+		case R.id.pad_reset:
+			mChartView.zoomReset();
+			return;
+		default:
+			break;
+		}
+		mRenderer.setXAxisMin(minX);
+		mRenderer.setXAxisMax(maxX);
+		mRenderer.setYAxisMin(minY);
+		mRenderer.setYAxisMax(maxY);
+		mChartView.repaint();
 	}
 }

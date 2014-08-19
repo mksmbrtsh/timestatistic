@@ -263,13 +263,12 @@ public class DiagramFragment extends Fragment implements
 				sb.append("<big>&#9679;</big> ");
 				sb.append("</font>");
 				sb.append(nvalues.get(i1));
-				sb.append(':');
-				sb.append(' ');
-				sb.append(nf.format(values.get(i1) / sum));
-				sb.append(' ');
-				sb.append('(');
+				sb.append(" &#8721;= ");
 				sb.append(getTime(values.get(i1)));
+				sb.append(" (");
+				sb.append(nf.format(values.get(i1) / sum).replace(" ", ""));
 				sb.append(')');
+				
 				sb.append("<br>");
 				mSeries.add(nvalues.get(i1), values.get(i1) / sum);
 			}
