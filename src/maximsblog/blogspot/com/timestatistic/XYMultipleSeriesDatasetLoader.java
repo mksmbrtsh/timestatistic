@@ -237,6 +237,7 @@ public class XYMultipleSeriesDatasetLoader extends AsyncTaskLoader<PeriodData> {
 		mRenderer.setDisplayValues(true);
 		mRenderer.setZoomButtonsVisible(false);
 		mRenderer.setZoomEnabled(true);
+		mRenderer.setPanEnabled(false, false);
 		mRenderer.setXAxisMax((double) mEndDate + PERIOD / 2);
 		mRenderer.setXAxisMin((double) mStartDate - PERIOD / 2);
 		//mRenderer.setPanLimits(new double[] {(double) mStartDate - PERIOD / 2, (double) mEndDate + PERIOD / 2, 0.0, 1.5 *PERIOD});

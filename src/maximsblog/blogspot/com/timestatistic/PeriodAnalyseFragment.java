@@ -193,6 +193,7 @@ public class PeriodAnalyseFragment extends Fragment implements
 		mRenderer = arg1.renderer;
 		mChartView = ChartFactory.getTimeChartView(getActivity(), arg1.dataset,
 				arg1.renderer, null);
+		mChartView.setClickable(false);
 		layout.post(new Runnable() {
 
 			@Override
@@ -281,10 +282,10 @@ public class PeriodAnalyseFragment extends Fragment implements
 			minY += deltaY / 3;
 			break;
 		case R.id.pad_plus:
-			mChartView.zoomOut();
+			mChartView.zoomIn();
 			return;
 		case R.id.pad_minus:
-			mChartView.zoomIn();
+			mChartView.zoomOut();
 			return;
 		case R.id.pad_reset:
 			mChartView.zoomReset();

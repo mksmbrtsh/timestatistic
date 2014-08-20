@@ -85,7 +85,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignBottom="@+id/pad_reset"
-                        android:layout_alignLeft="@+id/pad_plus"
+                        android:layout_alignLeft="@+id/pad_minus"
                         android:layout_alignParentRight="true"
                         android:layout_alignParentTop="true"
                         android:text="+" />
