@@ -6,7 +6,7 @@
         android:icon="@drawable/ic_filter_dark"
         android:title="@string/filterdateset">
     </item>
-    <item android:id="@+id/item_search"
+    <item android:id="@+id/item_interval"
          android:title="@string/search"
          android:orderInCategory="4"
          android:icon="@drawable/ic_interval_title"

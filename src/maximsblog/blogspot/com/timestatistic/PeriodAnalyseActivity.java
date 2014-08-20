@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 
+import maximsblog.blogspot.com.timestatistic.PeriodSetupDialogFragment.IPeriodSetupDialog;
+
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -16,12 +18,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 
 public class PeriodAnalyseActivity extends SherlockFragmentActivity implements
-		IRecordDialog {
+		IRecordDialog, IPeriodSetupDialog {
+
+	private static final String PERIOD = "period_interval";
+	private long mPeriod;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -29,18 +35,30 @@ public class PeriodAnalyseActivity extends SherlockFragmentActivity implements
 		super.onCreate(savedInstanceState);
 		setTitle("");
 		if (savedInstanceState == null) {
-			PeriodAnalyseFragment details = new PeriodAnalyseFragment();
+			mPeriod = PreferenceManager.getDefaultSharedPreferences(
+					this).getLong(PeriodAnalyseActivity.PERIOD, 1000*60*60);
+			PeriodAnalyseFragment details = new PeriodAnalyseFragment(mPeriod);
 
 			getSupportFragmentManager().beginTransaction()
 					.add(android.R.id.content, details).commit();
 		} else {
+			mPeriod = savedInstanceState.getLong("period");
 			FragmentManager fm = getSupportFragmentManager();
 			FilterDateSetDialogFragment startDateSetDialogFragment = (FilterDateSetDialogFragment) fm
 					.findFragmentByTag("mStartDateSetDialogFragment");
 			if (startDateSetDialogFragment != null)
 				startDateSetDialogFragment.setDialogListener(this);
+			PeriodSetupDialogFragment periodSetupDialogFragment = (PeriodSetupDialogFragment) fm
+					.findFragmentByTag("periodSetupDialogFragment");
+			if (periodSetupDialogFragment != null)
+				periodSetupDialogFragment.setPeriodSetupDialog(this);
 		}
 	}
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		outState.putLong("period", mPeriod);
+		super.onSaveInstanceState(outState);
+	};
 
 	@Override
 	public void onRefreshFragmentsValue() {
@@ -60,7 +78,9 @@ public class PeriodAnalyseActivity extends SherlockFragmentActivity implements
 		else {
 			((SherlockFragmentActivity)this).getSupportActionBar().setSubtitle(startDateOption.dateName + " " + mSimpleDateFormat.format(new Date(enddate)));
 		}
-		PeriodAnalyseFragment details = new PeriodAnalyseFragment();
+		mPeriod = PreferenceManager.getDefaultSharedPreferences(
+				this).getLong(PeriodAnalyseActivity.PERIOD, 1000*60*60);
+		PeriodAnalyseFragment details = new PeriodAnalyseFragment(mPeriod);
 		getSupportFragmentManager().beginTransaction()
 				.replace(android.R.id.content, details).commit();
 	}
@@ -113,10 +133,24 @@ public class PeriodAnalyseActivity extends SherlockFragmentActivity implements
 			startDateSetDialogFragment.show(this.getSupportFragmentManager(),
 					"mStartDateSetDialogFragment");
 			break;
+		case R.id.item_interval:
+			PeriodSetupDialogFragment periodSetupDialogFragment = new PeriodSetupDialogFragment();
+			periodSetupDialogFragment.setPeriodSetupDialog(this);
+			periodSetupDialogFragment.show(this.getSupportFragmentManager(),
+					"periodSetupDialogFragment");
+			break;
 		default:
 			break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void setupNewPeriod(long time) {
+		mPeriod = time;
+		PeriodAnalyseFragment details = new PeriodAnalyseFragment(mPeriod);
+		getSupportFragmentManager().beginTransaction()
+				.replace(android.R.id.content, details).commit();
 	}
 
 }

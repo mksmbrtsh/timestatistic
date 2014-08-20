@@ -72,7 +72,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 public class PeriodAnalyseFragment extends Fragment implements
 		LoaderCallbacks<PeriodData>, MainFragments, OnClickListener {
 	private final int LOADER_ID = 3;
-	private final long PERIOD = 1000 * 60 * 60 * 24;
+	private final long mPeriod;
 
 	/** The chart view that displays the data. */
 	private GraphicalView mChartView;
@@ -89,6 +89,10 @@ public class PeriodAnalyseFragment extends Fragment implements
 	private long mEndDate;
 	private PeriodData mPeriodData;
 	private XYMultipleSeriesRenderer mRenderer;
+
+	public PeriodAnalyseFragment(long period) {
+		mPeriod = period;
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -146,8 +150,8 @@ public class PeriodAnalyseFragment extends Fragment implements
 		super.onDestroy();
 	};
 
-	public static PeriodAnalyseFragment newInstance() {
-		PeriodAnalyseFragment fragment = new PeriodAnalyseFragment();
+	public static PeriodAnalyseFragment newInstance(long mPeriod) {
+		PeriodAnalyseFragment fragment = new PeriodAnalyseFragment(mPeriod);
 		return fragment;
 	}
 
@@ -168,7 +172,7 @@ public class PeriodAnalyseFragment extends Fragment implements
 		// TODO Auto-generated method stub
 		long start = app.getStartDate(getActivity()).date;
 		long stop = app.getEndDate(getActivity()).date;
-		return new XYMultipleSeriesDatasetLoader(getActivity(), start, stop);
+		return new XYMultipleSeriesDatasetLoader(getActivity(), start, stop, mPeriod);
 	}
 
 	@Override

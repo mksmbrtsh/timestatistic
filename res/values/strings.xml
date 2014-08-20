@@ -81,4 +81,10 @@
     <string name="future">future</string>
     <string name="not_found_diary">Not found diary notes</string>
     <string name="not_found_records">Not found time records</string>
+    <string-array name="periods">
+        <item >hour</item>
+        <item >day</item>
+        <item >week</item>
+        <item >12 hours</item>
+    </string-array>
 </resources>

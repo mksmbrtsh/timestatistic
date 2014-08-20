@@ -21,17 +21,18 @@ import android.util.DisplayMetrics;
 import android.util.TypedValue;
 
 public class XYMultipleSeriesDatasetLoader extends AsyncTaskLoader<PeriodData> {
-	private static final long PERIOD = 1000 * 60 * 60 * 24;
 	private long mStartDate;
 	private long mEndDate;
+	private long mPeriod;
 	private Context mContext;
 	private PeriodData data;
 
-	public XYMultipleSeriesDatasetLoader(Context context, long start, long stop) {
+	public XYMultipleSeriesDatasetLoader(Context context, long start, long stop, long period) {
 		super(context);
 		mStartDate = start;
 		mEndDate = stop;
 		mContext = context;
+		mPeriod = period;
 	}
 
 	@Override
@@ -181,24 +182,24 @@ public class XYMultipleSeriesDatasetLoader extends AsyncTaskLoader<PeriodData> {
 						if (stop < current){
 							continue;
 						}
-						if (start > current + PERIOD){
+						if (start > current + mPeriod){
 							continue;
 						}
 						if (start < current)
 							start = current;
-						if (stop > current + PERIOD)
-							stop = current + PERIOD;
+						if (stop > current + mPeriod)
+							stop = current + mPeriod;
 						sum += (stop - start);
 					}
 					if (max < sum)
 						max = (double) sum;
 					sd+=sum;
 					if(sum == 0){
-						series.add(new Date((current + current + PERIOD) / 2), MathHelper.NULL_VALUE);
+						series.add(new Date((current + current + mPeriod) / 2), MathHelper.NULL_VALUE);
 					}
 					else
-						series.add(new Date((current + current + PERIOD) / 2), sum);
-					current += PERIOD;
+						series.add(new Date((current + current + mPeriod) / 2), sum);
+					current += mPeriod;
 				} while (current < mEndDate);
 				XYSeriesRenderer r = new XYSeriesRenderer();
 				r.setColor(colors.get(i1));
@@ -238,8 +239,8 @@ public class XYMultipleSeriesDatasetLoader extends AsyncTaskLoader<PeriodData> {
 		mRenderer.setZoomButtonsVisible(false);
 		mRenderer.setZoomEnabled(true);
 		mRenderer.setPanEnabled(false, false);
-		mRenderer.setXAxisMax((double) mEndDate + PERIOD / 2);
-		mRenderer.setXAxisMin((double) mStartDate - PERIOD / 2);
+		mRenderer.setXAxisMax((double) mEndDate + mPeriod / 2);
+		mRenderer.setXAxisMin((double) mStartDate - mPeriod / 2);
 		//mRenderer.setPanLimits(new double[] {(double) mStartDate - PERIOD / 2, (double) mEndDate + PERIOD / 2, 0.0, 1.5 *PERIOD});
 		//mRenderer.setZoomLimits(new double[] {(double) mStartDate - PERIOD / 2, (double) mEndDate + PERIOD / 2, 0.0, 1.5* PERIOD});
 		mRenderer.setExternalZoomEnabled(true);
