@@ -115,10 +115,6 @@ public class PeriodAnalyseFragment extends Fragment implements
 		mDiagramLayout = mLayout.findViewById(R.id.ScrollView1);
 		mDiagramLayout.setVisibility(View.GONE);
 		mNotFoundText.setVisibility(View.GONE);
-		mLayout.findViewById(R.id.pad_up).setOnClickListener(this);
-		mLayout.findViewById(R.id.pad_down).setOnClickListener(this);
-		mLayout.findViewById(R.id.pad_left).setOnClickListener(this);
-		mLayout.findViewById(R.id.pad_right).setOnClickListener(this);
 		mLayout.findViewById(R.id.pad_plus).setOnClickListener(this);
 		mLayout.findViewById(R.id.pad_minus).setOnClickListener(this);
 		mLayout.findViewById(R.id.pad_reset).setOnClickListener(this);
@@ -197,8 +193,11 @@ public class PeriodAnalyseFragment extends Fragment implements
 		mRenderer = arg1.renderer;
 		mChartView = ChartFactory.getTimeChartView(getActivity(), arg1.dataset,
 				arg1.renderer, null);
-		mChartView.setClickable(false);
-		layout.post(new Runnable() {
+		layout.addView(mChartView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		if (mChartView != null) {
+			mChartView.repaint();
+		}
+		/*layout.post(new Runnable() {
 
 			@Override
 			public void run() {
@@ -213,7 +212,7 @@ public class PeriodAnalyseFragment extends Fragment implements
 					mChartView.repaint();
 				}
 			}
-		});
+		});*/
 
 		// mLegendText.setText(Html.fromHtml(arg1.legend));
 		mPeriodData = arg1;
@@ -258,33 +257,7 @@ public class PeriodAnalyseFragment extends Fragment implements
 
 	@Override
 	public void onClick(View v) {
-		double oldMaxX = mRenderer.getXAxisMax();
-		double oldMinX = mRenderer.getXAxisMin();
-		double oldMaxY = mRenderer.getYAxisMax();
-		double oldMinY = mRenderer.getYAxisMin();
-		double deltaX = oldMaxX - oldMinX;
-		double deltaY = oldMaxY - oldMinY;
-		double maxX = oldMaxX;
-		double minX = oldMinX;
-		double maxY = oldMaxY;
-		double minY = oldMinY;
 		switch (v.getId()) {
-		case R.id.pad_left:
-			maxX -= deltaX / 3;
-			minX -= deltaX / 3;
-			break;
-		case R.id.pad_right:
-			maxX += deltaX / 3;
-			minX += deltaX / 3;
-			break;
-		case R.id.pad_down:
-			maxY -= deltaY / 3;
-			minY -= deltaY / 3;
-			break;
-		case R.id.pad_up:
-			maxY += deltaY / 3;
-			minY += deltaY / 3;
-			break;
 		case R.id.pad_plus:
 			mChartView.zoomIn();
 			return;
@@ -297,6 +270,17 @@ public class PeriodAnalyseFragment extends Fragment implements
 		default:
 			break;
 		}
+		double oldMaxX = mRenderer.getXAxisMax();
+		double oldMinX = mRenderer.getXAxisMin();
+		double oldMaxY = mRenderer.getYAxisMax();
+		double oldMinY = mRenderer.getYAxisMin();
+		double deltaX = oldMaxX - oldMinX;
+		double deltaY = oldMaxY - oldMinY;
+		double maxX = oldMaxX;
+		double minX = oldMinX;
+		double maxY = oldMaxY;
+		double minY = oldMinY;
+		
 		mRenderer.setXAxisMin(minX);
 		mRenderer.setXAxisMax(maxX);
 		mRenderer.setYAxisMin(minY);

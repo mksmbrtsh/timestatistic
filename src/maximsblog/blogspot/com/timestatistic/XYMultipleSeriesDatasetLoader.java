@@ -208,6 +208,7 @@ public class XYMultipleSeriesDatasetLoader extends AsyncTaskLoader<PeriodData> {
 				r.setPointStyle(PointStyle.CIRCLE);
 				r.setPointStrokeWidth(6);
 			    r.setDisplayChartValues(true);
+
 			    r.setChartValuesTextSize(val);
 				mRenderer.addSeriesRenderer(r);
 				mDataset.addSeries(series);
@@ -224,7 +225,6 @@ public class XYMultipleSeriesDatasetLoader extends AsyncTaskLoader<PeriodData> {
 		mRenderer.setShowLabels(true);
 		mRenderer.setShowLegend(false);
 		mRenderer.setInScroll(false);
-		mRenderer.setClickEnabled(false);
 		mRenderer.setShowGrid(true);
 		mRenderer.setXLabelsAlign(Align.CENTER);
 		mRenderer.setYLabelsAngle(-90);
@@ -238,10 +238,10 @@ public class XYMultipleSeriesDatasetLoader extends AsyncTaskLoader<PeriodData> {
 		mRenderer.setDisplayValues(true);
 		mRenderer.setZoomButtonsVisible(false);
 		mRenderer.setZoomEnabled(true);
-		mRenderer.setPanEnabled(false, false);
-		mRenderer.setXAxisMax((double) mEndDate + mPeriod / 2);
-		mRenderer.setXAxisMin((double) mStartDate - mPeriod / 2);
-		//mRenderer.setPanLimits(new double[] {(double) mStartDate - PERIOD / 2, (double) mEndDate + PERIOD / 2, 0.0, 1.5 *PERIOD});
+		mRenderer.setXLabelsPadding(2.0f);
+		mRenderer.setXAxisMax((double) mEndDate + mPeriod );
+		mRenderer.setXAxisMin((double) mStartDate - mPeriod );
+		mRenderer.setPanLimits(new double[] {(double) mStartDate - mPeriod, (double) mEndDate + mPeriod, 0.0, 2 * mPeriod});
 		//mRenderer.setZoomLimits(new double[] {(double) mStartDate - PERIOD / 2, (double) mEndDate + PERIOD / 2, 0.0, 1.5* PERIOD});
 		mRenderer.setExternalZoomEnabled(true);
 		return data;
