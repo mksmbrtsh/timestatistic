@@ -26,7 +26,7 @@ import android.support.v4.app.FragmentTransaction;
 public class PeriodAnalyseActivity extends SherlockFragmentActivity implements
 		IRecordDialog, IPeriodSetupDialog {
 
-	private static final String PERIOD = "period_interval";
+	public static final String PERIOD = "period_interval";
 	private long mPeriod;
 
 	/** Called when the activity is first created. */
@@ -37,8 +37,10 @@ public class PeriodAnalyseActivity extends SherlockFragmentActivity implements
 		if (savedInstanceState == null) {
 			mPeriod = PreferenceManager.getDefaultSharedPreferences(
 					this).getLong(PeriodAnalyseActivity.PERIOD, 1000*60*60);
-			PeriodAnalyseFragment details = new PeriodAnalyseFragment(mPeriod);
-
+			PeriodAnalyseFragment details = new PeriodAnalyseFragment();
+			Bundle b = new Bundle();
+			b.putLong(PERIOD, mPeriod);
+			details.setArguments(b);
 			getSupportFragmentManager().beginTransaction()
 					.add(android.R.id.content, details).commit();
 		} else {
@@ -80,7 +82,10 @@ public class PeriodAnalyseActivity extends SherlockFragmentActivity implements
 		}
 		mPeriod = PreferenceManager.getDefaultSharedPreferences(
 				this).getLong(PeriodAnalyseActivity.PERIOD, 1000*60*60);
-		PeriodAnalyseFragment details = new PeriodAnalyseFragment(mPeriod);
+		PeriodAnalyseFragment details = new PeriodAnalyseFragment();
+		Bundle b = new Bundle();
+		b.putLong(PERIOD, mPeriod);
+		details.setArguments(b);
 		getSupportFragmentManager().beginTransaction()
 				.replace(android.R.id.content, details).commit();
 	}
@@ -135,10 +140,17 @@ public class PeriodAnalyseActivity extends SherlockFragmentActivity implements
 			break;
 		case R.id.item_interval:
 			PeriodSetupDialogFragment periodSetupDialogFragment = new PeriodSetupDialogFragment();
+			Bundle b = new Bundle();
+			b.putLong(PERIOD, mPeriod);
+			periodSetupDialogFragment.setArguments(b);
 			periodSetupDialogFragment.setPeriodSetupDialog(this);
 			periodSetupDialogFragment.show(this.getSupportFragmentManager(),
 					"periodSetupDialogFragment");
 			break;
+		case R.id.item_counters:
+			CountersPeriodSetupDialogFragment countersPeriodSetupDialogFragment = new CountersPeriodSetupDialogFragment();
+			countersPeriodSetupDialogFragment.show(this.getSupportFragmentManager(),
+					"countersPeriodSetupDialogFragment");
 		default:
 			break;
 		}
@@ -148,7 +160,12 @@ public class PeriodAnalyseActivity extends SherlockFragmentActivity implements
 	@Override
 	public void setupNewPeriod(long time) {
 		mPeriod = time;
-		PeriodAnalyseFragment details = new PeriodAnalyseFragment(mPeriod);
+		PreferenceManager.getDefaultSharedPreferences(
+				this).edit().putLong(PERIOD, mPeriod).commit();
+		PeriodAnalyseFragment details = new PeriodAnalyseFragment();
+		Bundle b = new Bundle();
+		b.putLong(PERIOD, mPeriod);
+		details.setArguments(b);
 		getSupportFragmentManager().beginTransaction()
 				.replace(android.R.id.content, details).commit();
 	}

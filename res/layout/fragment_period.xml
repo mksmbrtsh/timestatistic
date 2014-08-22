@@ -3,10 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    <LinearLayout android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-        <LinearLayout
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <LinearLayout
             android:id="@+id/ScrollView1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -22,8 +25,16 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                 >
+                android:layout_height="200dp" >
+
+                <TextView
+                    android:id="@+id/legend"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:scrollbars="vertical"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="14sp" />
 
                 <RelativeLayout
                     android:layout_width="200dp"
@@ -35,53 +46,47 @@
                         android:id="@+id/pad_minus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
                         android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
                         android:text="-" />
 
                     <Button
                         android:id="@+id/pad_reset"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
                         android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
                         android:text="R" />
 
                     <Button
                         android:id="@+id/pad_plus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
                         android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
                         android:text="+" />
                 </RelativeLayout>
-
-                <TextView
-                    android:id="@+id/legend"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/transparent"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textSize="14sp" />
-
             </RelativeLayout>
         </LinearLayout>
-        </LinearLayout>
+    </LinearLayout>
+
     <TextView
         android:id="@+id/not_found"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:gravity="center"
         android:background="@android:color/transparent"
+        android:gravity="center"
         android:text="@string/not_found_records"
         android:textAppearance="?android:attr/textAppearanceLarge" />
-<ProgressBar
+
+    <ProgressBar
         android:id="@+id/progress"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:gravity="center"
-        android:background="@android:color/transparent" />
+        android:background="@android:color/transparent"
+        android:gravity="center" />
+
 </RelativeLayout>

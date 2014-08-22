@@ -50,6 +50,7 @@ import android.text.Html;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.method.MovementMethod;
+import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -72,7 +73,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 public class PeriodAnalyseFragment extends Fragment implements
 		LoaderCallbacks<PeriodData>, MainFragments, OnClickListener {
 	private final int LOADER_ID = 3;
-	private final long mPeriod;
+	private long mPeriod;
 
 	/** The chart view that displays the data. */
 	private GraphicalView mChartView;
@@ -89,15 +90,12 @@ public class PeriodAnalyseFragment extends Fragment implements
 	private long mEndDate;
 	private PeriodData mPeriodData;
 	private XYMultipleSeriesRenderer mRenderer;
-
-	public PeriodAnalyseFragment(long period) {
-		mPeriod = period;
-	}
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		loadermanager = getLoaderManager();
 		super.onCreate(savedInstanceState);
+		loadermanager = getLoaderManager();
+		mPeriod = getArguments().getLong(PeriodAnalyseActivity.PERIOD);
 		mStartDate = app.getStartDate(getActivity()).date;
 		mEndDate = app.getEndDate(getActivity()).date;
 		if (mEndDate == -1) {
@@ -118,6 +116,7 @@ public class PeriodAnalyseFragment extends Fragment implements
 		mLayout.findViewById(R.id.pad_plus).setOnClickListener(this);
 		mLayout.findViewById(R.id.pad_minus).setOnClickListener(this);
 		mLayout.findViewById(R.id.pad_reset).setOnClickListener(this);
+		mLegendText.setMovementMethod(ScrollingMovementMethod.getInstance());
 		return mLayout;
 	}
 
@@ -147,7 +146,10 @@ public class PeriodAnalyseFragment extends Fragment implements
 	};
 
 	public static PeriodAnalyseFragment newInstance(long mPeriod) {
-		PeriodAnalyseFragment fragment = new PeriodAnalyseFragment(mPeriod);
+		PeriodAnalyseFragment fragment = new PeriodAnalyseFragment();
+		Bundle b = new Bundle();
+		b.putLong(PeriodAnalyseActivity.PERIOD, mPeriod);
+		fragment.setArguments(b);
 		return fragment;
 	}
 
@@ -197,26 +199,9 @@ public class PeriodAnalyseFragment extends Fragment implements
 		if (mChartView != null) {
 			mChartView.repaint();
 		}
-		/*layout.post(new Runnable() {
-
-			@Override
-			public void run() {
-				int height = mLayout.getHeight()
-						- 2
-						* ((SherlockFragmentActivity) getActivity())
-								.getSupportActionBar().getHeight();
-				int width = mLayout.getWidth();
-				layout.addView(mChartView, new LayoutParams(width, height));
-
-				if (mChartView != null) {
-					mChartView.repaint();
-				}
-			}
-		});*/
-
-		// mLegendText.setText(Html.fromHtml(arg1.legend));
+		mLegendText.setText(Html.fromHtml(arg1.legend));
 		mPeriodData = arg1;
-		StringBuilder sb = new StringBuilder();
+		/*StringBuilder sb = new StringBuilder();
 		SimpleDateFormat df = new SimpleDateFormat("d MMMM");
 		for (int i1 = 0, cnt = mPeriodData.dataset.getSeriesCount(); i1 < cnt; i1++) {
 			XYSeries m = mPeriodData.dataset.getSeriesAt(i1);
@@ -230,7 +215,7 @@ public class PeriodAnalyseFragment extends Fragment implements
 			}
 			sb.append("\n");
 		}
-		mLegendText.setText(sb.toString());
+		mLegendText.setText(sb.toString());*/
 
 	}
 

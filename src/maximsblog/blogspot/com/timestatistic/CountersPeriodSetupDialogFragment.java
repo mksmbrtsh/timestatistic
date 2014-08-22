@@ -1,14 +1,19 @@
 package maximsblog.blogspot.com.timestatistic;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import maximsblog.blogspot.com.timestatistic.AreYouSureResetAllDialogFragment.ResetAllDialog;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.DialogInterface.OnMultiChoiceClickListener;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
-public class PeriodSetupDialogFragment extends DialogFragment implements OnClickListener {
+public class CountersPeriodSetupDialogFragment extends DialogFragment implements OnClickListener, OnMultiChoiceClickListener {
 	
 	private IPeriodSetupDialog mListener;
 	private long mPeriod;
@@ -20,21 +25,21 @@ public class PeriodSetupDialogFragment extends DialogFragment implements OnClick
 	}
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-    	mPeriod = getArguments().getLong(PeriodAnalyseActivity.PERIOD);
-    	int index=0;
-    	if(mPeriod == 1000*60*60)
-    		index = 0;
-    	else if(mPeriod == 1000*60*60*24)
-    		index = 1;
-        	else
-        		if(mPeriod == 1000*60*60*24 * 7)
-        			index = 2;
-        	    	else
-        	    		if(mPeriod == 1000*60*60 * 12)
-        	    			index = 3;
+    	Cursor newtimers = getActivity().getContentResolver().query(
+				RecordsDbHelper.CONTENT_URI_TIMES, null, null, null, RecordsDbHelper.SORTID);
+    	int[] ids = new int[newtimers.getCount()];
+    	String[] names = new String[newtimers.getCount()] ;
+    	boolean[] checked = new boolean[newtimers.getCount()];
+    	for (int i1 = 0, cnt1 = newtimers.getCount(); i1 < cnt1; i1++) {
+			newtimers.moveToPosition(i1);
+			ids[i1]= (newtimers.getInt(4));
+			names[i1]=(newtimers.getString(5));
+			checked[i1]=(false);
+		}
+    	newtimers.close();
         return new AlertDialog.Builder(getActivity())
             .setTitle(R.string.interval)
-            .setSingleChoiceItems(R.array.periods, index, this)
+            .setMultiChoiceItems(names, checked , this)
             .create();
     }
 	@Override
@@ -59,5 +64,10 @@ public class PeriodSetupDialogFragment extends DialogFragment implements OnClick
 		}
 		mListener.setupNewPeriod(time);
 		this.dismiss();
+	}
+	@Override
+	public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+		// TODO Auto-generated method stub
+		
 	}
 }
