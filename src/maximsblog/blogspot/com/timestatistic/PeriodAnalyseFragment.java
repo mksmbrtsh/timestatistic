@@ -90,12 +90,16 @@ public class PeriodAnalyseFragment extends Fragment implements
 	private long mEndDate;
 	private PeriodData mPeriodData;
 	private XYMultipleSeriesRenderer mRenderer;
+	private int[] mIds;
+	private boolean[] mChecked;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		loadermanager = getLoaderManager();
 		mPeriod = getArguments().getLong(PeriodAnalyseActivity.PERIOD);
+		mIds = getArguments().getIntArray(PeriodAnalyseActivity.IDS);
+		mChecked = getArguments().getBooleanArray(PeriodAnalyseActivity.CHECKED);
 		mStartDate = app.getStartDate(getActivity()).date;
 		mEndDate = app.getEndDate(getActivity()).date;
 		if (mEndDate == -1) {
@@ -145,13 +149,13 @@ public class PeriodAnalyseFragment extends Fragment implements
 		super.onDestroy();
 	};
 
-	public static PeriodAnalyseFragment newInstance(long mPeriod) {
+	/*public static PeriodAnalyseFragment newInstance(long mPeriod) {
 		PeriodAnalyseFragment fragment = new PeriodAnalyseFragment();
 		Bundle b = new Bundle();
 		b.putLong(PeriodAnalyseActivity.PERIOD, mPeriod);
 		fragment.setArguments(b);
 		return fragment;
-	}
+	}*/
 
 	public static int getRandomColor() {
 		Random rnd = new Random();
@@ -170,7 +174,12 @@ public class PeriodAnalyseFragment extends Fragment implements
 		// TODO Auto-generated method stub
 		long start = app.getStartDate(getActivity()).date;
 		long stop = app.getEndDate(getActivity()).date;
-		return new XYMultipleSeriesDatasetLoader(getActivity(), start, stop, mPeriod);
+		ArrayList<Integer> ids = new ArrayList<Integer>(); 
+		for (int i = 0; i < mIds.length; i++) {
+			if(mChecked[i])
+				ids.add(mIds[i]);
+		}
+		return new XYMultipleSeriesDatasetLoader(getActivity(), start, stop, mPeriod, ids);
 	}
 
 	@Override

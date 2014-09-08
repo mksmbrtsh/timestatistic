@@ -16,6 +16,9 @@ import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -24,10 +27,14 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 
 public class PeriodAnalyseActivity extends SherlockFragmentActivity implements
-		IRecordDialog, IPeriodSetupDialog {
+		IRecordDialog, IPeriodSetupDialog, maximsblog.blogspot.com.timestatistic.CountersPeriodSetupDialogFragment.IPeriodSetupDialog {
 
 	public static final String PERIOD = "period_interval";
+	public static final String IDS = "ids";
+	public static final String CHECKED = "selected_ids";
 	private long mPeriod;
+	private int[] mIDs;
+	private boolean[] mChecked;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -35,16 +42,45 @@ public class PeriodAnalyseActivity extends SherlockFragmentActivity implements
 		super.onCreate(savedInstanceState);
 		setTitle("");
 		if (savedInstanceState == null) {
-			mPeriod = PreferenceManager.getDefaultSharedPreferences(
-					this).getLong(PeriodAnalyseActivity.PERIOD, 1000*60*60);
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(
+					this);
+			mPeriod = prefs.getLong(PeriodAnalyseActivity.PERIOD, 1000*60*60);
+			String s = prefs.getString(IDS, null);
+			if(s != null){
+				String[] ids = s.split(";");
+				mIDs = new int[ids.length];
+				mChecked = new boolean[ids.length];
+				for(int i = 0; i < ids.length; i++) {
+					String[] split = ids[i].split("\\.");
+					mIDs[i] = Integer.valueOf(split[0]);
+					mChecked[i] = split[1].equals("1");
+				}
+			} else {
+				Cursor newtimers = getContentResolver().query(
+						RecordsDbHelper.CONTENT_URI_TIMES, null, null, null, RecordsDbHelper.SORTID);
+		    	mIDs = new int[newtimers.getCount()];
+		    	mChecked = new boolean[newtimers.getCount()];
+		    	for (int i1 = 0, cnt1 = newtimers.getCount(); i1 < cnt1; i1++) {
+					newtimers.moveToPosition(i1);
+					mIDs[i1] = (newtimers.getInt(4));
+					mChecked[i1] = true;
+				}
+		    	newtimers.close();
+			}
+			
 			PeriodAnalyseFragment details = new PeriodAnalyseFragment();
 			Bundle b = new Bundle();
 			b.putLong(PERIOD, mPeriod);
+			b.putIntArray(IDS, mIDs);
+			b.putBooleanArray(CHECKED, mChecked);
 			details.setArguments(b);
 			getSupportFragmentManager().beginTransaction()
 					.add(android.R.id.content, details).commit();
+			
 		} else {
 			mPeriod = savedInstanceState.getLong("period");
+			mIDs = savedInstanceState.getIntArray("ids");
+			mChecked = savedInstanceState.getBooleanArray("checked");
 			FragmentManager fm = getSupportFragmentManager();
 			FilterDateSetDialogFragment startDateSetDialogFragment = (FilterDateSetDialogFragment) fm
 					.findFragmentByTag("mStartDateSetDialogFragment");
@@ -54,11 +90,17 @@ public class PeriodAnalyseActivity extends SherlockFragmentActivity implements
 					.findFragmentByTag("periodSetupDialogFragment");
 			if (periodSetupDialogFragment != null)
 				periodSetupDialogFragment.setPeriodSetupDialog(this);
+			CountersPeriodSetupDialogFragment countersPeriodSetupDialogFragment = (CountersPeriodSetupDialogFragment) fm
+					.findFragmentByTag("countersPeriodSetupDialogFragment");
+			if(countersPeriodSetupDialogFragment != null)
+				countersPeriodSetupDialogFragment.setPeriodSetupDialog(this);
 		}
 	}
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		outState.putLong("period", mPeriod);
+		outState.putBooleanArray("checked", mChecked);
+		outState.putIntArray("ids", mIDs);
 		super.onSaveInstanceState(outState);
 	};
 
@@ -85,6 +127,8 @@ public class PeriodAnalyseActivity extends SherlockFragmentActivity implements
 		PeriodAnalyseFragment details = new PeriodAnalyseFragment();
 		Bundle b = new Bundle();
 		b.putLong(PERIOD, mPeriod);
+		b.putIntArray(IDS, mIDs);
+		b.putBooleanArray(CHECKED, mChecked);
 		details.setArguments(b);
 		getSupportFragmentManager().beginTransaction()
 				.replace(android.R.id.content, details).commit();
@@ -149,6 +193,11 @@ public class PeriodAnalyseActivity extends SherlockFragmentActivity implements
 			break;
 		case R.id.item_counters:
 			CountersPeriodSetupDialogFragment countersPeriodSetupDialogFragment = new CountersPeriodSetupDialogFragment();
+			countersPeriodSetupDialogFragment.setPeriodSetupDialog(this);
+			Bundle args = new Bundle();
+			args.putBooleanArray("checked", mChecked);
+			args.putIntArray("ids", mIDs);
+			countersPeriodSetupDialogFragment.setArguments(args);
 			countersPeriodSetupDialogFragment.show(this.getSupportFragmentManager(),
 					"countersPeriodSetupDialogFragment");
 		default:
@@ -165,6 +214,37 @@ public class PeriodAnalyseActivity extends SherlockFragmentActivity implements
 		PeriodAnalyseFragment details = new PeriodAnalyseFragment();
 		Bundle b = new Bundle();
 		b.putLong(PERIOD, mPeriod);
+		b.putIntArray(IDS, mIDs);
+		b.putBooleanArray(CHECKED, mChecked);
+		details.setArguments(b);
+		getSupportFragmentManager().beginTransaction()
+				.replace(android.R.id.content, details).commit();
+	}
+	@Override
+	public void setupCounters(int[] ids, boolean[] checked) {
+		mIDs = ids;
+		mChecked = checked;
+		Editor edit = PreferenceManager.getDefaultSharedPreferences(
+				this).edit();
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0; i< ids.length;i++) {
+			sb.append(mIDs[i]);
+			sb.append('.');
+			if(mChecked[i])
+				sb.append('1');
+			else 
+				sb.append('0');
+			sb.append(';');
+		}
+		sb.deleteCharAt(sb.length() - 1);
+		edit.putString(IDS, sb.toString());
+		edit.commit();
+		
+		PeriodAnalyseFragment details = new PeriodAnalyseFragment();
+		Bundle b = new Bundle();
+		b.putLong(PERIOD, mPeriod);
+		b.putIntArray(IDS, mIDs);
+		b.putBooleanArray(CHECKED, mChecked);
 		details.setArguments(b);
 		getSupportFragmentManager().beginTransaction()
 				.replace(android.R.id.content, details).commit();

@@ -2,6 +2,7 @@ package maximsblog.blogspot.com.timestatistic;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import org.achartengine.util.MathHelper;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Paint.Align;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.util.DisplayMetrics;
@@ -26,14 +28,18 @@ public class XYMultipleSeriesDatasetLoader extends AsyncTaskLoader<PeriodData> {
 	private long mPeriod;
 	private Context mContext;
 	private PeriodData data;
+	private ArrayList<Integer> mIds;
 
-	public XYMultipleSeriesDatasetLoader(Context context, long start, long stop, long period) {
+	public XYMultipleSeriesDatasetLoader(Context context, long start,
+			long stop, long period, ArrayList<Integer> ids) {
 		super(context);
 		mStartDate = start;
 		mEndDate = stop;
 		mContext = context;
 		mPeriod = period;
+		mIds = ids;
 	}
+
 
 	@Override
 	public void deliverResult(PeriodData data) {
@@ -90,19 +96,18 @@ public class XYMultipleSeriesDatasetLoader extends AsyncTaskLoader<PeriodData> {
 
 	@Override
 	public PeriodData loadInBackground() {
-		String[] selectionArgs = new String[] {
-				String.valueOf(mStartDate),
+		String[] selectionArgs = new String[] { String.valueOf(mStartDate),
 				String.valueOf(mEndDate) };
-		Cursor cursor = mContext.getContentResolver().query(RecordsDbHelper.CONTENT_URI_ALLTIMES, null,
-				RecordsDbHelper.STARTTIME + " IS NOT NULL ", selectionArgs ,
+		Cursor cursor = mContext.getContentResolver().query(
+				RecordsDbHelper.CONTENT_URI_ALLTIMES, null,
+				RecordsDbHelper.STARTTIME + " IS NOT NULL ", selectionArgs,
 				null);
 		PeriodData data = new PeriodData();
 		XYMultipleSeriesDataset mDataset = data.dataset;
 		XYMultipleSeriesRenderer mRenderer = data.renderer;
 		mDataset.clear();
 		mRenderer.removeAllRenderers();
-		DisplayMetrics metrics = mContext.getResources()
-				.getDisplayMetrics();
+		DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
 		float val = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12,
 				metrics);
 		double max = -1;
@@ -110,34 +115,40 @@ public class XYMultipleSeriesDatasetLoader extends AsyncTaskLoader<PeriodData> {
 			if (mEndDate <= mStartDate && mEndDate != -1) {
 				return null;
 			}
-			if(mEndDate == -1) {
+			if (mEndDate == -1) {
 				mEndDate = new Date().getTime();
 			}
-			
-			cursor.moveToFirst();
-			Item item = new Item();
-			item.start = cursor.getLong(2);
-			item.stop = cursor.getLong(7);
-			item.color = cursor.getInt(4);
-			item.name = cursor.getString(3);
-			item.id = cursor.getInt(0);
 			List<Integer> ids = new ArrayList<Integer>();
 			List<String> names = new ArrayList<String>();
 			List<Integer> colors = new ArrayList<Integer>();
 			List<Item> items = new ArrayList<Item>();
-			items.add(item);
-			ids.add(item.id);
-			names.add(item.name);
-			colors.add(item.color);
 			StringBuilder sb = new StringBuilder();
-			sb.append("<font color=\"#");
-			sb.append(String.format("%08X", item.color).substring(2));
-			sb.append("\">");
-			sb.append("<big>&#9679;</big> ");
-			sb.append("</font>");
-			sb.append(item.name);
-			sb.append("<br>");
+			Item item;
+			cursor.moveToFirst();
+			if (mIds.contains(cursor.getInt(0))) {
+				item = new Item();
+				item.start = cursor.getLong(2);
+				item.stop = cursor.getLong(7);
+				item.color = cursor.getInt(4);
+				item.name = cursor.getString(3);
+				item.id = cursor.getInt(0);
+
+				items.add(item);
+				ids.add(item.id);
+				names.add(item.name);
+				colors.add(item.color);
+
+				sb.append("<font color=\"#");
+				sb.append(String.format("%08X", item.color).substring(2));
+				sb.append("\">");
+				sb.append("<big>&#9679;</big> ");
+				sb.append("</font>");
+				sb.append(item.name);
+				sb.append("<br>");
+			}
 			while (cursor.moveToNext()) {
+				if (!mIds.contains(cursor.getInt(0)))
+					continue;
 				item = new Item();
 				item.start = cursor.getLong(2);
 				if (item.start < mStartDate)
@@ -145,7 +156,7 @@ public class XYMultipleSeriesDatasetLoader extends AsyncTaskLoader<PeriodData> {
 				item.stop = cursor.getLong(7);
 				if (item.stop > mEndDate)
 					item.stop = mEndDate;
-				if(item.stop == 0){
+				if (item.stop == 0) {
 					item.stop = new Date().getTime();
 				}
 				item.color = cursor.getInt(4);
@@ -179,10 +190,10 @@ public class XYMultipleSeriesDatasetLoader extends AsyncTaskLoader<PeriodData> {
 					for (int i2 = 0; i2 < currentItems.size(); i2++) {
 						long start = currentItems.get(i2).start;
 						long stop = currentItems.get(i2).stop;
-						if (stop < current){
+						if (stop < current) {
 							continue;
 						}
-						if (start > current + mPeriod){
+						if (start > current + mPeriod) {
 							continue;
 						}
 						if (start < current)
@@ -193,12 +204,13 @@ public class XYMultipleSeriesDatasetLoader extends AsyncTaskLoader<PeriodData> {
 					}
 					if (max < sum)
 						max = (double) sum;
-					sd+=sum;
-					if(sum == 0){
-						series.add(new Date((current + current + mPeriod) / 2), MathHelper.NULL_VALUE);
-					}
-					else
-						series.add(new Date((current + current + mPeriod) / 2), sum);
+					sd += sum;
+					if (sum == 0) {
+						series.add(new Date((current + current + mPeriod) / 2),
+								MathHelper.NULL_VALUE);
+					} else
+						series.add(new Date((current + current + mPeriod) / 2),
+								sum);
 					current += mPeriod;
 				} while (current < mEndDate);
 				XYSeriesRenderer r = new XYSeriesRenderer();
@@ -207,14 +219,16 @@ public class XYMultipleSeriesDatasetLoader extends AsyncTaskLoader<PeriodData> {
 				r.setLineWidth(2);
 				r.setPointStyle(PointStyle.CIRCLE);
 				r.setPointStrokeWidth(6);
-			    r.setDisplayChartValues(true);
+				r.setDisplayChartValues(true);
 
-			    r.setChartValuesTextSize(val);
+				r.setChartValuesTextSize(val);
 				mRenderer.addSeriesRenderer(r);
 				mDataset.addSeries(series);
-				
+
 				index = sb.indexOf("<br>", index);
-				String s = ": " + getLabel( (double)(sd / series.getItemCount())) + "<br>";
+				String s = ": "
+						+ getLabel((double) (sd / series.getItemCount()))
+						+" (&#8721;= " + getLabel((double) (sd))+ ")" +"<br>";
 				sb.replace(index, index + "<br>".length(), s);
 				index += s.length();
 			}
@@ -230,7 +244,7 @@ public class XYMultipleSeriesDatasetLoader extends AsyncTaskLoader<PeriodData> {
 		mRenderer.setYLabelsAngle(-90);
 		mRenderer.setYLabelsPadding(5);
 		mRenderer.setYLabelsVerticalPadding(5);
-		
+
 		mRenderer.setYLabelsAlign(Align.CENTER);
 		mRenderer.setPointSize(6.0f);
 		mRenderer.setLegendTextSize(val);
@@ -239,10 +253,12 @@ public class XYMultipleSeriesDatasetLoader extends AsyncTaskLoader<PeriodData> {
 		mRenderer.setZoomButtonsVisible(false);
 		mRenderer.setZoomEnabled(true);
 		mRenderer.setXLabelsPadding(2.0f);
-		mRenderer.setXAxisMax((double) mEndDate + mPeriod );
-		mRenderer.setXAxisMin((double) mStartDate - mPeriod );
-		mRenderer.setPanLimits(new double[] {(double) mStartDate - mPeriod, (double) mEndDate + mPeriod, 0.0, 2 * mPeriod});
-		//mRenderer.setZoomLimits(new double[] {(double) mStartDate - PERIOD / 2, (double) mEndDate + PERIOD / 2, 0.0, 1.5* PERIOD});
+		mRenderer.setXAxisMax((double) mEndDate + mPeriod);
+		mRenderer.setXAxisMin((double) mStartDate - mPeriod);
+		mRenderer.setPanLimits(new double[] { (double) mStartDate - mPeriod,
+				(double) mEndDate + mPeriod, 0.0, 2 * mPeriod });
+		// mRenderer.setZoomLimits(new double[] {(double) mStartDate - PERIOD /
+		// 2, (double) mEndDate + PERIOD / 2, 0.0, 1.5* PERIOD});
 		mRenderer.setExternalZoomEnabled(true);
 		return data;
 	}

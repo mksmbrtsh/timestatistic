@@ -49,7 +49,8 @@
     <string name="less_min">Less start data of record</string>
     <string name="more_max">More stop data of record</string>
     <string name="now">Now</string>
-    <string name="interval">Remember interval</string>
+    <string name="interval">Interval</string>
+    <string name="interval_alarm">Interval alarm</string>
     <string name="help">Help</string>
     <string name="union">Union</string>
     <string name="filterdateset">Filter</string>
@@ -81,6 +82,7 @@
     <string name="future">future</string>
     <string name="not_found_diary">Not found diary notes</string>
     <string name="not_found_records">Not found time records</string>
+    <string name="periods">Periods</string>
     <string-array name="periods">
         <item >hour</item>
         <item >day</item>
