@@ -256,12 +256,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 		case R.id.item_help: {
 			Intent i = new Intent(this, HelpActivity.class);
 			startActivity(i);
+			break;
 		}
 		case R.id.item_periods: {
 			Intent i = new Intent(this, PeriodAnalyseActivity.class);
 			startActivity(i);
-		}
 			break;
+		}
 		default:
 			break;
 		}
