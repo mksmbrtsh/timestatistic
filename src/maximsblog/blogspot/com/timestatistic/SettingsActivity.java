@@ -34,6 +34,10 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 	
 	public static final String STARTTIMEFILTER = "startdatetimefilter";
 	public static final String ENDTIMEFILTER = "enddatetimefilter";
+
+	public static final String STARTTIMEFILTERPERIOD = "startdatetimefilterperiod";
+
+	public static final String ENDTIMEFILTERPERIOD = "enddatetimefilterperiod";
 	public static final class STARTTIMEFILTERS
 	{
 		public static final int TODAY = 0;

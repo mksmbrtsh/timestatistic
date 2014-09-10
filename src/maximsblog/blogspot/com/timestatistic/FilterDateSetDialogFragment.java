@@ -123,7 +123,7 @@ public class FilterDateSetDialogFragment extends DialogFragment implements andro
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == R.id.filter_ok) {
-			String setting = SettingsActivity.STARTTIMEFILTER;
+			/*String setting = SettingsActivity.STARTTIMEFILTER;
 			Editor editor = PreferenceManager.getDefaultSharedPreferences(
 					FilterDateSetDialogFragment.this.getActivity()).edit();
 			editor.putLong(setting, mSelectStartItem);
@@ -131,7 +131,9 @@ public class FilterDateSetDialogFragment extends DialogFragment implements andro
 			editor.putLong(setting, mSelectEndItem);
 			editor.commit();
 			FilterDateSetDialogFragment.this.dismiss();
-			mListener.onRefreshFragmentsValue();
+			mListener.onRefreshFragmentsValue();*/
+			FilterDateSetDialogFragment.this.dismiss();
+			mListener.onFilterDateSet(mSelectStartItem, mSelectEndItem);
 		} else if(v.getId() == R.id.filter_cancel) {
 			FilterDateSetDialogFragment.this.dismiss();
 		} else if(v.getId() == R.id.start_Button) {

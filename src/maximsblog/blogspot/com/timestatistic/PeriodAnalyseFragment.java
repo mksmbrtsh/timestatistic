@@ -100,8 +100,8 @@ public class PeriodAnalyseFragment extends Fragment implements
 		mPeriod = getArguments().getLong(PeriodAnalyseActivity.PERIOD);
 		mIds = getArguments().getIntArray(PeriodAnalyseActivity.IDS);
 		mChecked = getArguments().getBooleanArray(PeriodAnalyseActivity.CHECKED);
-		mStartDate = app.getStartDate(getActivity()).date;
-		mEndDate = app.getEndDate(getActivity()).date;
+		mStartDate = app.getStartDatePeriod(getActivity()).date;
+		mEndDate = app.getEndDatePeriod(getActivity()).date;
 		if (mEndDate == -1) {
 			mEndDate = new Date().getTime();
 		}
@@ -172,14 +172,14 @@ public class PeriodAnalyseFragment extends Fragment implements
 	@Override
 	public Loader<PeriodData> onCreateLoader(int arg0, Bundle arg1) {
 		// TODO Auto-generated method stub
-		long start = app.getStartDate(getActivity()).date;
-		long stop = app.getEndDate(getActivity()).date;
+		//long start = app.getStartDatePeriod(getActivity()).date;
+		//long stop = app.getEndDatePeriod(getActivity()).date;
 		ArrayList<Integer> ids = new ArrayList<Integer>(); 
 		for (int i = 0; i < mIds.length; i++) {
 			if(mChecked[i])
 				ids.add(mIds[i]);
 		}
-		return new XYMultipleSeriesDatasetLoader(getActivity(), start, stop, mPeriod, ids);
+		return new XYMultipleSeriesDatasetLoader(getActivity(), mStartDate, mEndDate, mPeriod, ids);
 	}
 
 	@Override

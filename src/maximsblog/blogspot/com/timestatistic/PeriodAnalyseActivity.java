@@ -147,7 +147,7 @@ public class PeriodAnalyseActivity extends SherlockFragmentActivity implements
 		MenuItem searchMenuItem = ((MenuItem) menu.findItem(R.id.item_search));
 		SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(
 				"dd/MM/yy HH:mm");
-		FilterDateOption startDateOption = app.getStartDate(this);
+		FilterDateOption startDateOption = app.getStartDatePeriod(this);
 		long startdate = startDateOption.date;
 		if (!startDateOption.dateName.equals(getResources().getStringArray(
 				R.array.StartFilters)[6]))
@@ -158,7 +158,7 @@ public class PeriodAnalyseActivity extends SherlockFragmentActivity implements
 					startDateOption.dateName + " "
 							+ mSimpleDateFormat.format(new Date(startdate)));
 		}
-		FilterDateOption endDateOption = app.getEndDate(this);
+		FilterDateOption endDateOption = app.getEndDatePeriod(this);
 		long endDate = endDateOption.date;
 		if (!endDateOption.dateName.equals(getResources().getStringArray(
 				R.array.EndFilters)[6]))
@@ -240,6 +240,43 @@ public class PeriodAnalyseActivity extends SherlockFragmentActivity implements
 		edit.putString(IDS, sb.toString());
 		edit.commit();
 		
+		PeriodAnalyseFragment details = new PeriodAnalyseFragment();
+		Bundle b = new Bundle();
+		b.putLong(PERIOD, mPeriod);
+		b.putIntArray(IDS, mIDs);
+		b.putBooleanArray(CHECKED, mChecked);
+		details.setArguments(b);
+		getSupportFragmentManager().beginTransaction()
+				.replace(android.R.id.content, details).commit();
+	}
+	@Override
+	public void onFilterDateSet(long startdate, long enddate) {
+		String setting = SettingsActivity.STARTTIMEFILTERPERIOD;
+		Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+		editor.putLong(setting, startdate);
+		setting = SettingsActivity.ENDTIMEFILTERPERIOD;
+		editor.putLong(setting, enddate);
+		editor.commit();
+		
+		
+		SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(
+				"dd/MM/yy HH:mm");
+		FilterDateOption startDateOption = app.getStartDatePeriod(this);
+		startdate = startDateOption.date;
+		if(!startDateOption.dateName.equals(getResources().getStringArray(R.array.StartFilters)[6]))
+			((SherlockFragmentActivity)this).getSupportActionBar().setTitle(startDateOption.dateName);
+		else {
+			((SherlockFragmentActivity)this).getSupportActionBar().setTitle(startDateOption.dateName + " " + mSimpleDateFormat.format(new Date(startdate)));
+		}
+		startDateOption = app.getEndDatePeriod(this);
+		enddate = startDateOption.date;
+		if(!startDateOption.dateName.equals(getResources().getStringArray(R.array.EndFilters)[6]))
+			((SherlockFragmentActivity)this).getSupportActionBar().setSubtitle(startDateOption.dateName);
+		else {
+			((SherlockFragmentActivity)this).getSupportActionBar().setSubtitle(startDateOption.dateName + " " + mSimpleDateFormat.format(new Date(enddate)));
+		}
+		mPeriod = PreferenceManager.getDefaultSharedPreferences(
+				this).getLong(PeriodAnalyseActivity.PERIOD, 1000*60*60);
 		PeriodAnalyseFragment details = new PeriodAnalyseFragment();
 		Bundle b = new Bundle();
 		b.putLong(PERIOD, mPeriod);
