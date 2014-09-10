@@ -83,7 +83,7 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
 		intent.putExtra(NAME, name);
 		PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
-		am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), l,
+		am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+l, l,
 				pi);
 	}
 

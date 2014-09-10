@@ -18,6 +18,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -166,6 +167,8 @@ public final class CountersFragment extends Fragment implements
 		TimeRecordsFragment timeRecordsFragment = (TimeRecordsFragment) ((MainActivity) getActivity())
 				.findFragmentByPosition(1);
 		timeRecordsFragment.setNormalMode();
+		((Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE))
+		.vibrate(100);
 	}
 
 	public final void timerAlert() {
