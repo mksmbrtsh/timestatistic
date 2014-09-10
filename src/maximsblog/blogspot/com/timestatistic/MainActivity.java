@@ -221,6 +221,16 @@ public class MainActivity extends SherlockFragmentActivity implements
 		switch (item.getItemId()) {
 		case R.id.item_starts:
 			FilterDateSetDialogFragment startDateSetDialogFragment = new FilterDateSetDialogFragment();
+			long selectStartItem = PreferenceManager.getDefaultSharedPreferences(
+					this).getLong(
+					SettingsActivity.STARTTIMEFILTER, 5);
+			long selectEndItem = PreferenceManager.getDefaultSharedPreferences(
+					this).getLong(
+					SettingsActivity.ENDTIMEFILTER, 5);
+			Bundle args = new Bundle();
+			args.putLong("start", selectStartItem);
+			args.putLong("stop", selectEndItem);
+			startDateSetDialogFragment.setArguments(args);
 			startDateSetDialogFragment.setDialogListener(this);
 			startDateSetDialogFragment.show(this.getSupportFragmentManager(),
 					"mStartDateSetDialogFragment");
