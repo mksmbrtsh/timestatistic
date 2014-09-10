@@ -37,34 +37,35 @@
                     android:textSize="14sp" />
 
                 <RelativeLayout
-                    android:layout_width="200dp"
+                    android:layout_width="168dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true" >
 
-                    <Button
+                    <ImageButton
                         android:id="@+id/pad_minus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_alignParentTop="true"
-                        android:text="-" />
+                        android:src="@drawable/ic_minus_dark" />
 
-                    <Button
+                    <ImageButton
                         android:id="@+id/pad_reset"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="true"
-                        android:text="R" />
+                        android:src="@drawable/ic_reset_dark" />
 
-                    <Button
+                    <ImageButton
                         android:id="@+id/pad_plus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
                         android:layout_centerHorizontal="true"
-                        android:text="+" />
+                        android:src="@drawable/ic_plus_dark" />
+
                 </RelativeLayout>
             </RelativeLayout>
         </LinearLayout>
