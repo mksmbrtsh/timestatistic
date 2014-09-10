@@ -18,6 +18,7 @@ import com.viewpagerindicator.TabPageIndicator;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -28,6 +29,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.SharedPreferences.Editor;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
@@ -219,6 +221,16 @@ public class MainActivity extends SherlockFragmentActivity implements
 		switch (item.getItemId()) {
 		case R.id.item_starts:
 			FilterDateSetDialogFragment startDateSetDialogFragment = new FilterDateSetDialogFragment();
+			long selectStartItem = PreferenceManager.getDefaultSharedPreferences(
+					this).getLong(
+					SettingsActivity.STARTTIMEFILTER, 5);
+			long selectEndItem = PreferenceManager.getDefaultSharedPreferences(
+					this).getLong(
+					SettingsActivity.ENDTIMEFILTER, 5);
+			Bundle args = new Bundle();
+			args.putLong("start", selectStartItem);
+			args.putLong("stop", selectEndItem);
+			startDateSetDialogFragment.setArguments(args);
 			startDateSetDialogFragment.setDialogListener(this);
 			startDateSetDialogFragment.show(this.getSupportFragmentManager(),
 					"mStartDateSetDialogFragment");
@@ -256,8 +268,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 		case R.id.item_help: {
 			Intent i = new Intent(this, HelpActivity.class);
 			startActivity(i);
-		}
 			break;
+		}
+		case R.id.item_periods: {
+			Intent i = new Intent(this, PeriodAnalyseActivity.class);
+			startActivity(i);
+			break;
+		}
 		default:
 			break;
 		}
@@ -418,6 +435,17 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public void onDiaryFragmentsRefresh() {
 		DiaryFragment diaryFragment = (DiaryFragment) ((MainFragments) findFragmentByPosition(3));
 		diaryFragment.onReload();
+	}
+
+	@Override
+	public void onFilterDateSet(long startdate, long enddate) {
+		String setting = SettingsActivity.STARTTIMEFILTER;
+		Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+		editor.putLong(setting, startdate);
+		setting = SettingsActivity.ENDTIMEFILTER;
+		editor.putLong(setting, enddate);
+		editor.commit();
+		reloadFragments();
 	}
 
 }

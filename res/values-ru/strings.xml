@@ -49,7 +49,8 @@
     <string name="less_min">Меньше даты начала записи</string>
     <string name="more_max">Больше даты конца записи</string>
     <string name="now">Сейчас</string>
-    <string name="interval">Интервал напоминания</string>
+    <string name="interval">Интервал</string>
+    <string name="interval_alarm">Интервал напоминания</string>
     <string name="help">Помощь</string>
     <string name="union">Объединить</string>
     <string name="filterdateset">Установить фильтр</string>
@@ -80,4 +81,11 @@
     <string name="future">Осталось</string>
     <string name="not_found_diary">Не найдено ни одной записи дневника</string>
     <string name="not_found_records">Не найдено ни одной записи времени</string>
+    <string name="periods">Периоды</string>
+    <string-array name="periods">
+        <item >Час</item>
+        <item >24 часа</item>
+        <item >Неделя</item>
+        <item >12 часов</item>
+    </string-array>
 </resources>

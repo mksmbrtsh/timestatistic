@@ -32,9 +32,19 @@ public class app extends Application {
 		app.alarm.CancelAlarm(context);
 	}
 
+	public static FilterDateOption getStartDatePeriod(Context context) {
+		long checkedItem = PreferenceManager.getDefaultSharedPreferences(
+				context).getLong(SettingsActivity.STARTTIMEFILTERPERIOD, 5);
+		return getStart(context, checkedItem);
+	}
+	
 	public static FilterDateOption getStartDate(Context context) {
 		long checkedItem = PreferenceManager.getDefaultSharedPreferences(
 				context).getLong(SettingsActivity.STARTTIMEFILTER, 5);
+		return getStart(context, checkedItem);
+	}
+	
+	private static FilterDateOption getStart(Context context, long checkedItem) {
 		Calendar calendar = Calendar.getInstance();
 		long result;
 		String resultName;
@@ -99,10 +109,13 @@ public class app extends Application {
 		startDateOption.dateName = resultName;
 		return startDateOption;
 	}
-	
-	public static FilterDateOption getEndDate(Context context) {
+
+	public static FilterDateOption getEndDatePeriod(Context context) {
 		long checkedItem = PreferenceManager.getDefaultSharedPreferences(
-				context).getLong(SettingsActivity.ENDTIMEFILTER, 5);
+				context).getLong(SettingsActivity.ENDTIMEFILTERPERIOD, 5);
+		return getEnd(context, checkedItem);
+	}
+	private static FilterDateOption getEnd(Context context, long checkedItem) {
 		Calendar calendar = Calendar.getInstance();
 		long result;
 		String resultName;
@@ -169,5 +182,11 @@ public class app extends Application {
 		startDateOption.date = result;
 		startDateOption.dateName = resultName;
 		return startDateOption;
+	}
+
+	public static FilterDateOption getEndDate(Context context) {
+		long checkedItem = PreferenceManager.getDefaultSharedPreferences(
+				context).getLong(SettingsActivity.ENDTIMEFILTER, 5);
+		return getEnd(context, checkedItem);
 	}
 }

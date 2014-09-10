@@ -26,7 +26,7 @@
     android:layout_height="wrap_content"
     android:layout_alignParentLeft="true"
     android:layout_below="@+id/name_editor"
-    android:text="@string/interval" />
+    android:text="@string/interval_alarm" />
 
 <EditText
     android:id="@+id/interval_hours_editor"
