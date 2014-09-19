@@ -69,6 +69,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 public class PeriodAnalyseFragment extends Fragment implements
 		LoaderCallbacks<PeriodData>, MainFragments, OnClickListener {
@@ -92,6 +94,7 @@ public class PeriodAnalyseFragment extends Fragment implements
 	private XYMultipleSeriesRenderer mRenderer;
 	private int[] mIds;
 	private boolean[] mChecked;
+	private AdView adView;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -121,6 +124,11 @@ public class PeriodAnalyseFragment extends Fragment implements
 		mLayout.findViewById(R.id.pad_minus).setOnClickListener(this);
 		mLayout.findViewById(R.id.pad_reset).setOnClickListener(this);
 		mLegendText.setMovementMethod(ScrollingMovementMethod.getInstance());
+		adView = (AdView) mLayout.findViewById(R.id.adView);
+		AdRequest adRequest = new AdRequest.Builder()
+				.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+				.addTestDevice("CF95DC53F383F9A836FD749F3EF439CD").build();
+		adView.loadAd(adRequest);
 		return mLayout;
 	}
 
@@ -133,11 +141,13 @@ public class PeriodAnalyseFragment extends Fragment implements
 	@Override
 	public void onResume() {
 		super.onResume();
+		adView.resume();
 		loadermanager.initLoader(LOADER_ID, null, this);
 	}
 
 	@Override
 	public void onPause() {
+		adView.pause();
 		super.onPause();
 		ViewGroup chartLayout = (ViewGroup) mLayout.findViewById(R.id.chart);
 		chartLayout.removeView(mChartView);
@@ -146,6 +156,7 @@ public class PeriodAnalyseFragment extends Fragment implements
 
 	@Override
 	public void onDestroy() {
+		adView.destroy();
 		super.onDestroy();
 	};
 

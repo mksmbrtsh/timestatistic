@@ -10,6 +10,8 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import android.app.Activity;
 import android.app.SearchManager;
@@ -38,6 +40,7 @@ public class PeriodAnalyseActivity extends SherlockFragmentActivity
 	private long mPeriod;
 	private int[] mIDs;
 	private boolean[] mChecked;
+	private AdView adView;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -100,6 +103,7 @@ public class PeriodAnalyseActivity extends SherlockFragmentActivity
 			if (countersPeriodSetupDialogFragment != null)
 				countersPeriodSetupDialogFragment.setPeriodSetupDialog(this);
 		}
+		
 	}
 
 	@Override
@@ -330,5 +334,4 @@ public class PeriodAnalyseActivity extends SherlockFragmentActivity
 		getSupportFragmentManager().beginTransaction()
 				.replace(android.R.id.content, details).commit();
 	}
-
 }

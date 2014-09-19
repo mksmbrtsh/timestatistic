@@ -28,6 +28,7 @@ import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences.Editor;
 import android.content.Intent;
@@ -45,12 +46,15 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.CursorAdapter;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
 import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 import com.actionbarsherlock.widget.SearchView.OnSuggestionListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 public class MainActivity extends SherlockFragmentActivity implements
 		ResetAllDialog, ICounterEditorDialog, OnPageChangeListener,
@@ -61,6 +65,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private ViewPager pager;
 	private SearchView mSearchView;
 	private int[] mIcons;
+	private AdView adView;
 
 	public interface MainFragments {
 		void onReload();
@@ -72,13 +77,16 @@ public class MainActivity extends SherlockFragmentActivity implements
 		setTitle("");
 		setContentView(R.layout.activity_main);
 		mTitles = getResources().getStringArray(R.array.TitlePages);
-		mIcons = new int[] {R.drawable.ic_counter_title, R.drawable.ic_interval_title, R.drawable.ic_diagram_title, R.drawable.ic_diary_title};
+		mIcons = new int[] { R.drawable.ic_counter_title,
+				R.drawable.ic_interval_title, R.drawable.ic_diagram_title,
+				R.drawable.ic_diary_title };
 		// prepare ViewPagerIndicator
 		adapter = new PagesAdapter(getSupportFragmentManager());
 		pager = (ViewPager) findViewById(R.id.pager);
-		pager.setOffscreenPageLimit(3);// all fragments upload, fix not switch counters
+		pager.setOffscreenPageLimit(3);// all fragments upload, fix not switch
+										// counters
 		pager.setAdapter(adapter);
-		TabPageIndicator  indicator = (TabPageIndicator ) findViewById(R.id.indicator);
+		TabPageIndicator indicator = (TabPageIndicator) findViewById(R.id.indicator);
 		indicator.setViewPager(pager);
 		indicator.setOnPageChangeListener(this);
 		if (savedInstanceState == null) {
@@ -110,6 +118,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 			if (diaryEditorDialogFragment != null)
 				diaryEditorDialogFragment.setCounterDialogListener(this);
 		}
+		adView = (AdView) findViewById(R.id.adView);
+		AdRequest adRequest = new AdRequest.Builder()
+				.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+				.addTestDevice("CF95DC53F383F9A836FD749F3EF439CD").build();
+		adView.loadAd(adRequest);
 	}
 
 	public Fragment findFragmentByPosition(int position) {
@@ -119,7 +132,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 						+ adapter.getItemId(position));
 	}
 
-	class PagesAdapter extends FragmentPagerAdapter implements IconPagerAdapter  {
+	class PagesAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
 		public PagesAdapter(FragmentManager fm) {
 			super(fm);
 		}
@@ -155,7 +168,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		@Override
 		public int getIconResId(int index) {
-			
+
 			return mIcons[index];
 		}
 
@@ -221,12 +234,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 		switch (item.getItemId()) {
 		case R.id.item_starts:
 			FilterDateSetDialogFragment startDateSetDialogFragment = new FilterDateSetDialogFragment();
-			long selectStartItem = PreferenceManager.getDefaultSharedPreferences(
-					this).getLong(
-					SettingsActivity.STARTTIMEFILTER, 5);
+			long selectStartItem = PreferenceManager
+					.getDefaultSharedPreferences(this).getLong(
+							SettingsActivity.STARTTIMEFILTER, 5);
 			long selectEndItem = PreferenceManager.getDefaultSharedPreferences(
-					this).getLong(
-					SettingsActivity.ENDTIMEFILTER, 5);
+					this).getLong(SettingsActivity.ENDTIMEFILTER, 5);
 			Bundle args = new Bundle();
 			args.putLong("start", selectStartItem);
 			args.putLong("stop", selectEndItem);
@@ -315,7 +327,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			ContentValues cv = new ContentValues();
 			if (c.getCount() > 0) {
 				c.moveToFirst();
-				
+
 				int index = sortid + 1;
 				do {
 					cv.clear();
@@ -440,7 +452,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 	@Override
 	public void onFilterDateSet(long startdate, long enddate) {
 		String setting = SettingsActivity.STARTTIMEFILTER;
-		Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+		Editor editor = PreferenceManager.getDefaultSharedPreferences(this)
+				.edit();
 		editor.putLong(setting, startdate);
 		setting = SettingsActivity.ENDTIMEFILTER;
 		editor.putLong(setting, enddate);
@@ -448,4 +461,20 @@ public class MainActivity extends SherlockFragmentActivity implements
 		reloadFragments();
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		adView.resume();
+	}
+
+	@Override
+	protected void onPause() {
+		adView.pause();
+		super.onPause();
+	}
+	@Override
+	protected void onDestroy() {
+			adView.destroy();
+		super.onDestroy();
+	};
 }

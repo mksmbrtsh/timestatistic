@@ -2,10 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-        android:paddingLeft="@dimen/fragment_border"
-    android:paddingRight="@dimen/fragment_border"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/fragment_border"
+    android:paddingRight="@dimen/fragment_border" >
+<LinearLayout
+        android:id="@+id/adViewLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
 
+        <com.google.android.gms.ads.AdView
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/adView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            ads:adSize="BANNER"
+            ads:adUnitId="ca-app-pub-0357007671643145/8031830798" />
+    </LinearLayout>
     <ScrollView
         android:id="@+id/ScrollView1"
         android:layout_width="fill_parent"
@@ -26,46 +39,44 @@
                 android:padding="2dip"
                 android:text="@string/help_page_intro_html" />
 
-                <Button
-                    android:id="@+id/help_button1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:padding="8dip"
-                    android:clickable="true"
-                    android:gravity="left|center_vertical"
-                    android:textAlignment="gravity"
-                    android:onClick="onClickHelp"
-                    android:drawableLeft="@drawable/ic_action_about_dark"
-                    android:text="@string/help_text_section1" />
+            <Button
+                android:id="@+id/help_button1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:drawableLeft="@drawable/ic_action_about_dark"
+                android:gravity="left|center_vertical"
+                android:onClick="onClickHelp"
+                android:padding="8dip"
+                android:text="@string/help_text_section1"
+                android:textAlignment="gravity" />
 
-                <Button
-                    android:id="@+id/help_button2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:padding="8dip"
-                    android:gravity="left|center_vertical"
-                    android:textAlignment="gravity"
-                    android:clickable="true"
-                    android:onClick="onClickHelp"
-                    android:drawableLeft="@drawable/ic_action_about_dark"
-                    android:text="@string/help_text_section2" />
+            <Button
+                android:id="@+id/help_button2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:drawableLeft="@drawable/ic_action_about_dark"
+                android:gravity="left|center_vertical"
+                android:onClick="onClickHelp"
+                android:padding="8dip"
+                android:text="@string/help_text_section2"
+                android:textAlignment="gravity" />
 
-
-                <Button
-                    android:id="@+id/help_button3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:padding="8dip"
-                    android:gravity="left|center_vertical"
-                    android:textAlignment="gravity"
-                    android:clickable="true"
-                    android:onClick="onClickHelp"
-                    android:drawableLeft="@drawable/ic_action_about_dark"
-                    android:text="@string/help_text_section3" />
-
+            <Button
+                android:id="@+id/help_button3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:drawableLeft="@drawable/ic_action_about_dark"
+                android:gravity="left|center_vertical"
+                android:onClick="onClickHelp"
+                android:padding="8dip"
+                android:text="@string/help_text_section3"
+                android:textAlignment="gravity" />
         </LinearLayout>
     </ScrollView>
 
