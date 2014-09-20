@@ -1,10 +1,13 @@
 package maximsblog.blogspot.com.timestatistic;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.channels.FileChannel.MapMode;
 import java.util.Date;
 
 import android.content.ContentValues;
@@ -85,6 +88,53 @@ public class OpenHelper extends SQLiteOpenHelper {
 			return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * Copies the database file at the specified location over the current
+	 * internal application database.
+	 * 
+	 * @param file
+	 * */
+	public byte[] importDatabase(File file) throws IOException {
+
+		// Close the SQLiteOpenHelper so it will commit the created empty
+		// database to internal storage.
+		close();
+		String destPath = file.getPath();
+		destPath = destPath.substring(0, destPath.lastIndexOf("/"))
+				+ "/databases";
+		String DB_FILEPATH = destPath + File.separator + OpenHelper.DB_NAME;
+		//File newDb = new File(dbPath);
+		File oldDb = new File(DB_FILEPATH);
+		FileChannel ch = null;
+		FileInputStream fin = null;
+		byte[] bytes=null;
+	    try {
+	        fin = new FileInputStream(oldDb);
+	        ch = fin.getChannel();
+	        int size = (int) ch.size();
+	        MappedByteBuffer buf = ch.map(MapMode.READ_ONLY, 0, size);
+	        bytes = new byte[size];
+	        buf.get(bytes);
+
+	    } catch (IOException e) {
+	        // TODO Auto-generated catch block
+	        e.printStackTrace();
+	    } finally {
+	        try {
+	            if (fin != null) {
+	                fin.close();
+	            }
+	            if (ch != null) {
+	                ch.close();
+	            }
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	    }
+		getWritableDatabase();
+		return bytes;
 	}
 
 	/**

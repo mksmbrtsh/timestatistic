@@ -88,4 +88,8 @@
         <item >Неделя</item>
         <item >12 часов</item>
     </string-array>
+    <string name="upload_to_gdrive">Загрузить в Google Drive</string>
+    <string name="uploadtogdriveok">База данных timestatistic успешно сохранена в Google Drive</string>
+    <string name="erroruploadtogdriveok">Ошибка загрузки базы данных timestatistic в Google Drive</string>
+    
 </resources>

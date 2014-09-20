@@ -22,7 +22,7 @@
             android:icon="@drawable/ic_import_db"
             android:key="import"
             android:title="@string/Import" />
-        <Preference android:title="dfgd" android:key="google_drive"/>
+        <Preference android:title="@string/upload_to_gdrive" android:key="google_drive"/>
     </PreferenceScreen>
 
 </PreferenceScreen>
