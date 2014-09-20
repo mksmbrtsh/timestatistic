@@ -34,7 +34,6 @@
                     android:padding="8dip"
                     android:clickable="true"
                     android:gravity="left|center_vertical"
-                    android:textAlignment="gravity"
                     android:onClick="onClickHelp"
                     android:drawableLeft="@drawable/ic_action_about_dark"
                     android:text="@string/help_text_section1" />
@@ -46,7 +45,6 @@
                     android:layout_weight="1"
                     android:padding="8dip"
                     android:gravity="left|center_vertical"
-                    android:textAlignment="gravity"
                     android:clickable="true"
                     android:onClick="onClickHelp"
                     android:drawableLeft="@drawable/ic_action_about_dark"
@@ -60,7 +58,6 @@
                     android:layout_weight="1"
                     android:padding="8dip"
                     android:gravity="left|center_vertical"
-                    android:textAlignment="gravity"
                     android:clickable="true"
                     android:onClick="onClickHelp"
                     android:drawableLeft="@drawable/ic_action_about_dark"
