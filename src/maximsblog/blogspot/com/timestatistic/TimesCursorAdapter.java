@@ -1,6 +1,7 @@
 package maximsblog.blogspot.com.timestatistic;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -273,12 +274,17 @@ ListView.OnScrollListener {
 	}
 	
 	private boolean isNewGroup(Cursor cursor, int position) {
-        cursor.moveToPosition(position - 1);
-        long before_start = (cursor.getLong(2) / 1000 / 60 / 60 / 24) * 1000 * 60 * 60* 24;
-        long before_stop = (cursor.getLong(7) / 1000 / 60 / 60 / 24) * 1000 * 60 * 60* 24;
+		cursor.moveToPosition(position - 1);
+		Calendar cal = Calendar.getInstance();
+		Calendar cal2 = Calendar.getInstance();
+		cal.setTimeInMillis(cursor.getLong(2));
+		cal2.setTimeInMillis(cursor.getLong(7));
+        //
+        //long before_start = (cursor.getLong(2) / 1000 / 60 / 60 / 24) * 1000 * 60 * 60* 24;
+        //long before_stop = (cursor.getLong(7) / 1000 / 60 / 60 / 24) * 1000 * 60 * 60* 24;
         cursor.moveToPosition(position);    
         //if ((now != before_start || before_stop != now) && before_stop != 0 ) {
-        if((before_start != before_stop) && before_stop !=0){
+        if(cal.get(Calendar.DATE) != cal2.get(Calendar.DATE)) {//((before_start != before_stop) && before_stop !=0){
             return true;
         }
 

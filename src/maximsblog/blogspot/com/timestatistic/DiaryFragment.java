@@ -40,6 +40,9 @@ import android.support.v4.widget.SimpleCursorAdapter;
 public class DiaryFragment extends Fragment implements LoaderCallbacks<Cursor>,
 		MainFragments, OnItemClickListener, OnItemLongClickListener,
 		OnClickListener {
+	
+	private final int LOADER_ID = 4;
+	
 	public static DiaryFragment newInstance() {
 
 		return new DiaryFragment();
@@ -62,7 +65,7 @@ public class DiaryFragment extends Fragment implements LoaderCallbacks<Cursor>,
 		mStartdate = app.getStartDate(getActivity()).date;
 		mAdapter = new DiaryCursorAdapter(this.getActivity(),
 				R.layout.diary_row, null, uiBindFrom, uiBindTo, 0, mStartdate);
-		loadermanager.initLoader(1, null, this);
+		loadermanager.initLoader(LOADER_ID, null, this);
 		if (savedInstanceState != null) {
 			mAdapter.setSelectedPosition(savedInstanceState
 					.getInt("mChoiceUnionMode"));
@@ -136,7 +139,7 @@ public class DiaryFragment extends Fragment implements LoaderCallbacks<Cursor>,
 	public void onReload() {
 		mStartdate = app.getStartDate(getActivity()).date;
 		mAdapter.setStartDate(mStartdate);
-		loadermanager.restartLoader(1, null, this);
+		loadermanager.restartLoader(LOADER_ID, null, this);
 	}
 
 	@Override

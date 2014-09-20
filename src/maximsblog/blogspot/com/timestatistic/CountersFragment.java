@@ -18,6 +18,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -49,6 +50,7 @@ public final class CountersFragment extends Fragment implements
 		LoaderCallbacks<Cursor>, OnItemClickListener, MainFragments,
 		OnItemLongClickListener {
 
+	private final int LOADER_ID = 1;
 	private Timer mTimer;
 	private CountersCursorAdapter mAdapter;
 	private LoaderManager loadermanager;
@@ -66,7 +68,7 @@ public final class CountersFragment extends Fragment implements
 		setActivityTitle();
 		mAdapter = new CountersCursorAdapter(this.getActivity(),
 				R.layout.count_row, null, uiBindFrom, uiBindTo, 0, mStartdate, mEnddate);
-		loadermanager.initLoader(1, null, this);
+		loadermanager.initLoader(LOADER_ID, null, this);
 	}
 
 	@Override
@@ -161,11 +163,12 @@ public final class CountersFragment extends Fragment implements
 		app.loadRunningCounterAlarm(getActivity().getApplicationContext());
 		SettingsActivity.visibleNotif(getActivity(), cursor.getLong(3),
 				cursor.getLong(2), cursor.getString(5));
-		loadermanager.restartLoader(1, null, this);
-
+		loadermanager.restartLoader(LOADER_ID, null, this);
 		TimeRecordsFragment timeRecordsFragment = (TimeRecordsFragment) ((MainActivity) getActivity())
 				.findFragmentByPosition(1);
 		timeRecordsFragment.setNormalMode();
+		((Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE))
+		.vibrate(100);
 	}
 
 	public final void timerAlert() {
@@ -224,7 +227,7 @@ public final class CountersFragment extends Fragment implements
 	public void onReload() {
 		setActivityTitle();
 		mAdapter.setDate(mStartdate, mEnddate);		
-		loadermanager.restartLoader(1, null, this);
+		loadermanager.restartLoader(LOADER_ID, null, this);
 	}
 
 	private void setActivityTitle() {

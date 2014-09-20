@@ -140,19 +140,19 @@ public class RecordsDbHelper extends ContentProvider {
 	public String getType(Uri uri) {
 		switch (sUriMatcher.match(uri)) {
 		case TIMERS:
-			return "vnd.android.cursor.dir/vnd.jwei512.timers";
+			return "vnd.android.cursor.dir/maximsblog.blogspot.com.timestatistic.timers";
 		case TIMERS_ID:
-			return "vnd.android.cursor.dir/vnd.jwei512.timers";
+			return "vnd.android.cursor.dir/maximsblog.blogspot.com.timestatistic.timers";
 		case TIMES:
-			return "vnd.android.cursor.dir/vnd.jwei512.times";
+			return "vnd.android.cursor.dir/maximsblog.blogspot.com.timestatistic.times";
 		case TIMES_ID:
-			return "vnd.android.cursor.dir/vnd.jwei512.times";
+			return "vnd.android.cursor.dir/maximsblog.blogspot.com.timestatistic.times";
 		case SUMTIMES:
-			return "vnd.android.cursor.dir/vnd.jwei512.times";
+			return "vnd.android.cursor.dir/maximsblog.blogspot.com.timestatistic.times";
 		case ALLTIMES:
-			return "vnd.android.cursor.dir/vnd.jwei512.times";
+			return "vnd.android.cursor.dir/maximsblog.blogspot.com.timestatistic.times";
 		case ALLNOTES:
-			return "vnd.android.cursor.dir/vnd.jwei512.times";
+			return "vnd.android.cursor.dir/maximsblog.blogspot.com.timestatistic.times";
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
 		}

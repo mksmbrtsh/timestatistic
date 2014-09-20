@@ -1,5 +1,8 @@
 package maximsblog.blogspot.com.timestatistic;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -16,6 +19,7 @@ public class HelpActivity extends Activity {
 
 	public static final String ARG_TEXT_ID = "text_id";
 	public static final String ARG_TITLE = "title";
+	private AdView adView;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -24,11 +28,15 @@ public class HelpActivity extends Activity {
 		setContentView(R.layout.activity_help);
 		setTitle(getString(R.string.help));
 		TextView textView = (TextView) findViewById(R.id.help_page_intro);
-		if (textView != null) {
-			textView.setMovementMethod(LinkMovementMethod.getInstance());
-			textView.setText(Html.fromHtml(
-					getString(R.string.help_page_intro_html)));
-		}
+		textView.setMovementMethod(LinkMovementMethod.getInstance());
+		textView.setText(Html
+				.fromHtml(getString(R.string.help_page_intro_html)));
+
+		adView = (AdView) findViewById(R.id.adView);
+		AdRequest adRequest = new AdRequest.Builder()
+				.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+				.addTestDevice("CF95DC53F383F9A836FD749F3EF439CD").build();
+		adView.loadAd(adRequest);
 	}
 
 	/**
@@ -77,7 +85,7 @@ public class HelpActivity extends Activity {
 		}
 
 		if (textId >= 0)
-			startInfoActivity(textId, ((Button)v).getText().toString());
+			startInfoActivity(textId, ((Button) v).getText().toString());
 		else
 			toast("Detailed Help for that topic is not available.", true);
 	}
@@ -97,5 +105,22 @@ public class HelpActivity extends Activity {
 				(longLength ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT)).show();
 	}
 
-	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		adView.resume();
+	}
+
+	@Override
+	protected void onPause() {
+		adView.pause();
+		super.onPause();
+	}
+
+	@Override
+	protected void onDestroy() {
+		adView.destroy();
+		super.onDestroy();
+	};
+
 }

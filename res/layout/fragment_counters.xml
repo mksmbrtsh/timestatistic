@@ -34,7 +34,9 @@
         android:layout_alignParentRight="true"
         android:gravity="center"
         android:layout_marginBottom="@dimen/fragment_border"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        
+        android:visibility="gone" >
 
         <TextView
             android:id="@+id/current"
