@@ -22,6 +22,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
@@ -235,6 +236,14 @@ public class PeriodAnalyseActivity extends SherlockFragmentActivity
 					"countersPeriodSetupDialogFragment");
 		}
 			break;
+		case R.id.item_pro: {
+			final String appPackageName = "maximsblog.blogspot.com.timestatistic.pro";
+			try {
+			    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+			} catch (android.content.ActivityNotFoundException anfe) {
+			    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + appPackageName)));
+			}
+		}
 		default:
 			break;
 		}

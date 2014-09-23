@@ -287,6 +287,14 @@ public class MainActivity extends SherlockFragmentActivity implements
 			startActivity(i);
 			break;
 		}
+		case R.id.item_pro: {
+			final String appPackageName = "maximsblog.blogspot.com.timestatistic.pro";
+			try {
+			    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+			} catch (android.content.ActivityNotFoundException anfe) {
+			    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + appPackageName)));
+			}
+		}
 		default:
 			break;
 		}

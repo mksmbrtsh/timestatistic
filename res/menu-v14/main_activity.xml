@@ -15,7 +15,13 @@
          android:voiceSearchMode="showVoiceSearchButton|launchRecognizer"
          android:actionViewClass="com.actionbarsherlock.widget.SearchView">
          </item>
-    
+    <item
+        android:id="@+id/item_pro"
+        android:icon="@drawable/ic_time_dark"
+        android:orderInCategory="0"
+        android:showAsAction="always"
+        android:title="@string/periods">
+    </item>
      <item
         android:id="@+id/item_periods"
         android:orderInCategory="1"

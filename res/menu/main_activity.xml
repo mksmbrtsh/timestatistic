@@ -18,6 +18,13 @@
         android:voiceSearchMode="showVoiceSearchButton|launchRecognizer">
     </item>
     <item
+        android:id="@+id/item_pro"
+        android:icon="@drawable/ic_time_light"
+        android:orderInCategory="0"
+        android:showAsAction="always"
+        android:title="@string/periods">
+    </item>
+    <item
         android:id="@+id/item_periods"
         android:orderInCategory="2"
         android:showAsAction="never"
@@ -50,6 +57,7 @@
         android:showAsAction="never"
         android:title="@string/help">
     </item>
+    
     <item
         android:id="@+id/item_about"
         android:icon="@drawable/ic_action_about_light"
