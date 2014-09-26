@@ -28,9 +28,9 @@ import android.support.v4.app.NotificationCompat.Builder;
 import android.widget.Toast;
 
 public class SettingsActivity extends SherlockPreferenceActivity implements
-		OnPreferenceChangeListener, OnPreferenceClickListener {
+		OnPreferenceChangeListener {
 
-	private static final int OPENDB = 1;
+	
 	
 	public static final String STARTTIMEFILTER = "startdatetimefilter";
 	public static final String ENDTIMEFILTER = "enddatetimefilter";
@@ -38,6 +38,10 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 	public static final String STARTTIMEFILTERPERIOD = "startdatetimefilterperiod";
 
 	public static final String ENDTIMEFILTERPERIOD = "enddatetimefilterperiod";
+
+	public static final String ENDTIMEFILTEREXPORT = "enddatetimefilterexport";
+
+	public static final String STARTTIMEFILTEREXPORT = "startdatetimefilterexport";
 	public static final class STARTTIMEFILTERS
 	{
 		public static final int TODAY = 0;
@@ -57,12 +61,6 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 		p.setOnPreferenceChangeListener(this);
 		p = findPreference("alarm");
 		p.setOnPreferenceChangeListener(this);
-		p = findPreference("export");
-		p.setOnPreferenceClickListener(this);
-		p = findPreference("import");
-		p.setOnPreferenceClickListener(this);
-		p = findPreference("google_drive");
-		p.setOnPreferenceClickListener(this);
 	}
 
 	@Override
@@ -132,62 +130,4 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 				false);
 		visibleNotif(context, start, lenght, string, visible);
 	}
-
-	@Override
-	public boolean onPreferenceClick(Preference preference) {
-		if (preference.getKey().equals("export")) {
-			OpenHelper o = new OpenHelper(getApplicationContext());
-			String d = "";
-			SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy");
-			try {
-				o.exportDatabase(
-						getFilesDir(),
-						d = getExternalFilesDir(null).getAbsolutePath()
-								+ File.separator + "timestat"
-								+ sdf.format(new Date()) + ".db");
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			o.close();
-			if (d.length() > 0)
-				d = getString(R.string.exportok) + ":\n" + d;
-			else
-				d = getString(R.string.exportfail);
-			Toast.makeText(getApplicationContext(), d, Toast.LENGTH_LONG)
-					.show();
-
-		} else if(preference.getKey().equals("google_drive")) {
-			startActivity(new Intent(this, GdriveUpload.class ));
-		} else {
-			Intent intent = new Intent(this, FileDialog.class);
-			intent.putExtra(FileDialog.FORMAT_FILTER, new String[] { ".db",
-					".sqlite" });
-			intent.putExtra(FileDialog.SELECTION_MODE, SelectionMode.MODE_OPEN);
-			startActivityForResult(intent, OPENDB);
-		}
-
-		return false;
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (data != null && requestCode == OPENDB && resultCode == RESULT_OK) {
-			String newDbOpen = data.getStringExtra(FileDialog.RESULT_PATH);
-			OpenHelper o = new OpenHelper(getApplicationContext());
-			try {
-				o.importDatabase(getFilesDir(), newDbOpen);
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			o.close();
-			Toast.makeText(getApplicationContext(),
-					getString(R.string.importok), Toast.LENGTH_LONG).show();
-			getContentResolver().notifyChange(
-					RecordsDbHelper.CONTENT_URI_TIMES, null);
-		}
-		super.onActivityResult(requestCode, resultCode, data);
-	}
-
 }

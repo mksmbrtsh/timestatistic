@@ -32,7 +32,7 @@
     <string name="alarm_notif_umode">вы сами следите за временем и переключаете счетчики</string>
     <string name="Import">Импорт</string>
     <string name="Export">Экспорт</string>
-    <string name="exim">Бекап</string>
+    <string name="exim">Экспорт, импорт и бекап</string>
     <string name="no_data">Нет данных</string>
     <string name="cant_read_folder">нельзя открыть директорию!</string>
     <string name="location">Путь</string>
@@ -91,5 +91,13 @@
     <string name="upload_to_gdrive">Загрузить в Google Drive</string>
     <string name="uploadtogdriveok">База данных timestatistic успешно сохранена в Google Drive</string>
     <string name="erroruploadtogdriveok">Ошибка загрузки базы данных timestatistic в Google Drive</string>
+        <string name="local_exim">Локально</string>
+    <string name="google">Google</string>
+        <string name="export_notes">Экспортировать с дневником</string>
+        <string name="export_to_gcalendar">Экспорт в Google Calendar</string>
+            <string name="select_counters">Выбрать счетчики</string>
+    <string name="select_gcalendar">Выбрать Google Calendar</string>
+    <string name="choise_gcalendar">Выбранный Google Calendar</string>
+    <string name="one_record_export">Только одна запись экспортируется в Google календарь в бесплатной версии TimeStatistic. Пожалуйста, установите TimeStatisticPro для полноценной этой функции!</string>
     
 </resources>

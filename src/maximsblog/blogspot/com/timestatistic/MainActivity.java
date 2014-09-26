@@ -290,10 +290,20 @@ public class MainActivity extends SherlockFragmentActivity implements
 		case R.id.item_pro: {
 			final String appPackageName = "maximsblog.blogspot.com.timestatistic.pro";
 			try {
-			    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+				startActivity(new Intent(Intent.ACTION_VIEW,
+						Uri.parse("market://details?id=" + appPackageName)));
 			} catch (android.content.ActivityNotFoundException anfe) {
-			    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + appPackageName)));
+				startActivity(new Intent(
+						Intent.ACTION_VIEW,
+						Uri.parse("http://play.google.com/store/apps/details?id="
+								+ appPackageName)));
 			}
+		}
+		case R.id.item_export_import_backup: {
+			Intent i = new Intent(this, ExportImportBackupActivity.class);
+			startActivity(i);
+
+			break;
 		}
 		default:
 			break;
@@ -480,9 +490,10 @@ public class MainActivity extends SherlockFragmentActivity implements
 		adView.pause();
 		super.onPause();
 	}
+
 	@Override
 	protected void onDestroy() {
-			adView.destroy();
+		adView.destroy();
 		super.onDestroy();
 	};
 }

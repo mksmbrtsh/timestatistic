@@ -1,5 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-
+<item
+        android:id="@+id/item_pro"
+        android:icon="@drawable/ic_time_dark"
+        android:orderInCategory="0"
+        android:showAsAction="always"
+        android:title="@string/periods">
+    </item>
     <item
         android:id="@+id/item_starts"
         android:icon="@drawable/ic_filter_dark"
@@ -16,13 +22,6 @@
         android:showAsAction="always"
         android:title="@string/search"
         android:voiceSearchMode="showVoiceSearchButton|launchRecognizer">
-    </item>
-    <item
-        android:id="@+id/item_pro"
-        android:icon="@drawable/ic_time_light"
-        android:orderInCategory="0"
-        android:showAsAction="always"
-        android:title="@string/periods">
     </item>
     <item
         android:id="@+id/item_periods"
@@ -45,23 +44,27 @@
         android:title="@string/reset_all">
     </item>
     <item
+        android:id="@+id/item_export_import_backup"
+        android:orderInCategory="6"
+        android:showAsAction="never"
+        android:title="@string/exim"/>
+    <item
         android:id="@+id/action_settings"
         android:icon="@drawable/abs__ic_menu_moreoverflow_holo_light"
-        android:orderInCategory="6"
+        android:orderInCategory="7"
         android:showAsAction="never"
         android:title="@string/action_settings"/>
     <item
         android:id="@+id/item_help"
         android:icon="@drawable/ic_action_about_light"
-        android:orderInCategory="7"
+        android:orderInCategory="8"
         android:showAsAction="never"
         android:title="@string/help">
     </item>
-    
     <item
         android:id="@+id/item_about"
         android:icon="@drawable/ic_action_about_light"
-        android:orderInCategory="8"
+        android:orderInCategory="9"
         android:showAsAction="never"
         android:title="@string/about">
     </item>
