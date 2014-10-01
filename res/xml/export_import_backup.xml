@@ -19,6 +19,7 @@
             android:key="google_drive"
             android:title="@string/upload_to_gdrive" />
         <Preference
+            android:icon="@drawable/ic_export_to_gcalendar"
             android:key="export_to_gcalendar"
             android:title="@string/export_to_gcalendar" />
     </PreferenceCategory>
