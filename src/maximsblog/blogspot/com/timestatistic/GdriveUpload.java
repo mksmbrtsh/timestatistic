@@ -147,6 +147,9 @@ public class GdriveUpload extends Activity implements ConnectionCallbacks,
                 }
                 finish();
                 break;
+            case REQUEST_CODE_RESOLUTION:
+            	finish();
+                break;
         }
     }
 
