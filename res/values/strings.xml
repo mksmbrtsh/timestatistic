@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
-
-    <string name="app_name">Time Statistic</string>
+    <string name="app_name">Time Statistic Pro</string>
     <string name="action_settings">Settings</string>
     <string name="last_value">Last value</string>
     <string name="add_counter_dialog">Add new counter</string>
@@ -10,14 +9,12 @@
     <string name="about">About</string>
     <string name="reset_all">Reset all counters</string>
     <string name="are_you_sure">You are sure?</string>
-
     <string-array name="TitlePages">
         <item>Counters</item>
         <item>Notes</item>
         <item>Diagrama</item>
         <item>Diary</item>
     </string-array>
-
     <string name="del">Delete</string>
     <string name="day1">day</string>
     <string name="day234">day</string>
@@ -35,7 +32,7 @@
     <string name="alarm_notif_umode">you are sure of the time and switch counters</string>
     <string name="Import">Import</string>
     <string name="Export">Export</string>
-    <string name="exim">Export, import and backup</string>
+    <string name="exim">Export, import and Backup</string>
     <string name="no_data">No data</string>
     <string name="cant_read_folder">Cant open a folder!</string>
     <string name="location">Path</string>
@@ -57,7 +54,6 @@
     <string name="help">Help</string>
     <string name="union">Union</string>
     <string name="filterdateset">Filter</string>
-
     <string-array name="StartFilters">
         <item>Since today</item>
         <item>Since yesterday</item>
@@ -76,13 +72,10 @@
         <item>not set</item>
         <item>to</item>
     </string-array>
-
     <string name="start">Since</string>
     <string name="note">Note</string>
     <string name="search">Search</string>
-
     <dimen name="fragment_border">4dp</dimen>
-
     <string name="h">h</string>
     <string name="m">m</string>
     <string name="end">end</string>
@@ -90,24 +83,23 @@
     <string name="not_found_diary">Not found diary notes</string>
     <string name="not_found_records">Not found time records</string>
     <string name="periods">Periods</string>
-
     <string-array name="periods">
-        <item>hour</item>
-        <item>day</item>
-        <item>week</item>
-        <item>12 hours</item>
+        <item >hour</item>
+        <item >day</item>
+        <item >week</item>
+        <item >12 hours</item>
     </string-array>
-
-    <string name="upload_to_gdrive">Upload to google drive</string>
+     <string name="upload_to_gdrive">Upload to google drive</string>
     <string name="uploadtogdriveok">Database timestatistic successfully saved to Google Drive</string>
     <string name="erroruploadtogdriveok">Error upload timestatistic database to Google Drive</string>
-    <string name="local_exim">Local</string>
-    <string name="google">Google</string>
-        <string name="export_notes">Export with notes</string>
-        <string name="export_to_gcalendar">Export to Google Calendar</string>
-            <string name="select_counters">Select counters</string>
+    <string name="export_to_gcalendar">Export to Google Calendar</string>
+    <string name="select_counters">Select counters</string>
     <string name="select_gcalendar">Select Google Calendar</string>
     <string name="choise_gcalendar">Choise Google Calendar</string>
+    <string name="export_notes">Export with notes</string>
+    <string name="local_exim">Local</string>
+    <string name="google">Google</string>
     <string name="one_record_export">Only one record export to Google calendar in lite version TimeStatistic. Please setup TimeStatisticPro for this fealture!</string>
+    
     
 </resources>
