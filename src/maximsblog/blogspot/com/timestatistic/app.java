@@ -44,7 +44,7 @@ public class app extends Application {
 		return getStart(context, checkedItem);
 	}
 	
-	private static FilterDateOption getStart(Context context, long checkedItem) {
+	public static FilterDateOption getStart(Context context, long checkedItem) {
 		Calendar calendar = Calendar.getInstance();
 		long result;
 		String resultName;
@@ -115,7 +115,7 @@ public class app extends Application {
 				context).getLong(SettingsActivity.ENDTIMEFILTERPERIOD, 5);
 		return getEnd(context, checkedItem);
 	}
-	private static FilterDateOption getEnd(Context context, long checkedItem) {
+	public static FilterDateOption getEnd(Context context, long checkedItem) {
 		Calendar calendar = Calendar.getInstance();
 		long result;
 		String resultName;
@@ -187,6 +187,20 @@ public class app extends Application {
 	public static FilterDateOption getEndDate(Context context) {
 		long checkedItem = PreferenceManager.getDefaultSharedPreferences(
 				context).getLong(SettingsActivity.ENDTIMEFILTER, 5);
+		return getEnd(context, checkedItem);
+	}
+
+	public static FilterDateOption getStartDateExport(
+			ExportToGoogleCalendarActivity context) {
+		long checkedItem = PreferenceManager.getDefaultSharedPreferences(
+				context).getLong(SettingsActivity.STARTTIMEFILTEREXPORT, 5);
+		return getStart(context, checkedItem);
+	}
+
+	public static FilterDateOption getEndDateExport(
+			ExportToGoogleCalendarActivity context) {
+		long checkedItem = PreferenceManager.getDefaultSharedPreferences(
+				context).getLong(SettingsActivity.ENDTIMEFILTEREXPORT, 5);
 		return getEnd(context, checkedItem);
 	}
 }

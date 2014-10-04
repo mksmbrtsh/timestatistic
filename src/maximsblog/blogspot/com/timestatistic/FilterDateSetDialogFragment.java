@@ -52,12 +52,6 @@ public class FilterDateSetDialogFragment extends DialogFragment implements andro
 		} else {
 			mSelectStartItem = getArguments().getLong("start");
 			mSelectEndItem = getArguments().getLong("stop");
-			/*mSelectStartItem = PreferenceManager.getDefaultSharedPreferences(
-					FilterDateSetDialogFragment.this.getActivity()).getLong(
-					SettingsActivity.STARTTIMEFILTER, 5);
-			mSelectEndItem = PreferenceManager.getDefaultSharedPreferences(
-					FilterDateSetDialogFragment.this.getActivity()).getLong(
-					SettingsActivity.ENDTIMEFILTER, 5);*/
 		}
 
 	};
