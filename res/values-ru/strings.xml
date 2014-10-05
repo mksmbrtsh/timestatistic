@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
-    <string name="app_name">Time Statistic PRO</string>
+    <string name="app_name">Time Statistic Lite</string>
     <string name="action_settings">Настройки</string>
     <string name="last_value">Последнее значение</string>
     <string name="add_counter_dialog">Добавление нового счетчика</string>
@@ -98,6 +98,5 @@
     <string name="export_notes">Экспортировать с дневником</string>
     <string name="local_exim">Локально</string>
     <string name="google">Google</string>
-    <string name="help_text_section4">Экспорт, импорт и бекап</string>
     <string name="one_record_export">Только одна запись экспортируется в Google календарь в бесплатной версии TimeStatistic. Пожалуйста, установите TimeStatisticPro для полноценной этой функции!</string>
 </resources>

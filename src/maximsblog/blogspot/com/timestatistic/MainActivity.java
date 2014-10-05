@@ -298,6 +298,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 						Uri.parse("http://play.google.com/store/apps/details?id="
 								+ appPackageName)));
 			}
+			break;
 		}
 		case R.id.item_export_import_backup: {
 			Intent i = new Intent(this, ExportImportBackupActivity.class);

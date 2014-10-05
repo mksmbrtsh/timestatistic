@@ -36,8 +36,7 @@
                 android:gravity="left|center_vertical"
                 android:onClick="onClickHelp"
                 android:padding="8dip"
-                android:text="@string/help_text_section1"
-                android:textAlignment="gravity" />
+                android:text="@string/help_text_section1" />
 
             <Button
                 android:id="@+id/help_button2"
@@ -49,8 +48,7 @@
                 android:gravity="left|center_vertical"
                 android:onClick="onClickHelp"
                 android:padding="8dip"
-                android:text="@string/help_text_section2"
-                android:textAlignment="gravity" />
+                android:text="@string/help_text_section2" />
 
             <Button
                 android:id="@+id/help_button3"
@@ -62,8 +60,7 @@
                 android:gravity="left|center_vertical"
                 android:onClick="onClickHelp"
                 android:padding="8dip"
-                android:text="@string/help_text_section3"
-                android:textAlignment="gravity" >
+                android:text="@string/help_text_section3">
             </Button>
              <Button
                     android:id="@+id/help_button4"
@@ -75,8 +72,7 @@
                     android:gravity="left|center_vertical"
                     android:onClick="onClickHelp"
                     android:padding="8dip"
-                    android:text="@string/help_text_section4"
-                    android:textAlignment="gravity" />
+                    android:text="@string/help_text_section4" />
         </LinearLayout>
     </ScrollView>
 

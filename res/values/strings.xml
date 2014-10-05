@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
-    <string name="app_name">Time Statistic Pro</string>
+    <string name="app_name">Time Statistic Lite</string>
     <string name="action_settings">Settings</string>
     <string name="last_value">Last value</string>
     <string name="add_counter_dialog">Add new counter</string>
