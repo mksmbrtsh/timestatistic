@@ -98,6 +98,8 @@ public class FileDialog extends ListActivity {
 	private File selectedFile;
 	private HashMap<String, Integer> lastPositions = new HashMap<String, Integer>();
 
+	private Button selectButton;
+
 	/**
 	 * Called when the activity is first created. Configura todos os parametros
 	 * de entrada e das VIEWS..
@@ -112,8 +114,8 @@ public class FileDialog extends ListActivity {
 
 		inputManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 
-		/*selectButton = (Button) findViewById(R.id.fdButtonSelect);
-		selectButton.setEnabled(false);
+		selectButton = (Button) findViewById(R.id.fdButtonSelect);
+		selectButton.setVisibility(View.GONE);
 		selectButton.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -124,7 +126,7 @@ public class FileDialog extends ListActivity {
 					finish();
 				}
 			}
-		});*/
+		});
 
 		
 
@@ -143,7 +145,7 @@ public class FileDialog extends ListActivity {
 		if (canSelectDir) {
 			File file = new File(startPath);
 			selectedFile = file;
-			//selectButton.setEnabled(true);
+			selectButton.setVisibility(View.VISIBLE);
 		}
 		getDir(startPath);
 		

@@ -72,7 +72,9 @@
             android:value="@integer/google_play_services_version" />
                 <activity android:name="ExportToGoogleCalendarActivity"></activity>
         <service android:name="ExportToGoogleCalendarService"></service>
+        <service android:name="ExportToCSVService"></service>
         <activity android:name="ExportImportBackupActivity"></activity>
+        <activity android:name="ExportToCSVActivity"></activity>
     </application>
 
 </manifest>

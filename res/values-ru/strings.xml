@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
+
     <string name="app_name">Time Statistic Lite</string>
     <string name="action_settings">Настройки</string>
     <string name="last_value">Последнее значение</string>
@@ -9,12 +10,14 @@
     <string name="about">О программе</string>
     <string name="reset_all">Сбросить все счетчики</string>
     <string name="are_you_sure">Вы уверены?</string>
+
     <string-array name="TitlePages">
         <item>Счётчики</item>
         <item>Записи</item>
         <item>Диаграмма</item>
         <item>Дневник</item>
     </string-array>
+
     <string name="del">Удалить</string>
     <string name="day1">день</string>
     <string name="day234">дня</string>
@@ -54,6 +57,7 @@
     <string name="help">Помощь</string>
     <string name="union">Объединить</string>
     <string name="filterdateset">Установить фильтр</string>
+
     <string-array name="StartFilters">
         <item>C сегодня</item>
         <item>Cо вчера</item>
@@ -72,6 +76,7 @@
         <item>Не задано</item>
         <item>До</item>
     </string-array>
+
     <string name="start">Начало</string>
     <string name="note">Примечание</string>
     <string name="search">Поиск</string>
@@ -82,12 +87,14 @@
     <string name="not_found_diary">Не найдено ни одной записи дневника</string>
     <string name="not_found_records">Не найдено ни одной записи времени</string>
     <string name="periods">Периоды</string>
+
     <string-array name="periods">
-        <item >Час</item>
-        <item >24 часа</item>
-        <item >Неделя</item>
-        <item >12 часов</item>
+        <item>Час</item>
+        <item>24 часа</item>
+        <item>Неделя</item>
+        <item>12 часов</item>
     </string-array>
+
     <string name="upload_to_gdrive">Загрузить в Google Drive</string>
     <string name="uploadtogdriveok">База данных timestatistic успешно сохранена в Google Drive</string>
     <string name="erroruploadtogdriveok">Ошибка загрузки базы данных timestatistic в Google Drive</string>
@@ -96,8 +103,14 @@
     <string name="select_gcalendar">Выбрать Google Calendar</string>
     <string name="choise_gcalendar">Выбранный Google Calendar</string>
     <string name="export_notes">Экспортировать с дневником</string>
-    <string name="local_exim">Локально</string>
-    <string name="google">Google</string>
+    <string name="local_exim">Бекап</string>
     <string name="one_record_export">Только одна запись экспортируется в Google календарь в бесплатной версии TimeStatistic. Пожалуйста, установите TimeStatisticPro для полноценной этой функции!</string>
     <string name="export_only_diary">Экспорт только дневника</string>
+    <string name="export_to_csv">Экспорт в CSV-файл</string>
+    <string name="select_path">Выбрать папку</string>
+    <string name="error_cr_file">Ошибка создания файла</string>
+    <string name="error_open_file">Ошибка открытия файла</string>
+    <string name="error_write_file">Ошибка записи файла</string>
+    <string name="error_close_file">Ошибка закрытия файла</string>
+
 </resources>

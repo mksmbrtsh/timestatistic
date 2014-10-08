@@ -33,6 +33,8 @@ public class ExportImportBackupActivity extends SherlockPreferenceActivity
 		p.setOnPreferenceClickListener(this);
 		p = findPreference("export_to_gcalendar");
 		p.setOnPreferenceClickListener(this);
+		p = findPreference("export_to_csv");
+		p.setOnPreferenceClickListener(this);
 	}
 
 	@Override
@@ -63,6 +65,8 @@ public class ExportImportBackupActivity extends SherlockPreferenceActivity
 			startActivity(new Intent(this, GdriveUpload.class));
 		} else if (preference.getKey().equals("export_to_gcalendar")) {
 			startActivity(new Intent(this, ExportToGoogleCalendarActivity.class));
+		} else if(preference.getKey().equals("export_to_csv")){
+			startActivity(new Intent(this, ExportToCSVActivity.class));
 		} else {
 			Intent intent = new Intent(this, FileDialog.class);
 			intent.putExtra(FileDialog.FORMAT_FILTER, new String[] { ".db",

@@ -3,25 +3,16 @@
     android:icon="@drawable/db"
     android:title="@string/exim" >
 
-    <PreferenceCategory android:title="@string/local_exim" >
+    <PreferenceCategory android:title="@string/local_exim">
+            <Preference android:icon="@drawable/ic_export_db" android:key="export" android:title="@string/Export" />
+            <Preference android:icon="@drawable/ic_import_db" android:key="import" android:title="@string/Import" />
+        <Preference android:icon="@drawable/ic_gdrive_upload_dark" android:key="google_drive" android:title="@string/upload_to_gdrive" /></PreferenceCategory>
+    <PreferenceCategory android:title="@string/Export" >
+        
         <Preference
             android:icon="@drawable/ic_export_db"
-            android:key="export"
-            android:title="@string/Export" />
-        <Preference
-            android:icon="@drawable/ic_import_db"
-            android:key="import"
-            android:title="@string/Import" />
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/google" >
-        <Preference
-            android:icon="@drawable/ic_gdrive_upload_dark"
-            android:key="google_drive"
-            android:title="@string/upload_to_gdrive" />
-        <Preference
-            android:icon="@drawable/ic_export_to_gcalendar"
-            android:key="export_to_gcalendar"
-            android:title="@string/export_to_gcalendar" />
+            android:key="export_to_csv"
+            android:title="@string/export_to_csv" /><Preference android:icon="@drawable/ic_export_to_gcalendar" android:key="export_to_gcalendar" android:title="@string/export_to_gcalendar" />
     </PreferenceCategory>
 
 </PreferenceScreen>

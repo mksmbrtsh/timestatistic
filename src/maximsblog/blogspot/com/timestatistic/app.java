@@ -209,4 +209,18 @@ public class app extends Application {
 				context).getLong(SettingsActivity.ENDTIMEFILTEREXPORT, 5);
 		return getEnd(context, checkedItem);
 	}
+
+	public static FilterDateOption getStartDateExport(
+			ExportToCSVActivity context) {
+		long checkedItem = PreferenceManager.getDefaultSharedPreferences(
+				context).getLong(SettingsActivity.STARTTIMEFILTEREXPORTCSV, 5);
+		return getStart(context, checkedItem);
+	}
+
+	public static FilterDateOption getEndDateExport(
+			ExportToCSVActivity context) {
+		long checkedItem = PreferenceManager.getDefaultSharedPreferences(
+				context).getLong(SettingsActivity.ENDTIMEFILTEREXPORTCSV, 5);
+		return getEnd(context, checkedItem);
+	}
 }
