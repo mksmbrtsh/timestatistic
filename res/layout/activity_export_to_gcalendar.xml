@@ -31,6 +31,12 @@
         android:layout_height="wrap_content"
         android:text="@string/export_notes" />
 
+    <CheckBox
+        android:id="@+id/export_only_diary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/export_only_diary" />
+
     <Button
         android:id="@+id/export_btn"
         android:layout_width="match_parent"

@@ -32,6 +32,7 @@ public class ExportToGoogleCalendarService extends Service {
 	private boolean[] mChecked;
 	private int mCalendarID;
 	private boolean mExportNotes;
+	private boolean mExportOnlyNotes;
 
 	@Override
 	public void onCreate() {
@@ -46,14 +47,28 @@ public class ExportToGoogleCalendarService extends Service {
 			@SuppressLint("NewApi")
 			@Override
 			public void run() {
-				String[] selectionArgs = new String[] {
-						String.valueOf(mSelectStartItem),
-						String.valueOf(mSelectEndItem) };
-
-				Cursor cursor = getContentResolver().query(
-						RecordsDbHelper.CONTENT_URI_ALLTIMES, null,
-						RecordsDbHelper.STARTTIME + " IS NOT NULL ",
-						selectionArgs, null);
+				String[] selectionArgs;
+				Cursor cursor;
+				if(mExportOnlyNotes) {
+					selectionArgs = new String[] {
+							"",
+							String.valueOf(mSelectStartItem),
+							String.valueOf(mSelectEndItem) };
+					cursor = getContentResolver().query(
+							RecordsDbHelper.CONTENT_URI_ALLNOTES, null,
+							RecordsDbHelper.STARTTIME + " IS NOT NULL AND "
+						+ RecordsDbHelper.NOTE + " LIKE ?",
+							selectionArgs, null);
+				} else {
+					selectionArgs = new String[] {
+							String.valueOf(mSelectStartItem),
+							String.valueOf(mSelectEndItem) };
+					cursor = getContentResolver().query(
+							RecordsDbHelper.CONTENT_URI_ALLTIMES, null,
+							RecordsDbHelper.STARTTIME + " IS NOT NULL ",
+							selectionArgs, null);
+				}
+				
 				int i1 = 0;
 				ArrayList<Integer> ids = new ArrayList<Integer>();
 				for (int i = 0; i < mIDs.length; i++) {
@@ -119,6 +134,7 @@ public class ExportToGoogleCalendarService extends Service {
 		mChecked = intent.getBooleanArrayExtra("checked");
 		mCalendarID = Integer.valueOf(intent.getStringExtra("calendar_id"));
 		mExportNotes = intent.getBooleanExtra("export_notes", false);
+		mExportOnlyNotes = intent.getBooleanExtra("export_only_notes", false);
 		t.start();
 		Toast.makeText(ExportToGoogleCalendarService.this, R.string.one_record_export, Toast.LENGTH_LONG).show();
 		return super.onStartCommand(intent, flags, startId);

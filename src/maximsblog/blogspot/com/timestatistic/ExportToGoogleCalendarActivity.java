@@ -38,12 +38,14 @@ public class ExportToGoogleCalendarActivity extends SherlockFragmentActivity
 		IRecordDialog,
 		IPeriodSetupDialog,
 		OnClickListener,
-		maximsblog.blogspot.com.timestatistic.CalendarSetupDialogFragment.ICalendarSetupDialog, OnCheckedChangeListener {
+		maximsblog.blogspot.com.timestatistic.CalendarSetupDialogFragment.ICalendarSetupDialog,
+		OnCheckedChangeListener {
 
 	private static final String IDS = "ids";
 	private static final String CALENDAR_ID = "calendar_id";
 	private static final String CALENDAR_NAME = "calendar_name";
-	private static final String EXPORT_NOTES = "export_notes";
+	private static final String EXPORT_WITH_NOTES = "export_notes";
+	private static final String EXPORT_ONLY_NOTES = "export_only_notes";
 	private long mSelectStartItem;
 	private long mSelectEndItem;
 	private int[] mIDs;
@@ -55,7 +57,8 @@ public class ExportToGoogleCalendarActivity extends SherlockFragmentActivity
 	private Button mExportStart;
 	private Button mCalendarSelect;
 	private Button mFilterSelect;
-	private CheckBox mCheckBox;
+	private CheckBox mExportWithDiary;
+	private CheckBox mExportOnlyDiary;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -65,12 +68,14 @@ public class ExportToGoogleCalendarActivity extends SherlockFragmentActivity
 		mCalendarSelect = (Button) findViewById(R.id.select_calendar_btn);
 		mCalendarSelect.setOnClickListener(this);
 		findViewById(R.id.select_conters_btn).setOnClickListener(this);
-		mFilterSelect = (Button)findViewById(R.id.set_filter_btn);
+		mFilterSelect = (Button) findViewById(R.id.set_filter_btn);
 		mFilterSelect.setOnClickListener(this);
 		mExportStart = (Button) findViewById(R.id.export_btn);
 		mExportStart.setOnClickListener(this);
-		mCheckBox = (CheckBox)findViewById(R.id.export_notes);
-		mCheckBox.setOnCheckedChangeListener(this);
+		mExportOnlyDiary = (CheckBox) findViewById(R.id.export_only_diary);
+		mExportOnlyDiary.setOnCheckedChangeListener(this);
+		mExportWithDiary = (CheckBox) findViewById(R.id.export_notes);
+		mExportWithDiary.setOnCheckedChangeListener(this);
 		if (ExportToGoogleCalendarService.isRunning) {
 			mExportStart.setText("остановить");
 		} else
@@ -87,7 +92,8 @@ public class ExportToGoogleCalendarActivity extends SherlockFragmentActivity
 			String s = prefs.getString(IDS, null);
 			mCalendarID = prefs.getString(CALENDAR_ID, null);
 			mCalendarName = prefs.getString(CALENDAR_NAME, null);
-			mCheckBox.setChecked(prefs.getBoolean(EXPORT_NOTES, false));
+			mExportWithDiary.setChecked(prefs.getBoolean(EXPORT_WITH_NOTES, false));
+			mExportOnlyDiary.setChecked(prefs.getBoolean(EXPORT_ONLY_NOTES, false));
 			if (s != null) {
 				String[] ids = s.split(";");
 				mIDs = new int[ids.length];
@@ -120,7 +126,10 @@ public class ExportToGoogleCalendarActivity extends SherlockFragmentActivity
 			mChecked = savedInstanceState.getBooleanArray("checked");
 			mCalendarID = savedInstanceState.getString(CALENDAR_ID);
 			mCalendarName = savedInstanceState.getString(CALENDAR_NAME);
-			mCheckBox.setChecked(savedInstanceState.getBoolean(EXPORT_NOTES));
+			mExportWithDiary.setChecked(savedInstanceState
+					.getBoolean(EXPORT_WITH_NOTES));
+			mExportOnlyDiary.setChecked(savedInstanceState
+					.getBoolean(EXPORT_ONLY_NOTES));
 			startDateSetDialogFragment = (FilterDateSetDialogFragment) fm
 					.findFragmentByTag("mStartDateSetDialogFragment");
 			if (startDateSetDialogFragment != null)
@@ -143,9 +152,11 @@ public class ExportToGoogleCalendarActivity extends SherlockFragmentActivity
 			mCalendarSelect.setText(getString(R.string.choise_gcalendar)
 					+ ":\n" + mCalendarName);
 		}
+		mExportWithDiary.setEnabled(!mExportOnlyDiary.isChecked());
 	}
 
-	private void setFilterText(FilterDateOption startDateOption, FilterDateOption endDateOption) {
+	private void setFilterText(FilterDateOption startDateOption,
+			FilterDateOption endDateOption) {
 		String s1, s2;
 		SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(
 				"dd/MM/yy HH:mm");
@@ -159,17 +170,20 @@ public class ExportToGoogleCalendarActivity extends SherlockFragmentActivity
 			s2 = endDateOption.dateName;
 		else
 			s2 = mSimpleDateFormat.format(new Date(endDateOption.date));
-		mFilterSelect.setText(getString(R.string.filterdateset) + ":\n" + s1 + " - " + s2);
+		mFilterSelect.setText(getString(R.string.filterdateset) + ":\n" + s1
+				+ " - " + s2);
 	}
+
 	private void setFilterText(long startDateOption, long endDateOption) {
 		String s1, s2;
 		SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(
 				"dd/MM/yy HH:mm");
 
-			s1 = mSimpleDateFormat.format(new Date(startDateOption));
+		s1 = mSimpleDateFormat.format(new Date(startDateOption));
 
-			s2 = mSimpleDateFormat.format(new Date(endDateOption));
-		mFilterSelect.setText(getString(R.string.filterdateset) + ":\n" + s1 + " - " + s2);
+		s2 = mSimpleDateFormat.format(new Date(endDateOption));
+		mFilterSelect.setText(getString(R.string.filterdateset) + ":\n" + s1
+				+ " - " + s2);
 	}
 
 	@Override
@@ -220,7 +234,8 @@ public class ExportToGoogleCalendarActivity extends SherlockFragmentActivity
 		outState.putString(CALENDAR_NAME, mCalendarName);
 		outState.putBooleanArray("checked", mChecked);
 		outState.putIntArray("ids", mIDs);
-		outState.putBoolean(EXPORT_NOTES, mCheckBox.isChecked());
+		outState.putBoolean(EXPORT_WITH_NOTES, mExportWithDiary.isChecked());
+		outState.putBoolean(EXPORT_ONLY_NOTES, mExportOnlyDiary.isChecked());
 		super.onSaveInstanceState(outState);
 	}
 
@@ -290,7 +305,8 @@ public class ExportToGoogleCalendarActivity extends SherlockFragmentActivity
 				intent.putExtra("checked", mChecked);
 				intent.putExtra("ids", mIDs);
 				intent.putExtra("calendar_id", mCalendarID);
-				intent.putExtra("export_notes", mCheckBox.isChecked());
+				intent.putExtra("export_notes", mExportWithDiary.isChecked());
+				intent.putExtra("export_only_notes", mExportOnlyDiary.isChecked());
 				getApplicationContext().startService(intent);
 				mExportStart.setText("остановить");
 			} else {
@@ -336,10 +352,18 @@ public class ExportToGoogleCalendarActivity extends SherlockFragmentActivity
 
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-		Editor edit = PreferenceManager.getDefaultSharedPreferences(this)
-				.edit();
-		edit.putBoolean(EXPORT_NOTES, isChecked);
-		edit.commit();
+		if (buttonView.getId() == R.id.export_only_diary) {
+			Editor edit = PreferenceManager.getDefaultSharedPreferences(this)
+					.edit();
+			edit.putBoolean(EXPORT_ONLY_NOTES, isChecked);
+			edit.commit();
+			mExportWithDiary.setEnabled(!mExportOnlyDiary.isChecked());
+		} else {
+			Editor edit = PreferenceManager.getDefaultSharedPreferences(this)
+					.edit();
+			edit.putBoolean(EXPORT_WITH_NOTES, isChecked);
+			edit.commit();
+		}
 	}
 
 }

@@ -382,6 +382,19 @@ public class RecordsDbHelper extends ContentProvider {
 		}
 		case ALLNOTES: {
 			selectionArgs[0] = "%" + selectionArgs[0] + "%";
+			if(selectionArgs.length > 1){
+				if(selectionArgs[2].equals("-1")) {
+					String[] newselection = new String[2];
+					newselection[0] = selectionArgs[0];
+					newselection[1] = selectionArgs[1];
+					selectionArgs = newselection;
+					selection += " AND (" + RecordsDbHelper.ENDTIME + " >= ? OR "
+							+ RecordsDbHelper.ENDTIME + " IS NULL )";
+				}
+				else
+				selection += " AND (" + RecordsDbHelper.ENDTIME + " >= ? OR "
+						+ RecordsDbHelper.ENDTIME + " IS NULL ) AND " + RecordsDbHelper.STARTTIME + " <= ?";
+			}
 			String s = qb.buildQueryString(false, TABLE_TIMERS
 					+ " LEFT OUTER JOIN " + TABLE_TIMES + " ON " + ID + " = "
 					+ TIMERSID + " LEFT OUTER JOIN " + TABLE_NOTES + " ON "

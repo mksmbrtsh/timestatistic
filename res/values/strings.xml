@@ -100,6 +100,7 @@
     <string name="local_exim">Local</string>
     <string name="google">Google</string>
     <string name="one_record_export">Only one record export to Google calendar in lite version TimeStatistic. Please setup TimeStatisticPro for this fealture!</string>
+    <string name="export_only_diary">Export only diary</string>
     
     
 </resources>
