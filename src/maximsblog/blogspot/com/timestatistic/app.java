@@ -4,6 +4,7 @@ import java.util.Calendar;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.preference.PreferenceManager;
 
@@ -95,7 +96,12 @@ public class app extends Application {
 				result = calendar.getTimeInMillis();
 				break;
 			case SettingsActivity.STARTTIMEFILTERS.ALLTIME:
-				result = 1;
+				try {
+					result = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).firstInstallTime;
+				} catch (NameNotFoundException e) {
+					e.printStackTrace();
+					result= 1;
+				}
 				break;
 			default:
 				result = 1;
