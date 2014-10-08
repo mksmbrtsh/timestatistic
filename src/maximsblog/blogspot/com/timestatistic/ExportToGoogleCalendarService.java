@@ -86,7 +86,9 @@ public class ExportToGoogleCalendarService extends Service {
 							// ранее
 							event.put(CalendarContract.Events.TITLE,
 									cursor.getString(3)); // Название события
-							if(mExportNotes) {
+							if(mExportOnlyNotes) {
+								event.put(CalendarContract.Events.DESCRIPTION, cursor.getString(8));
+							} else if(mExportNotes) {
 								Cursor c = getContentResolver().query(RecordsDbHelper.CONTENT_URI_NOTES, new String[] { RecordsDbHelper.ID3, RecordsDbHelper.NOTE },RecordsDbHelper.ID3+ "=?" , new String[] { String.valueOf(cursor.getInt(5)) }, null);
 								if(c.getCount() == 1) {
 									c.moveToFirst();
