@@ -118,7 +118,11 @@
       <p>The datebase will be upload to your Google Drive.
       </p>      
       <h1>Export</h1>
-      <p> You can export to Google calendar.</p>
+      <p>Lite-version support export in testing mode! Please, buy <a href="http://play.google.com/store/apps/details?id=maximsblog.blogspot.com.timestatistic.pro">PRO-version</a></p>
+      <h2>Google</h2>
+      <p> You can export to Google calendar. Export with diary, export only diary are support. You can select counters, time interval, Google calendar.</p>
+      <h2>CSV</h2>
+      <p> You can export to <a href="https://en.wikipedia.org/wiki/Comma-separated_values">CSV-file</a>. Export with diary, export only diary are support. You can select counters, time interval, filename, file header, csv-splitter char, datetime format.</p>
        ]]>
     </string>
 </resources>

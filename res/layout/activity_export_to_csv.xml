@@ -4,43 +4,121 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/set_filter_btn"
+    <ScrollView
+        android:id="@+id/scrollView1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_filter_dark"
-        android:text="@string/filterdateset" />
+        android:layout_height="wrap_content" >
 
-    <Button
-        android:id="@+id/select_conters_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_counter_title"
-        android:text="@string/select_counters" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/select_folder_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/folder"
-        android:text="@string/location" />
+            <Button
+                android:id="@+id/set_filter_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_filter_dark"
+                android:text="@string/filterdateset" />
 
-    <CheckBox
-        android:id="@+id/export_notes"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/export_notes" />
+            <Button
+                android:id="@+id/select_conters_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_counter_title"
+                android:text="@string/select_counters" />
 
-    <CheckBox
-        android:id="@+id/export_only_diary"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/export_only_diary" />
+            <Button
+                android:id="@+id/select_folder_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/folder"
+                android:text="@string/location" />
 
-    <Button
-        android:id="@+id/export_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/Export" />
+            <CheckBox
+                android:id="@+id/export_notes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/export_notes" />
+
+            <CheckBox
+                android:id="@+id/export_only_diary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/export_only_diary" />
+
+            <CheckBox
+                android:id="@+id/header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/header" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/split_char" />
+
+                <EditText
+                    android:id="@+id/split_char"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:maxLength="1" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/datetimeformat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:linksClickable="true"
+                android:text="@string/datetime_format" />
+
+            <EditText
+                android:id="@+id/datetime_format"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/datetime_format_hint"
+                android:singleLine="false" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/filename" />
+
+                <EditText
+                    android:id="@+id/filename"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10" />
+
+            </LinearLayout>
+
+            <CheckBox
+                android:id="@+id/include_datetime_in_file_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/csv_include_datetime" />
+
+            <Button
+                android:id="@+id/export_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/Export" />
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>

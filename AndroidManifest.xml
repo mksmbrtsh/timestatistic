@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="maximsblog.blogspot.com.timestatistic"
-    android:versionCode="41"
-    android:versionName="1.0.26" >
+    android:versionCode="42"
+    android:versionName="1.0.27" >
 
     <uses-sdk
         android:minSdkVersion="9"

@@ -112,5 +112,14 @@
     <string name="error_open_file">Ошибка открытия файла</string>
     <string name="error_write_file">Ошибка записи файла</string>
     <string name="error_close_file">Ошибка закрытия файла</string>
-
+    <string name="split_char">Разделитель полей в CSV</string>
+    <string name="header">Включать заголовок</string>
+    <string name="datetime_format"><a href="http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html">Формат дат внутри файла</a></string>
+    <string name="datetime_format_hint">Пустое поле - милисекунды от 1 Января 1970 UTC</string>
+    <string name="error_dateformat">Ошибка в формате даты!</string>
+    <string name="csv_file_name">Имя файла</string>
+    <string name="csv_include_datetime">Имя файла включает дату (yyyyMMdd)</string>
+    <string name="stop">Остановить!</string>
+    <string name="export_to_csv_complete">Только одна запись экспортируется в бесплатной версии! Пожалуйста, установите TimeStatisticPro для полноценной этой функции!</string>
+	<string name="filename">Имя файла</string>
 </resources>

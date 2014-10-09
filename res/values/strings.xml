@@ -122,5 +122,14 @@
     <string name="error_open_file">Open file error</string>
     <string name="error_write_file">Write file error</string>
     <string name="error_close_file">Close file error</string>
-
+	<string name="split_char">CSV split field char</string>
+    <string name="header">Include header</string>
+    <string name="datetime_format"><a href="http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html">Format datetime in file</a></string>
+    <string name="datetime_format_hint">Empty is miliseconds from January 1, 1970 UTC</string>
+    <string name="error_dateformat">Date format error!</string>
+    <string name="csv_file_name">Filename</string>
+    <string name="csv_include_datetime">Filename include datetime (yyyyMMdd)</string>
+    <string name="stop">Stop it!</string>
+    <string name="export_to_csv_complete">Only one record export in lite-version! Please setup TimeStatisticPro for this fealture!</string>
+    <string name="filename">Filename</string>
 </resources>

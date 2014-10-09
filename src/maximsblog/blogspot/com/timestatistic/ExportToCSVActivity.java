@@ -1,5 +1,6 @@
 package maximsblog.blogspot.com.timestatistic;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,14 +13,20 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
@@ -34,6 +41,11 @@ public class ExportToCSVActivity extends SherlockFragmentActivity implements
 	private static final String EXPORT_WITH_NOTES = "export_notes";
 	private static final String EXPORT_ONLY_NOTES = "export_only_notes";
 	private static final int SELECT_PATH = 1;
+	private static final String SPLIT_CHAR = "csv_split_char";
+	private static final String EXPORT_WITH_HEADER = "export_csv_with_header";
+	private static final String DATETIME_FORMAT = "csv_datetime_format";
+	private static final String FILENAME = "csv_file_name";
+	private static final String INCLUDE_DATETIME_IN_FILENAME = "csv_include_datetime_in_filename";
 	private long mSelectStartItem;
 	private long mSelectEndItem;
 	private int[] mIDs;
@@ -46,12 +58,24 @@ public class ExportToCSVActivity extends SherlockFragmentActivity implements
 	private Button mFilterSelect;
 	private CheckBox mExportWithDiary;
 	private CheckBox mExportOnlyDiary;
+	private EditText mSplitChar;
+	private String mOldSplitChar;
+	private CheckBox mExportWithHeader;
+	private EditText mDateTimeFormat;
+	private String mOldDateTimeFormat;
+	private EditText mFileName;
+	private String mOldFileName;
+	private CheckBox mFileNameIncludeDateTime;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_export_to_csv);
+		TextView t = (TextView) findViewById(R.id.datetimeformat);
+		t.setText(getResources().getText(R.string.datetime_format));
+		Linkify.addLinks(t, Linkify.ALL);
+		t.setMovementMethod(LinkMovementMethod.getInstance());
 		mExportPathSelect = (Button) findViewById(R.id.select_folder_btn);
 		mExportPathSelect.setOnClickListener(this);
 		findViewById(R.id.select_conters_btn).setOnClickListener(this);
@@ -63,8 +87,15 @@ public class ExportToCSVActivity extends SherlockFragmentActivity implements
 		mExportOnlyDiary.setOnCheckedChangeListener(this);
 		mExportWithDiary = (CheckBox) findViewById(R.id.export_notes);
 		mExportWithDiary.setOnCheckedChangeListener(this);
+		mExportWithHeader = (CheckBox) findViewById(R.id.header);
+		mExportWithDiary.setOnCheckedChangeListener(this);
+		mFileNameIncludeDateTime = (CheckBox) findViewById(R.id.include_datetime_in_file_name);
+		mFileNameIncludeDateTime.setOnCheckedChangeListener(this);
+		mSplitChar = (EditText) findViewById(R.id.split_char);
+		mDateTimeFormat = (EditText) findViewById(R.id.datetime_format);
+		mFileName = (EditText) findViewById(R.id.filename);
 		if (ExportToCSVService.isRunning) {
-			mExportStart.setText("остановить");
+			mExportStart.setText(getString(R.string.stop));
 		} else
 			mExportStart.setText(getString(R.string.Export));
 
@@ -78,10 +109,20 @@ public class ExportToCSVActivity extends SherlockFragmentActivity implements
 					.getDefaultSharedPreferences(this);
 			String s = prefs.getString(IDS, null);
 			mExportPath = prefs.getString(EXPORT_PATH, null);
+			mDateTimeFormat.setText(mOldDateTimeFormat = prefs.getString(
+					DATETIME_FORMAT, ""));
+			mSplitChar
+					.setText(mOldSplitChar = prefs.getString(SPLIT_CHAR, ";"));
+			mFileName.setText(mOldFileName = prefs
+					.getString(FILENAME, "ts.csv"));
 			mExportWithDiary.setChecked(prefs.getBoolean(EXPORT_WITH_NOTES,
 					false));
 			mExportOnlyDiary.setChecked(prefs.getBoolean(EXPORT_ONLY_NOTES,
 					false));
+			mExportWithHeader.setChecked(prefs.getBoolean(EXPORT_WITH_HEADER,
+					false));
+			mFileNameIncludeDateTime.setChecked(prefs.getBoolean(
+					INCLUDE_DATETIME_IN_FILENAME, true));
 			if (s != null) {
 				String[] ids = s.split(";");
 				mIDs = new int[ids.length];
@@ -117,6 +158,12 @@ public class ExportToCSVActivity extends SherlockFragmentActivity implements
 					.getBoolean(EXPORT_WITH_NOTES));
 			mExportOnlyDiary.setChecked(savedInstanceState
 					.getBoolean(EXPORT_ONLY_NOTES));
+			mExportWithHeader.setChecked(savedInstanceState
+					.getBoolean(EXPORT_WITH_HEADER));
+			mOldSplitChar = savedInstanceState.getString(SPLIT_CHAR);
+			mOldDateTimeFormat = savedInstanceState.getString(DATETIME_FORMAT);
+			mFileNameIncludeDateTime.setChecked(savedInstanceState
+					.getBoolean(INCLUDE_DATETIME_IN_FILENAME));
 			startDateSetDialogFragment = (FilterDateSetDialogFragment) fm
 					.findFragmentByTag("mStartDateSetDialogFragment");
 			if (startDateSetDialogFragment != null)
@@ -132,8 +179,8 @@ public class ExportToCSVActivity extends SherlockFragmentActivity implements
 			mExportStart.setEnabled(false);
 			mExportPathSelect.setText(getString(R.string.location));
 		} else {
-			mExportPathSelect.setText(getString(R.string.select_path)
-					+ ":\n" + mExportPath);
+			mExportPathSelect.setText(getString(R.string.select_path) + ":\n"
+					+ mExportPath);
 		}
 		mExportWithDiary.setEnabled(!mExportOnlyDiary.isChecked());
 	}
@@ -182,6 +229,35 @@ public class ExportToCSVActivity extends SherlockFragmentActivity implements
 	};
 
 	@Override
+	protected void onDestroy() {
+		String newSplitChar = mSplitChar.getText().toString();
+		String newDatetimeFormat = mDateTimeFormat.getText().toString();
+		String newFilename = mFileName.getText().toString();
+		if (!newSplitChar.equals(mOldSplitChar)) {
+			mOldSplitChar = newSplitChar;
+			Editor editor = PreferenceManager.getDefaultSharedPreferences(this)
+					.edit();
+			editor.putString(SPLIT_CHAR, mOldSplitChar);
+			editor.commit();
+		}
+		if (!newDatetimeFormat.equals(mOldDateTimeFormat)) {
+			mOldDateTimeFormat = newDatetimeFormat;
+			Editor editor = PreferenceManager.getDefaultSharedPreferences(this)
+					.edit();
+			editor.putString(DATETIME_FORMAT, mOldDateTimeFormat);
+			editor.commit();
+		}
+		if (!newFilename.equals(mOldFileName)) {
+			mOldFileName = newFilename;
+			Editor editor = PreferenceManager.getDefaultSharedPreferences(this)
+					.edit();
+			editor.putString(FILENAME, mOldFileName);
+			editor.commit();
+		}
+		super.onDestroy();
+	};
+
+	@Override
 	public void onRefreshFragmentsValue() {
 		// TODO Auto-generated method stub
 
@@ -195,11 +271,11 @@ public class ExportToCSVActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onFilterDateSet(long start, long stop) {
-		String setting = SettingsActivity.STARTTIMEFILTEREXPORT;
+		String setting = SettingsActivity.STARTTIMEFILTEREXPORTCSV;
 		Editor editor = PreferenceManager.getDefaultSharedPreferences(this)
 				.edit();
 		editor.putLong(setting, start);
-		setting = SettingsActivity.ENDTIMEFILTEREXPORT;
+		setting = SettingsActivity.ENDTIMEFILTEREXPORTCSV;
 		editor.putLong(setting, stop);
 		editor.commit();
 		FilterDateOption startDateOption = app.getStartDateExport(this);
@@ -218,6 +294,12 @@ public class ExportToCSVActivity extends SherlockFragmentActivity implements
 		outState.putIntArray("ids", mIDs);
 		outState.putBoolean(EXPORT_WITH_NOTES, mExportWithDiary.isChecked());
 		outState.putBoolean(EXPORT_ONLY_NOTES, mExportOnlyDiary.isChecked());
+		outState.putBoolean(EXPORT_WITH_HEADER, mExportWithHeader.isChecked());
+		outState.putString(SPLIT_CHAR, mOldSplitChar);
+		outState.putString(DATETIME_FORMAT, mOldDateTimeFormat);
+		outState.putString(FILENAME, mOldFileName);
+		outState.putBoolean(INCLUDE_DATETIME_IN_FILENAME,
+				mFileNameIncludeDateTime.isChecked());
 		super.onSaveInstanceState(outState);
 	}
 
@@ -267,9 +349,9 @@ public class ExportToCSVActivity extends SherlockFragmentActivity implements
 		case R.id.set_filter_btn:
 			startDateSetDialogFragment = new FilterDateSetDialogFragment();
 			long start = PreferenceManager.getDefaultSharedPreferences(this)
-					.getLong(SettingsActivity.STARTTIMEFILTEREXPORT, 5);
+					.getLong(SettingsActivity.STARTTIMEFILTEREXPORTCSV, 5);
 			long end = PreferenceManager.getDefaultSharedPreferences(this)
-					.getLong(SettingsActivity.ENDTIMEFILTEREXPORT, 5);
+					.getLong(SettingsActivity.ENDTIMEFILTEREXPORTCSV, 5);
 			args.putLong("start", start);
 			args.putLong("stop", end);
 			startDateSetDialogFragment.setArguments(args);
@@ -278,8 +360,7 @@ public class ExportToCSVActivity extends SherlockFragmentActivity implements
 					"mStartDateSetDialogFragment");
 			break;
 		case R.id.export_btn:
-			Intent intent = new Intent(this,
-					ExportToCSVService.class);
+			Intent intent = new Intent(this, ExportToCSVService.class);
 			if (!ExportToCSVService.isRunning) {
 				intent.putExtra("start", mSelectStartItem);
 				intent.putExtra("stop", mSelectEndItem);
@@ -289,6 +370,15 @@ public class ExportToCSVActivity extends SherlockFragmentActivity implements
 				intent.putExtra("export_notes", mExportWithDiary.isChecked());
 				intent.putExtra("export_only_notes",
 						mExportOnlyDiary.isChecked());
+				intent.putExtra("export_with_header",
+						mExportWithHeader.isChecked());
+
+				intent.putExtra("split_char", mSplitChar.getText().toString());
+				intent.putExtra("datetime_format", mDateTimeFormat.getText()
+						.toString());
+				intent.putExtra("filename", mFileName.getText().toString());
+				intent.putExtra("filename_include_datetime",
+						mFileNameIncludeDateTime.isChecked());
 				getApplicationContext().startService(intent);
 				mExportStart.setText("остановить");
 			} else {
@@ -307,13 +397,34 @@ public class ExportToCSVActivity extends SherlockFragmentActivity implements
 		public void onReceive(Context context, Intent intent) {
 			if (intent.getAction().equals(ExportToCSVService.EXPORT)) {
 				if (ExportToCSVService.isRunning) {
-					mExportStart.setText("остановить"
+					mExportStart.setText(getString(R.string.stop)
 							+ intent.getIntExtra("progress", 0) + "/"
 							+ intent.getIntExtra("count", 0));
 
-				} else
-					mExportStart
-							.setText(getString(R.string.export_to_gcalendar));
+				} else {
+					mExportStart.setText(getString(R.string.Export));
+					Intent newintent = new Intent();
+					newintent.setAction(Intent.ACTION_VIEW);
+					File f = new File(mExportPath,
+							ExportToCSVService.getCSVFileName(mFileName
+									.getText().toString(),
+									getString(R.string.now),
+									mFileNameIncludeDateTime.isChecked(),
+									mSelectStartItem, mSelectEndItem));
+					if (f.exists()) {
+						MimeTypeMap myMime = MimeTypeMap.getSingleton();
+						String mimeType = myMime
+								.getMimeTypeFromExtension(fileExt(f.toString())
+										.substring(1));
+						newintent.setDataAndType(Uri.fromFile(f), mimeType);
+						newintent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
+						try {
+							startActivity(newintent);
+						} catch (android.content.ActivityNotFoundException e) {
+
+						}
+					}
+				}
 			}
 		}
 	};
@@ -326,6 +437,16 @@ public class ExportToCSVActivity extends SherlockFragmentActivity implements
 			edit.putBoolean(EXPORT_ONLY_NOTES, isChecked);
 			edit.commit();
 			mExportWithDiary.setEnabled(!mExportOnlyDiary.isChecked());
+		} else if (buttonView.getId() == R.id.header) {
+			Editor edit = PreferenceManager.getDefaultSharedPreferences(this)
+					.edit();
+			edit.putBoolean(EXPORT_WITH_HEADER, isChecked);
+			edit.commit();
+		} else if (buttonView.getId() == R.id.include_datetime_in_file_name) {
+			Editor edit = PreferenceManager.getDefaultSharedPreferences(this)
+					.edit();
+			edit.putBoolean(INCLUDE_DATETIME_IN_FILENAME, isChecked);
+			edit.commit();
 		} else {
 			Editor edit = PreferenceManager.getDefaultSharedPreferences(this)
 					.edit();
@@ -333,10 +454,11 @@ public class ExportToCSVActivity extends SherlockFragmentActivity implements
 			edit.commit();
 		}
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (data != null && requestCode == SELECT_PATH && resultCode == RESULT_OK) {
+		if (data != null && requestCode == SELECT_PATH
+				&& resultCode == RESULT_OK) {
 			mExportPath = data.getStringExtra(FileDialog.RESULT_PATH);
 			Editor edit = PreferenceManager.getDefaultSharedPreferences(this)
 					.edit();
@@ -347,5 +469,24 @@ public class ExportToCSVActivity extends SherlockFragmentActivity implements
 					+ mExportPath);
 		}
 		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	private String fileExt(String url) {
+		if (url.indexOf("?") > -1) {
+			url = url.substring(0, url.indexOf("?"));
+		}
+		if (url.lastIndexOf(".") == -1) {
+			return null;
+		} else {
+			String ext = url.substring(url.lastIndexOf("."));
+			if (ext.indexOf("%") > -1) {
+				ext = ext.substring(0, ext.indexOf("%"));
+			}
+			if (ext.indexOf("/") > -1) {
+				ext = ext.substring(0, ext.indexOf("/"));
+			}
+			return ext.toLowerCase();
+
+		}
 	}
 }
