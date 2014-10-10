@@ -88,7 +88,7 @@ public class ExportToCSVActivity extends SherlockFragmentActivity implements
 		mExportWithDiary = (CheckBox) findViewById(R.id.export_notes);
 		mExportWithDiary.setOnCheckedChangeListener(this);
 		mExportWithHeader = (CheckBox) findViewById(R.id.header);
-		mExportWithDiary.setOnCheckedChangeListener(this);
+		mExportWithHeader.setOnCheckedChangeListener(this);
 		mFileNameIncludeDateTime = (CheckBox) findViewById(R.id.include_datetime_in_file_name);
 		mFileNameIncludeDateTime.setOnCheckedChangeListener(this);
 		mSplitChar = (EditText) findViewById(R.id.split_char);
