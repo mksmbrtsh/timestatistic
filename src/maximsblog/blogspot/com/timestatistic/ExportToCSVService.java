@@ -376,7 +376,7 @@ public class ExportToCSVService extends Service {
 				SimpleDateFormat filesdf = new SimpleDateFormat("yyyyMMdd");
 				int index = fileName.lastIndexOf('.');
 				String n = fileName.substring(0, index);
-				String r = fileName.substring(index + 1, fileName.length() - 1);
+				String r = fileName.substring(index + 1, fileName.length());
 				fileName = n
 						+ filesdf.format(new Date(selectStartItem))
 						+ "-"

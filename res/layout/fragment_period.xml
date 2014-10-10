@@ -89,7 +89,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_below="@+id/pad_plus"
-                        android:src="@android:drawable/ic_menu_share" />
+                        android:src="@drawable/ic_send_dark" />
                 </RelativeLayout>
             </RelativeLayout>
         </LinearLayout>

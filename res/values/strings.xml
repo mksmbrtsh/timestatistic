@@ -42,7 +42,7 @@
     <string name="cancel">Cancel</string>
     <string name="create">Save</string>
     <string name="no_data">No Data</string>
-
+    <string name="cant_read_folder">Cant open a folder!</string>
     <color name="gray">#ffff0000</color>
 
     <string name="location">Path</string>
