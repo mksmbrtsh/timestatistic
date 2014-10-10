@@ -132,4 +132,5 @@
     <string name="stop">Stop it!</string>
     <string name="export_to_csv_complete">Only one record export in lite-version! Please setup TimeStatisticPro for this fealture!</string>
     <string name="filename">Filename</string>
+    <string name="share_diagram">Share diagram is enable in TimeStatisticPRO version. Please setup TimeStatisticPro for this fealture!</string>
 </resources>

@@ -1,12 +1,20 @@
 package maximsblog.blogspot.com.timestatistic;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Calendar;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.widget.Toast;
 
 public class app extends Application {
 	private static AlarmManagerBroadcastReceiver alarm = new AlarmManagerBroadcastReceiver();
@@ -38,13 +46,13 @@ public class app extends Application {
 				context).getLong(SettingsActivity.STARTTIMEFILTERPERIOD, 5);
 		return getStart(context, checkedItem);
 	}
-	
+
 	public static FilterDateOption getStartDate(Context context) {
 		long checkedItem = PreferenceManager.getDefaultSharedPreferences(
 				context).getLong(SettingsActivity.STARTTIMEFILTER, 5);
 		return getStart(context, checkedItem);
 	}
-	
+
 	public static FilterDateOption getStart(Context context, long checkedItem) {
 		Calendar calendar = Calendar.getInstance();
 		long result;
@@ -53,7 +61,7 @@ public class app extends Application {
 				R.array.StartFilters);
 		if (checkedItem < 6) {
 			resultName = startDateNames[(int) checkedItem];
-			switch ((int)checkedItem) {
+			switch ((int) checkedItem) {
 
 			case SettingsActivity.STARTTIMEFILTERS.TODAY:
 				calendar.set(Calendar.MILLISECOND, 0);
@@ -97,10 +105,11 @@ public class app extends Application {
 				break;
 			case SettingsActivity.STARTTIMEFILTERS.ALLTIME:
 				try {
-					result = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).firstInstallTime;
+					result = context.getPackageManager().getPackageInfo(
+							context.getPackageName(), 0).firstInstallTime;
 				} catch (NameNotFoundException e) {
 					e.printStackTrace();
-					result= 1;
+					result = 1;
 				}
 				break;
 			default:
@@ -121,6 +130,7 @@ public class app extends Application {
 				context).getLong(SettingsActivity.ENDTIMEFILTERPERIOD, 5);
 		return getEnd(context, checkedItem);
 	}
+
 	public static FilterDateOption getEnd(Context context, long checkedItem) {
 		Calendar calendar = Calendar.getInstance();
 		long result;
@@ -129,7 +139,7 @@ public class app extends Application {
 				R.array.EndFilters);
 		if (checkedItem < 6) {
 			resultName = startDateNames[(int) checkedItem];
-			switch ((int)checkedItem) {
+			switch ((int) checkedItem) {
 
 			case SettingsActivity.STARTTIMEFILTERS.TODAY:
 				calendar.set(Calendar.MILLISECOND, 0);
@@ -217,10 +227,15 @@ public class app extends Application {
 		return getStart(context, checkedItem);
 	}
 
-	public static FilterDateOption getEndDateExport(
-			ExportToCSVActivity context) {
+	public static FilterDateOption getEndDateExport(ExportToCSVActivity context) {
 		long checkedItem = PreferenceManager.getDefaultSharedPreferences(
 				context).getLong(SettingsActivity.ENDTIMEFILTEREXPORTCSV, 5);
 		return getEnd(context, checkedItem);
+	}
+
+	public static void BitmapShare(Context context, Bitmap b) {
+			Toast.makeText(context,
+					context.getString(R.string.share_diagram),
+					Toast.LENGTH_LONG).show();
 	}
 }

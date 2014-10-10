@@ -1,5 +1,8 @@
 package maximsblog.blogspot.com.timestatistic;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -18,12 +21,16 @@ import org.achartengine.model.SeriesSelection;
 import org.achartengine.renderer.DefaultRenderer;
 import org.achartengine.renderer.SimpleSeriesRenderer;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -39,11 +46,13 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -51,7 +60,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 public class DiagramFragment extends Fragment implements
-		LoaderCallbacks<Cursor>, MainFragments {
+		LoaderCallbacks<Cursor>, MainFragments, OnClickListener {
 	private final int LOADER_ID = 3;
 
 	/** The main series that will include all the data. */
@@ -70,6 +79,8 @@ public class DiagramFragment extends Fragment implements
 	private TextView mNotFoundText;
 
 	private View mDiagramLayout;
+
+	private ImageButton mDiagramShare;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -104,6 +115,8 @@ public class DiagramFragment extends Fragment implements
 		mNotFoundText = (TextView) mLayout.findViewById(R.id.not_found);
 		mDiagramLayout = mLayout.findViewById(R.id.ScrollView1);
 		mDiagramLayout.setVisibility(View.GONE);
+		mDiagramShare = (ImageButton) mLayout.findViewById(R.id.pad_share);
+		mDiagramShare.setOnClickListener(this);
 		return mLayout;
 	}
 
@@ -142,15 +155,15 @@ public class DiagramFragment extends Fragment implements
 			chartLayout.removeView(mChartView);
 			mChartView = null;
 		}
-			ViewGroup layout = (ViewGroup) mLayout.findViewById(R.id.chart);
-			mChartView = ChartFactory.getPieChartView(getActivity(), mSeries,
-					mRenderer);
-			int height = mLayout.getHeight()
-					- 2
-					* ((SherlockFragmentActivity) getActivity())
-							.getSupportActionBar().getHeight();
-			int width = mLayout.getWidth();
-			layout.addView(mChartView, new LayoutParams(width, height));
+		ViewGroup layout = (ViewGroup) mLayout.findViewById(R.id.chart);
+		mChartView = ChartFactory.getPieChartView(getActivity(), mSeries,
+				mRenderer);
+		int height = mLayout.getHeight()
+				- 2
+				* ((SherlockFragmentActivity) getActivity())
+						.getSupportActionBar().getHeight();
+		int width = mLayout.getWidth();
+		layout.addView(mChartView, new LayoutParams(width, height));
 		mRenderer.removeAllRenderers();
 		if (cursor != null) {
 			sca.swapCursor(cursor);
@@ -268,7 +281,7 @@ public class DiagramFragment extends Fragment implements
 				sb.append(" (");
 				sb.append(nf.format(values.get(i1) / sum).replace(" ", ""));
 				sb.append(')');
-				
+
 				sb.append("<br>");
 				mSeries.add(nvalues.get(i1), values.get(i1) / sum);
 			}
@@ -340,5 +353,16 @@ public class DiagramFragment extends Fragment implements
 		Random rnd = new Random();
 		return Color.argb(255, rnd.nextInt(256), rnd.nextInt(256),
 				rnd.nextInt(256));
+	}
+
+	@Override
+	public void onClick(View v) {
+		if (v.getId() == R.id.pad_share) {
+			if (mChartView != null) {
+				Bitmap b = mChartView.toBitmap();
+				app.BitmapShare(getActivity(), b);
+				b.recycle();
+			}
+		}
 	}
 }

@@ -36,6 +36,7 @@ import org.achartengine.util.MathHelper;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -63,6 +64,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -95,6 +97,7 @@ public class PeriodAnalyseFragment extends Fragment implements
 	private int[] mIds;
 	private boolean[] mChecked;
 	private AdView adView;
+	private ImageButton mDiagramShare;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -129,6 +132,8 @@ public class PeriodAnalyseFragment extends Fragment implements
 				.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
 				.addTestDevice("CF95DC53F383F9A836FD749F3EF439CD").build();
 		adView.loadAd(adRequest);
+		mDiagramShare = (ImageButton) mLayout.findViewById(R.id.pad_share);
+		mDiagramShare.setOnClickListener(this);
 		return mLayout;
 	}
 
@@ -264,6 +269,11 @@ public class PeriodAnalyseFragment extends Fragment implements
 			return;
 		case R.id.pad_reset:
 			mChartView.zoomReset();
+			return;
+		case R.id.pad_share:
+			Bitmap b = mChartView.toBitmap();
+			app.BitmapShare(getActivity(), b);
+			b.recycle();
 			return;
 		default:
 			break;

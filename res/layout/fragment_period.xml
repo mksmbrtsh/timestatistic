@@ -26,20 +26,22 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="200dp" >
-<LinearLayout
-        android:id="@+id/adViewLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
 
-        <com.google.android.gms.ads.AdView
-            xmlns:ads="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/adView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            ads:adSize="BANNER"
-            ads:adUnitId="ca-app-pub-0357007671643145/8031830798" />
-    </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/adViewLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <com.google.android.gms.ads.AdView
+                        xmlns:ads="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/adView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        ads:adSize="BANNER"
+                        ads:adUnitId="ca-app-pub-0357007671643145/8031830798" />
+                </LinearLayout>
+
                 <TextView
                     android:id="@+id/legend"
                     android:layout_width="match_parent"
@@ -51,6 +53,7 @@
                     android:textSize="14sp" />
 
                 <RelativeLayout
+                    android:id="@+id/relativeLayout1"
                     android:layout_width="168dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -80,6 +83,13 @@
                         android:layout_centerHorizontal="true"
                         android:src="@drawable/ic_plus_dark" />
 
+                    <ImageButton
+                        android:id="@+id/pad_share"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@+id/pad_plus"
+                        android:src="@android:drawable/ic_menu_share" />
                 </RelativeLayout>
             </RelativeLayout>
         </LinearLayout>
