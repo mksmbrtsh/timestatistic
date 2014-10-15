@@ -121,6 +121,14 @@
     <string name="csv_include_datetime">Имя файла включает дату (yyyyMMdd)</string>
     <string name="stop">Остановить!</string>
     <string name="export_to_csv_complete">Только одна запись экспортируется в бесплатной версии! Пожалуйста, установите TimeStatisticPro для этой функции!</string>
-	<string name="filename">Имя файла</string>
-	<string name="share_diagram">Отправка диаграмм доступна в TimeStatisticPRO. Пожалуйста, установите TimeStatisticPro для этой функции!</string>
+    <string name="filename">Имя файла</string>
+    <string name="share_diagram">Отправка диаграмм доступна в TimeStatisticPRO. Пожалуйста, установите TimeStatisticPro для этой функции!</string>
+    <string name="vibro_notif_mode">включена (переключение счетчиков, напоминания). Отключение доступно в ПРО-версии</string>
+    <string name="vibro_notif">Вибрация</string>
+
+    <string-array name="AboutPages">
+        <item>О программе</item>
+        <item>История версий</item>
+    </string-array>
+
 </resources>

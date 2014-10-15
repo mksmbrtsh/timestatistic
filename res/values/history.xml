@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="history_text">
+News:\n\n
+1.0.28\n
++ new about activity with history versions;\n
++ vibration settings.\n\n
+1.0.27\n
++ export to CSV format;\n
++ share diagram image.\n\n
+1.0.26\n
++ period diagram, summary and arithmetic mean values;\n
++ backup to Google Drive;\n
++ testing export to Google calendar one record;\n
++ PRO-version.\n\n
+1.0.25\n
++ new legend for diagrams;\n
++ icons on tab;\n
+* fix somebugs.\n\n   
+1.0.24.3\n
+* fix some bugs.\n\n
+1.0.24.2\n
+* fix some bugs.\n\n
+1.0.24\n
++ counter sort enable;\n
++ filters;\n
++ grey color enable.\n\n
+1.0.23\n
++ add autostart alarm when device reboot;\n
+* fix design on small screens;\n
+* fix some bugs.\n\n
+1.0.22\n
++ add diary.\n\n
+1.0.21\n
++ add start time (today, week, month, year, all time);\n
+* fix some bugs.\n
+1.0.11\n
++ add alarm.\n\n
+1.0.10\n
++ add union records.\n\n
+1.0.9\n
++ add split records.\n\n
+1.0.8\n
++ add color choose.\n\n
+1.0.7\n
++ add delete counters and reset.\n\n
+1.0.6\n
++ add diagram.\n\n
+1.0.5\n
++ add records.\n\n
+alpha3\n
++ add counters.\n</string>
+
+</resources>

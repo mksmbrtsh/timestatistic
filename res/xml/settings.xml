@@ -12,7 +12,12 @@
         android:summaryOff="@string/alarm_notif_umode"
         android:summaryOn="@string/alarm_notif_mode"
         android:title="@string/alarm_notif" />
-
+<CheckBoxPreference
+        android:key="vibration"
+        android:summaryOn="@string/vibro_notif_mode"
+        android:defaultValue="true"
+        android:title="@string/vibro_notif"
+        android:enabled="false" />
     
 
 </PreferenceScreen>

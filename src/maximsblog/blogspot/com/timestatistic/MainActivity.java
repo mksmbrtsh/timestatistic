@@ -268,9 +268,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			areYouSureResetAllDialog.show(ft, "mAreYouSureResetAllDialog");
 			break;
 		case R.id.item_about:
-			ft = getSupportFragmentManager().beginTransaction();
-			AboutDialogFragment aboutFragment = new AboutDialogFragment();
-			aboutFragment.show(ft, "aboutDialog");
+			startActivity(new Intent(this, AboutActivity.class));
 			break;
 		case R.id.action_settings: {
 			Intent i = new Intent(this, SettingsActivity.class);
