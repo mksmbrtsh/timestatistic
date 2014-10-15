@@ -192,11 +192,11 @@ public class FileDialog extends ListActivity {
 		if (!currentPath.equals(ROOT)) {
 
 			item.add(ROOT);
-			addItem(ROOT, R.drawable.folder);
+			addItem(ROOT, R.drawable.ic_folder_dark);
 			path.add(ROOT);
 
 			item.add("../");
-			addItem("../", R.drawable.folder);
+			addItem("../", R.drawable.ic_folder_dark);
 			path.add(f.getParent());
 			parentPath = f.getParent();
 
@@ -246,7 +246,7 @@ public class FileDialog extends ListActivity {
 				ITEM_KEY, ITEM_IMAGE }, new int[] { R.id.fdrowtext, R.id.fdrowimage });
 
 		for (String dir : dirsMap.tailMap("").values()) {
-			addItem(dir, R.drawable.folder);
+			addItem(dir, R.drawable.ic_folder_dark);
 		}
 
 		for (String file : filesMap.tailMap("").values()) {

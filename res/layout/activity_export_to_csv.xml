@@ -32,7 +32,7 @@
                 android:id="@+id/select_folder_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/folder"
+                android:drawableLeft="@drawable/ic_folder_dark"
                 android:text="@string/location" />
 
             <CheckBox
