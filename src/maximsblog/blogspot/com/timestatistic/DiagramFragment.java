@@ -72,7 +72,7 @@ public class DiagramFragment extends Fragment implements
 	private GraphicalView mChartView;
 	private View mLayout;
 	private LoaderManager loadermanager;
-	private TextView mLegendText;
+	private EditText mLegendText;
 
 	private SimpleCursorAdapter sca;
 
@@ -111,7 +111,7 @@ public class DiagramFragment extends Fragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		mLayout = inflater.inflate(R.layout.fragment_diagram, container, false);
-		mLegendText = (TextView) mLayout.findViewById(R.id.legend);
+		mLegendText = (EditText) mLayout.findViewById(R.id.legend);
 		mNotFoundText = (TextView) mLayout.findViewById(R.id.not_found);
 		mDiagramLayout = mLayout.findViewById(R.id.ScrollView1);
 		mDiagramLayout.setVisibility(View.GONE);

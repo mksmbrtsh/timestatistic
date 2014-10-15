@@ -83,7 +83,7 @@ public class PeriodAnalyseFragment extends Fragment implements
 	private GraphicalView mChartView;
 	private View mLayout;
 	private LoaderManager loadermanager;
-	private TextView mLegendText;
+	private EditText mLegendText;
 
 	private SimpleCursorAdapter sca;
 
@@ -117,7 +117,7 @@ public class PeriodAnalyseFragment extends Fragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		mLayout = inflater.inflate(R.layout.fragment_period, container, false);
-		mLegendText = (TextView) mLayout.findViewById(R.id.legend);
+		mLegendText = (EditText) mLayout.findViewById(R.id.legend);
 		mNotFoundText = (TextView) mLayout.findViewById(R.id.not_found);
 		mProgressBar = (ProgressBar) mLayout.findViewById(R.id.progress);
 		mDiagramLayout = mLayout.findViewById(R.id.ScrollView1);

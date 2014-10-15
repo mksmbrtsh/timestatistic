@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-<LinearLayout
+
+    <LinearLayout
         android:id="@+id/adViewLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,6 +18,7 @@
             ads:adSize="BANNER"
             ads:adUnitId="ca-app-pub-0357007671643145/8031830798" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -41,14 +43,17 @@
                 android:layout_width="200dp"
                 android:layout_height="match_parent" >
 
-                <TextView
+                <EditText
                     android:id="@+id/legend"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@+id/relativeLayout1"
                     android:background="@android:color/transparent"
+                    android:cursorVisible="true"
+                    android:editable="false"
                     android:scrollbars="vertical"
                     android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textIsSelectable="true"
                     android:textSize="14sp" />
 
                 <RelativeLayout
@@ -90,7 +95,6 @@
                         android:layout_alignParentTop="true"
                         android:layout_centerHorizontal="true"
                         android:src="@drawable/ic_plus_dark" />
-
                 </RelativeLayout>
             </RelativeLayout>
         </LinearLayout>

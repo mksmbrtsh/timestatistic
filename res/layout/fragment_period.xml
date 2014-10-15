@@ -42,14 +42,17 @@
                         ads:adUnitId="ca-app-pub-0357007671643145/8031830798" />
                 </LinearLayout>
 
-                <TextView
+                <EditText
                     android:id="@+id/legend"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@+id/adViewLayout"
                     android:background="@android:color/transparent"
+                    android:cursorVisible="true"
+                    android:editable="false"
                     android:scrollbars="vertical"
                     android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textIsSelectable="true"
                     android:textSize="14sp" />
 
                 <RelativeLayout
