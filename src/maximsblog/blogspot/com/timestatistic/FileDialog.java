@@ -250,7 +250,7 @@ public class FileDialog extends ListActivity {
 		}
 
 		for (String file : filesMap.tailMap("").values()) {
-			addItem(file, R.drawable.file);
+				addItem(file, R.drawable.ic_file_dark);
 		}
 
 		fileList.notifyDataSetChanged();
