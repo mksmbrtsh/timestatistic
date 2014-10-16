@@ -242,7 +242,14 @@ public class RecordsDbHelper extends ContentProvider {
 		case TIMES: {
 			String start;
 			String stop;
-			if (selectionArgs != null && selection == null) {
+			if(selectionArgs != null && selectionArgs.length == 3 )
+			{
+				start = selectionArgs[0];
+				stop = selectionArgs[1];
+				String[] newSelectionArgs = new String[1];
+				newSelectionArgs[0] = selectionArgs[2];
+				selectionArgs = newSelectionArgs;
+			} else if (selectionArgs != null && selection == null) {
 				start = selectionArgs[0];
 				stop = selectionArgs[1];
 			}
@@ -490,7 +497,4 @@ public class RecordsDbHelper extends ContentProvider {
 		getContext().getContentResolver().notifyChange(uri, null);
 		return count;
 	}
-
-	
-
 }

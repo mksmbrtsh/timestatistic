@@ -141,5 +141,6 @@
         <item>About program</item>
         <item>Version history</item>
     </string-array>
-
+    <string name="since">Since</string>
+    <string name="alerttime">Alert time</string> 
 </resources>

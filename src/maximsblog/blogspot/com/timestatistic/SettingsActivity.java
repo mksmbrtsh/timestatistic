@@ -2,8 +2,11 @@ package maximsblog.blogspot.com.timestatistic;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 
@@ -105,17 +108,57 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 					context.getApplicationContext(), 0, intent1,
 					Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			Builder mBuilder;
+			
+			FilterDateOption startDateOption = app.getStartDate(context);
+			long mStartdate = startDateOption.date;
+			long mEnddate = -1;
+			
+			if(start < mStartdate)
+				start = mStartdate;
+			long now = new Date().getTime();
+			
+			if(now > mEnddate && mEnddate != -1){
+
+			} else {
+				lenght = now - start +  lenght;
+			}
+			
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTimeInMillis(start);
+			Calendar calendarNow = Calendar.getInstance();
+			calendar.set(Calendar.MILLISECOND, 0);
+			calendar.set(Calendar.SECOND, 0);
+			calendar.set(Calendar.MINUTE, 0);
+			calendar.set(Calendar.HOUR_OF_DAY, 0);
+			calendarNow.set(Calendar.MILLISECOND, 0);
+			calendarNow.set(Calendar.SECOND, 0);
+			calendarNow.set(Calendar.MINUTE, 0);
+			calendarNow.set(Calendar.HOUR_OF_DAY, 0);
+			String contentText;
+			String subText;
+			
+			if(calendar.getTimeInMillis() == calendarNow.getTimeInMillis()){
+				DateFormat simpleDateFormat = SimpleDateFormat.getTimeInstance();
+				contentText = context.getString(R.string.since) + ": " + simpleDateFormat.format(start);
+				subText = context.getString(R.string.alerttime) + ": " + simpleDateFormat.format(new Date());
+			} else {
+				DateFormat simpleDateFormat = SimpleDateFormat.getDateTimeInstance();
+				contentText = context.getString(R.string.since) + ": " + simpleDateFormat.format(start);
+				subText = context.getString(R.string.alerttime) + ": " + simpleDateFormat.format(new Date());
+			}
+			
 			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-				mBuilder = new NotificationCompat.Builder(
-						context).setSmallIcon(R.drawable.ic_notification)
-						.setContentTitle(name).setOngoing(false)
+				mBuilder = new NotificationCompat.Builder(context)
+						.setSmallIcon(R.drawable.ic_notification)
+						.setContentTitle(context.getString(R.string.now) + ": " + name).setOngoing(false).setContentText(contentText)
 						.setWhen(new Date().getTime() - lenght)
 						.setAutoCancel(false).setUsesChronometer(true);
-				else mBuilder = new NotificationCompat.Builder(
-					context).setSmallIcon(R.drawable.ic_status_bar_not)
-					.setContentTitle(name).setOngoing(false)
-					.setWhen(new Date().getTime() - lenght)
-					.setAutoCancel(false).setUsesChronometer(true);
+			else
+				mBuilder = new NotificationCompat.Builder(context)
+						.setSmallIcon(R.drawable.ic_status_bar_not)
+						.setContentTitle(context.getString(R.string.now) + ": " + name).setOngoing(false).setContentText(contentText)
+						.setWhen(new Date().getTime() - lenght)
+						.setAutoCancel(false).setUsesChronometer(true);
 
 			Notification n = mBuilder.build();
 			n.contentIntent = contentIntent;

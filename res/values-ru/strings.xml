@@ -130,5 +130,6 @@
         <item>О программе</item>
         <item>История версий</item>
     </string-array>
-
+<string name="since">Отсчет от</string>
+    <string name="alerttime">Время срабатывания</string> 
 </resources>

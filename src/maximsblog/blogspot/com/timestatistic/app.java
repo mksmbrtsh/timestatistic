@@ -33,7 +33,7 @@ public class app extends Application {
 						RecordsDbHelper.ISRUNNING },
 				RecordsDbHelper.ISRUNNING + "='1'", null, null);
 		c.moveToFirst();
-		alarm.SetAlarm(context, c.getString(5), c.getLong(8));
+		alarm.SetAlarm(context, c.getString(5), c.getLong(8), true);
 		c.close();
 	}
 
