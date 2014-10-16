@@ -7,6 +7,7 @@ News:\n\n
 + new about activity with history versions;\n
 + select text on diagram legend;\n
 + new information in notification;\n
+* fix not save note info;\n
 + vibration settings.\n\n
 1.0.27\n
 + export to CSV format;\n
