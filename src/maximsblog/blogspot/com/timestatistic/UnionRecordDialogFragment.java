@@ -82,7 +82,7 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 		outState.putSerializable("mIdrecords", mIdrecords);
 		outState.putBoolean("mNowCounter", mNowCounter);
 		outState.putInt("mCurrentPosition", mCurrentPosition);
-		outState.putString("mCurrentNoteEdit", mCurrentNoteEdit.getText()
+		outState.putString(mCurrentNote = "mCurrentNoteEdit", mCurrentNoteEdit.getText()
 				.toString());
 		super.onSaveInstanceState(outState);
 	};

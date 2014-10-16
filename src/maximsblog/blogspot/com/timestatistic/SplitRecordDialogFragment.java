@@ -142,9 +142,9 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 				mBeforeCounter.getSelectedItemPosition());
 		outState.putInt("mAfterCounter",
 				mAfterCounter.getSelectedItemPosition());
-		outState.putString("mCurrentNote", mCurrentNoteEdit.getText().toString());
-		outState.putString("mAfterNote", mAfterNoteEdit.getText().toString());
-		outState.putString("mBeforeNote", mBeforeNoteEdit.getText().toString());
+		outState.putString("mCurrentNote", mCurrentNote = mCurrentNoteEdit.getText().toString());
+		outState.putString("mAfterNote", mAfterNote = mAfterNoteEdit.getText().toString());
+		outState.putString("mBeforeNote", mBeforeNote = mBeforeNoteEdit.getText().toString());
 		super.onSaveInstanceState(outState);
 	};
 

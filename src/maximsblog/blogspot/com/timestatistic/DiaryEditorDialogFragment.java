@@ -87,7 +87,7 @@ public class DiaryEditorDialogFragment extends DialogFragment implements OnClick
 		outState.putString("mName", mName);
 		outState.putInt("mIDrecord", mIDrecord);
 		// edit values
-		outState.putString("mCurrentNote", mCurrentNoteEdit.getText().toString());
+		outState.putString("mCurrentNote", mCurrentNote = mCurrentNoteEdit.getText().toString());
 		super.onSaveInstanceState(outState);
 	};
 
