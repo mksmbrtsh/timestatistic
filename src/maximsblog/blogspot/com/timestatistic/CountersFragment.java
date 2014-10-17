@@ -161,8 +161,7 @@ public final class CountersFragment extends Fragment implements
 				RecordsDbHelper.ID + " = ?",
 				new String[] { String.valueOf(counterId) });
 		app.loadRunningCounterAlarm(getActivity().getApplicationContext());
-		SettingsActivity.visibleNotif(getActivity(), cursor.getLong(3),
-				cursor.getLong(2), cursor.getString(5));
+		app.setStatusBar(getActivity().getApplicationContext());
 		loadermanager.restartLoader(LOADER_ID, null, this);
 		TimeRecordsFragment timeRecordsFragment = (TimeRecordsFragment) ((MainActivity) getActivity())
 				.findFragmentByPosition(1);

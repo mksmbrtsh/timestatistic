@@ -17,6 +17,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -77,103 +78,17 @@ public class SettingsActivity extends SherlockPreferenceActivity implements
 			} else {
 				app.delAlarm(getApplicationContext());
 			}
+			 Editor e = preference.getEditor();
+			 e.putBoolean("alarm", (Boolean)newValue);
+			 e.commit();
+			 app.setStatusBar(this);
 		} else {
-			Cursor c = getContentResolver().query(
-					RecordsDbHelper.CONTENT_URI_TIMES,
-					new String[] { RecordsDbHelper.ID, RecordsDbHelper.NAME,
-							RecordsDbHelper.ISRUNNING },
-					RecordsDbHelper.ISRUNNING + "='1'", null, null);
-			c.moveToFirst();
-
-			if ((Boolean) newValue) {
-				visibleNotif(this, c.getLong(3), c.getLong(2), c.getString(5),
-						true);
-			} else {
-				visibleNotif(this, c.getLong(3), c.getLong(2), c.getString(5),
-						false);
-			}
-			c.close();
+			Editor e = preference.getEditor();
+			e.putBoolean("visible_notif", (Boolean)newValue);
+			e.commit();
+			app.setStatusBar(this);
 		}
 		return true;
 	}
 
-	public static void visibleNotif(Context context, long start, long lenght,
-			String name, boolean visible) {
-		NotificationManager mNotificationManager = (NotificationManager) context
-				.getSystemService(Context.NOTIFICATION_SERVICE);
-		mNotificationManager.cancel(100);
-		if (visible) {
-			final Intent intent1 = new Intent(context, MainActivity.class);
-			final PendingIntent contentIntent = PendingIntent.getActivity(
-					context.getApplicationContext(), 0, intent1,
-					Intent.FLAG_ACTIVITY_CLEAR_TASK);
-			Builder mBuilder;
-			
-			FilterDateOption startDateOption = app.getStartDate(context);
-			long mStartdate = startDateOption.date;
-			long mEnddate = -1;
-			
-			if(start < mStartdate)
-				start = mStartdate;
-			long now = new Date().getTime();
-			
-			if(now > mEnddate && mEnddate != -1){
-
-			} else {
-				lenght = now - start +  lenght;
-			}
-			
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTimeInMillis(start);
-			Calendar calendarNow = Calendar.getInstance();
-			calendar.set(Calendar.MILLISECOND, 0);
-			calendar.set(Calendar.SECOND, 0);
-			calendar.set(Calendar.MINUTE, 0);
-			calendar.set(Calendar.HOUR_OF_DAY, 0);
-			calendarNow.set(Calendar.MILLISECOND, 0);
-			calendarNow.set(Calendar.SECOND, 0);
-			calendarNow.set(Calendar.MINUTE, 0);
-			calendarNow.set(Calendar.HOUR_OF_DAY, 0);
-			String contentText;
-			String subText;
-			
-			if(calendar.getTimeInMillis() == calendarNow.getTimeInMillis()){
-				DateFormat simpleDateFormat = SimpleDateFormat.getTimeInstance();
-				contentText = context.getString(R.string.since) + ": " + simpleDateFormat.format(start);
-				subText = context.getString(R.string.alerttime) + ": " + simpleDateFormat.format(new Date());
-			} else {
-				DateFormat simpleDateFormat = SimpleDateFormat.getDateTimeInstance();
-				contentText = context.getString(R.string.since) + ": " + simpleDateFormat.format(start);
-				subText = context.getString(R.string.alerttime) + ": " + simpleDateFormat.format(new Date());
-			}
-			
-			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-				mBuilder = new NotificationCompat.Builder(context)
-						.setSmallIcon(R.drawable.ic_notification)
-						.setContentTitle(context.getString(R.string.now) + ": " + name).setOngoing(false).setContentText(contentText)
-						.setWhen(new Date().getTime() - lenght)
-						.setAutoCancel(false).setUsesChronometer(true);
-			else
-				mBuilder = new NotificationCompat.Builder(context)
-						.setSmallIcon(R.drawable.ic_status_bar_not)
-						.setContentTitle(context.getString(R.string.now) + ": " + name).setOngoing(false).setContentText(contentText)
-						.setWhen(new Date().getTime() - lenght)
-						.setAutoCancel(false).setUsesChronometer(true);
-
-			Notification n = mBuilder.build();
-			n.contentIntent = contentIntent;
-			n.when = new Date().getTime() - lenght;
-
-			n.flags = Notification.FLAG_ONGOING_EVENT;
-			mNotificationManager.notify(100, n);
-		}
-	}
-
-	public static void visibleNotif(Context context, long start, long lenght,
-			String string) {
-		boolean visible = PreferenceManager.getDefaultSharedPreferences(
-				context.getApplicationContext()).getBoolean("visible_notif",
-				false);
-		visibleNotif(context, start, lenght, string, visible);
-	}
 }

@@ -130,6 +130,10 @@
         <item>О программе</item>
         <item>История версий</item>
     </string-array>
-<string name="since">Отсчет от</string>
-    <string name="alerttime">Время срабатывания</string> 
+
+    <string name="since">Отсчет от</string>
+    <string name="alerttime">Время срабатывания</string>
+    <string name="sum_since">Суммируется с</string>
+    <string name="switchtime">Последнее переключение</string>
+
 </resources>

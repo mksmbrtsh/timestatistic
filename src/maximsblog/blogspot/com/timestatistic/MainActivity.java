@@ -314,6 +314,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public void onResetAllDialog() {
 		getContentResolver().delete(RecordsDbHelper.CONTENT_URI_RESETCOUNTERS,
 				null, null);
+		app.loadRunningCounterAlarm(getApplicationContext());
+		app.setStatusBar(getApplicationContext());
 		reloadFragments();
 	}
 
@@ -367,6 +369,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 					RecordsDbHelper.ID + "=?",
 					new String[] { String.valueOf(id) });
 			app.loadRunningCounterAlarm(getApplicationContext());
+			app.setStatusBar(getApplicationContext());
 			reloadFragments();
 		} else if (status == Status.DEL) {
 			if (isRunning) {
@@ -376,6 +379,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 						cv, RecordsDbHelper.ID + " = ?",
 						new String[] { String.valueOf(1) });
 				app.loadRunningCounterAlarm(getApplicationContext());
+				app.setStatusBar(getApplicationContext());
 			}
 			getContentResolver().delete(RecordsDbHelper.CONTENT_URI_TIMERS,
 					null, new String[] { String.valueOf(id) });

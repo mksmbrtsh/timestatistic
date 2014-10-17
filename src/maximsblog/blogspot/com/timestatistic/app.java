@@ -3,17 +3,27 @@ package maximsblog.blogspot.com.timestatistic;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+
 
 import android.app.Application;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.Builder;
 import android.widget.Toast;
 
 public class app extends Application {
@@ -237,5 +247,100 @@ public class app extends Application {
 			Toast.makeText(context,
 					context.getString(R.string.share_diagram),
 					Toast.LENGTH_LONG).show();
+	}
+	
+	public static void setStatusBar(Context context) {
+		boolean visible = PreferenceManager.getDefaultSharedPreferences(
+				context.getApplicationContext()).getBoolean("visible_notif",
+				false);
+		NotificationManager mNotificationManager = (NotificationManager) context
+				.getSystemService(Context.NOTIFICATION_SERVICE);
+		mNotificationManager.cancel(100);
+		if (visible) {
+			FilterDateOption startDateOption = app.getStartDate(context);
+			long mStartdate = startDateOption.date;
+			long mEnddate = -1;
+			String[] selectionArgs = new String[] { String.valueOf(mStartdate),
+					String.valueOf(mEnddate), String.valueOf(1) };
+
+			Cursor c = context.getContentResolver().query(
+					RecordsDbHelper.CONTENT_URI_TIMES,
+					new String[] { RecordsDbHelper.ID, RecordsDbHelper.NAME,
+							RecordsDbHelper.ISRUNNING },
+					RecordsDbHelper.ISRUNNING + "=?", selectionArgs, null);
+			if (c.moveToFirst()) {
+
+				long start = c.getLong(3);
+				long lenght = c.getLong(2);
+				String name = c.getString(5);
+
+				final Intent intent1 = new Intent(context, MainActivity.class);
+				final PendingIntent contentIntent = PendingIntent.getActivity(
+						context.getApplicationContext(), 0, intent1,
+						Intent.FLAG_ACTIVITY_CLEAR_TASK);
+				Builder mBuilder;
+				if (start < mStartdate)
+					start = mStartdate;
+				long now = new Date().getTime();
+
+				if (now > mEnddate && mEnddate != -1) {
+
+				} else {
+					lenght = now - start + lenght;
+				}
+
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTimeInMillis(start);
+				Calendar calendarNow = Calendar.getInstance();
+				calendar.set(Calendar.MILLISECOND, 0);
+				calendar.set(Calendar.SECOND, 0);
+				calendar.set(Calendar.MINUTE, 0);
+				calendar.set(Calendar.HOUR_OF_DAY, 0);
+				calendarNow.set(Calendar.MILLISECOND, 0);
+				calendarNow.set(Calendar.SECOND, 0);
+				calendarNow.set(Calendar.MINUTE, 0);
+				calendarNow.set(Calendar.HOUR_OF_DAY, 0);
+				String contentText;
+				String subText;
+
+				if (calendar.getTimeInMillis() == calendarNow.getTimeInMillis()) {
+					DateFormat simpleDateFormat = SimpleDateFormat
+							.getTimeInstance();
+					contentText = context.getString(R.string.sum_since) + ": "
+							+ simpleDateFormat.format(mStartdate);
+					subText = context.getString(R.string.switchtime) + ": "
+							+ simpleDateFormat.format(start);
+				} else {
+					DateFormat simpleDateFormat = SimpleDateFormat
+							.getDateTimeInstance();
+					contentText = context.getString(R.string.sum_since) + ": "
+							+ simpleDateFormat.format(mStartdate);
+					subText = context.getString(R.string.switchtime) + ": "
+							+ simpleDateFormat.format(start);
+				}
+				boolean alarm = PreferenceManager.getDefaultSharedPreferences(
+						context).getBoolean("alarm", false);
+
+				mBuilder = new NotificationCompat.Builder(context)
+
+						.setSmallIcon(R.drawable.ic_status_bar_not)
+						.setContentTitle(
+								context.getString(R.string.now) + ": " + name)
+						.setOngoing(false).setSubText(contentText)
+						.setContentText(subText)
+						.setWhen(new Date().getTime() - lenght)
+						.setAutoCancel(false).setUsesChronometer(true);
+				if (alarm)
+					mBuilder.setLargeIcon(BitmapFactory.decodeResource(
+							context.getResources(), R.drawable.ic_status_bar_not));
+				Notification n = mBuilder.build();
+				n.contentIntent = contentIntent;
+				n.when = new Date().getTime() - lenght;
+
+				n.flags = Notification.FLAG_ONGOING_EVENT;
+				mNotificationManager.notify(100, n);
+			}
+			c.close();
+		}
 	}
 }

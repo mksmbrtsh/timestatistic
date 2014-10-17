@@ -14,6 +14,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -48,10 +49,6 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
 
 		});
 		t.start();
-		// Bundle extras = intent.getExtras();
-		// String name = extras.getString(NAME);
-		// visibleNotif(context, name);
-
 	}
 
 	private void visible_notification(Context context) {
@@ -89,15 +86,14 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
 		String name = null;
 		long lenght = 0;
 		long start = 0;
+		long rememberInterval = 0;
+		long now = new Date().getTime();
 		if (cursor.moveToFirst()) {
 			name = cursor.getString(5);
-			long add = cursor.getLong(8);
-
+			rememberInterval = cursor.getLong(8);
 			start = cursor.getLong(3);
 			if (start < mStartdate)
 				start = mStartdate;
-			long now = new Date().getTime();
-
 			if (now > mEnddate && mEnddate != -1) {
 				lenght = cursor.getLong(2);
 			} else {
@@ -140,7 +136,11 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
 								+ ")").setContentText(contentText)
 				.setWhen((new Date().getTime() - lenght))
 				.setUsesChronometer(true).setSubText(subText)
-				.build();
+				.setNumber((int) Math.ceil((now - start) / rememberInterval))
+				.setSmallIcon(R.drawable.ic_notification)
+				.setLargeIcon(
+						BitmapFactory.decodeResource(context.getResources(),
+								R.drawable.ic_notification)).build();
 		n.contentIntent = contentIntent;
 		n.flags = Notification.FLAG_AUTO_CANCEL;
 		mNotificationManager.notify(101, n);
@@ -209,13 +209,4 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
 				.getSystemService(Context.ALARM_SERVICE);
 		alarmManager.cancel(sender);
 	}
-	/*
-	 * public void setOnetimeTimer(Context context){ AlarmManager
-	 * am=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE); Intent
-	 * intent = new Intent(context, AlarmManagerBroadcastReceiver.class);
-	 * intent.putExtra(ONE_TIME, Boolean.TRUE); PendingIntent pi =
-	 * PendingIntent.getBroadcast(context, 0, intent, 0);
-	 * am.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pi); }
-	 */
-
 }

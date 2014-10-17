@@ -141,6 +141,10 @@
         <item>About program</item>
         <item>Version history</item>
     </string-array>
+
     <string name="since">Since</string>
-    <string name="alerttime">Alert time</string> 
+    <string name="alerttime">Alert time</string>
+    <string name="sum_since">Summary since</string>
+    <string name="switchtime">Last switch</string>
+
 </resources>

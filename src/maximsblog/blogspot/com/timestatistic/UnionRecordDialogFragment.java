@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+
 import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
@@ -171,7 +172,6 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 					RecordsDbHelper.ID + " = ?",
 					new String[] { String.valueOf(c.getInt(4)) });
 			cv.clear();
-			app.loadRunningCounterAlarm(getActivity().getApplicationContext());
 		} else {
 			cv.put(RecordsDbHelper.LENGHT, mLenght);
 			cv.put(RecordsDbHelper.ENDTIME, mStart + mLenght);
@@ -196,6 +196,10 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 						RecordsDbHelper.ID3 + "=?",
 						new String[] { String.valueOf(iterable_element) });
 			}
+		}
+		if (mNowCounter) {
+			app.loadRunningCounterAlarm(getActivity().getApplicationContext());
+			app.setStatusBar(getActivity().getApplicationContext());
 		}
 	}
 

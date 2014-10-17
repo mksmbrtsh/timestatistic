@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.zip.DataFormatException;
 
+
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -298,8 +299,11 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 					|| mOriginalStart != mCurrentStart
 					|| mOriginalLenght + mOriginalStart != mCurrentStart
 							+ mCurrentLenght
-							|| !mCurrentNote.equals(mCurrentNoteEdit.getText().toString()))
+							|| !mCurrentNote.equals(mCurrentNoteEdit.getText().toString())){
 				editRecord();
+				app.setStatusBar(getActivity().getApplicationContext());
+				app.setRunningCounterAlarmSettings(getActivity().getApplicationContext());
+			}
 			mListener.onRefreshFragmentsValue();
 			dismiss();
 		} else if (id == R.id.cancel) {
