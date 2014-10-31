@@ -13,6 +13,7 @@
         android:summaryOn="@string/alarm_notif_mode"
         android:title="@string/alarm_notif" />
 <CheckBoxPreference
+    	android:icon="@drawable/ic_vibro_dark"
         android:key="vibration"
         android:summaryOn="@string/vibro_notif_mode"
         android:defaultValue="true"
