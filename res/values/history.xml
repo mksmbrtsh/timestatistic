@@ -3,6 +3,15 @@
 
     <string name="history_text">
 News:\n\n
+1.0.29\n
+* fix critical bug with union intervals.\n
+PRO-version:\n
++ left slide-menu;\n
++ select counters in circle diagram;\n
+* two tabs: counters and records;\n
+* fix slow switch from tab to tab;
+* autorefresh time filter on mainform;\n\n
+\n\n
 1.0.28\n
 + new about activity with history versions;\n
 + select text on diagram legend;\n
