@@ -2,6 +2,7 @@ package maximsblog.blogspot.com.timestatistic;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -229,7 +230,8 @@ public class TimeRecordsFragment extends Fragment implements
 		if (v.getId() == R.id.ok) {
 			Cursor times = mAdapter.getCursor();
 			long start = Long.MAX_VALUE;
-			long lenght = 0;
+			//long lenght = 0;
+			long stop = Long.MIN_VALUE;
 			long clenght = -1;
 			boolean nowCounter = false;
 			int iDtimer = -1;
@@ -255,7 +257,9 @@ public class TimeRecordsFragment extends Fragment implements
 						note = null;
 					cursor.close();
 				}
-				lenght += times.getLong(1);
+				if(stop <  times.getLong(7))
+					stop = times.getLong(7);
+				//lenght += times.getLong(1);
 				idrecords.add(times.getInt(5));
 				if (times.getLong(1) == 0) {
 					nowCounter = true;
@@ -271,7 +275,7 @@ public class TimeRecordsFragment extends Fragment implements
 				}
 
 			}
-
+			long lenght = stop - start > 0 ? stop - start : new Date().getTime() - start;
 			UnionRecordDialogFragment unionRecordDialog = new UnionRecordDialogFragment();
 			unionRecordDialog.setDialogListener((MainActivity) getActivity());
 			unionRecordDialog.setValues(mAdapter.getSelected(), start, lenght,
