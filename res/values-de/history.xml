@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="history_text">
+Was ist neu:\n\n
+1.0.29\n
+* Es wurde ein Fehler mit der Vereinigung von Intervallen;\n
+PRO-Version\n
++ Slide-Menü auf der linken;\n
++ Wahl eines Gegen enthält ein Kreisdiagramm;\n
+* Zwei Haupt Taba Zähler und Aufzeichnungen;\n
+* Lag Umschalten zwischen Registerkarten;\n
+* Auto-Update des Filters auf dem Hauptformular.\n\n
+1.0.28\n
++ New Bildschirm mit der Geschichte der Programmversionen;\n
++ Text-Auswahltabelle Legenden;\n
++ Neue Informationen, wenn die Benachrichtigung;\n
+* Fixed nicht Erhaltung Journaleinträge;\n
++ Einstellung zu aktivieren oder deaktivieren Vibration.\n\n
+1.0.27\n
++ Export nach CSV;\n
++ Rassharivaniya Diagramm als Bild.\n\n
+1.0.26\n
++ Perioden, Gesamtzeit, das arithmetische Mittel, das Diagramm;\n
++ Sicherung in Google Drive;\n
++ Export nach Google Kalender;\n
++ PRO-Version.\n\n
+1.0.25\n
++ Neue Legende für das Diagramm;\n
++ Icons Registerkarte;\n
+* Korrektur von Fehlern.\n\n
+1.0.24.3\n
+* Korrektur von Fehlern.\n\n
+1.0.24.2\n
+* Korrektur von Fehlern.\n\n
+1.0.24\n
++ Sortierung Zähler;\n
++ Filterzeit;\n
++ Grau für Zähler;\n\n
+1.0.23\n
++ Autostart, Mahnungen, wenn Sie das Gerät neu zu starten;\n
+* Fix Design auf kleinen Bildschirmen;\n
+* Korrektur von Fehlern.\n\n
+1.0.22\n
++ Tagebuch Registerkarte.\n\n
+1.0.21\n
++ Fähigkeit, das Datum und die Uhrzeit des Berichts festlegen (heute, vom Anfang der Woche, Monat, Jahr);\n
+* Korrektur von Fehlern.\n
+1.0.11\n
++ Reminder.\n\n
+1.0.10\n
++ Union Datensätze.\n\n
+1.0.9\n
++ Schallmauer durchbrochen.\n\n
+1.0.8\n
++ Wählen Sie Farben für Zähler.\n\n
+1.0.7\n
++ Löschen und Zurücksetzen aller Zähler auf Null.\n\n
+1.0.6\n
++ Es wurde ein Diagramm.\n\n
+1.0.5\n
++ Registerkarte Aufnahme.\n\n
+alpha3\n
++ Zähler.\n
+    </string>
+    
+</resources>

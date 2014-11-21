@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+
+    <string name="app_name">Zeitstudie Lite</string>
+    <string name="action_settings">Einstellungen</string>
+    <string name="last_value">Der letzte Wert</string>
+    <string name="add_counter_dialog">Hinzufügen eines neuen Zählers</string>
+    <string name="edit_counter_dialog">Ändern der Zähler</string>
+    <string name="add">Hinzufügen</string>
+    <string name="about">Über</string>
+    <string name="reset_all">Alle Zähler zurücksetzen</string>
+    <string name="are_you_sure">Sind Sie sicher?</string>
+
+    <string-array name="TitlePages">
+        <item>Messgeräte</item>
+        <item>Rekorde</item>
+        <item>Plan</item>
+        <item>Tagebuch</item>
+    </string-array>
+
+    <string name="del">Löschen</string>
+    <string name="day1">Tag</string>
+    <string name="day234">Tag</string>
+    <string name="days">Tag</string>
+    <string name="change_color">Wählt die Hintergrundfarbe</string>
+    <string name="version">Version</string>
+    <string name="about_text">Idee: <a href="mailto:ruslan.popov@gmail.com">Ruslan Popov</a>\n\nSymbolen Launch: Sergei Barkov (superbarok)\n\nDizayn Menüsymbole: Anna Bartosh \n\nRazrabotchik: <a href="mailto:mksmbtrsh@gmail.com">Maksim Bartosh</a>\n\nnFür weitere Anwendungen auf der <a href="https://play.google.com/store/search?q=maksim+bartosh&amp;c=apps">GooglePlay</a>\n\n<a href="mailto:mksmbtrsh@gmail.com">Kommunikation für Anregungen und Kommentare</a></string>
+    <string name="start_time">Start</string>
+    <string name="end_time">Ende</string>
+    <string name="name">Name</string>
+    <string name="lenght">Total</string>
+    <string name="visible_notif">Symbol Frieren in der Taskleiste</string>
+    <string name="alarm_notif">Alarm</string>
+    <string name="alarm_notif_mode">Gerät warnt Sie</string>
+    <string name="alarm_notif_umode">schauen Sie sich die Zeit und schalten Zähler</string>
+    <string name="Import">Import</string>
+    <string name="Export">Exportieren</string>
+    <string name="exim">Export, Import und Backup</string>
+    <string name="no_data">Keine Daten</string>
+    <string name="cant_read_folder">kann nicht geöffnet Verzeichnis!</string>
+    <string name="location">Pfad</string>
+    <string name="importok">erfolgreich importiert Daten</string>
+    <string name="exportok">hier gespeicherte Daten</string>
+    <string name="exportfail">Fehler Exportieren von Daten</string>
+    <string name="notif">Benachrichtigungsaktivität!</string>
+    <string name="edit">Bearbeiten</string>
+    <string name="time">Zeit</string>
+    <string name="date">Datum</string>
+    <string name="current">Leistungsbilanz</string>
+    <string name="before">Предведущая запись</string>
+    <string name="after">Der nächste Eintrag</string>
+    <string name="less_min">Weniger Aufzeichnungsstartdatum</string>
+    <string name="more_max">Mehr Aufzeichnungs Enddatum</string>
+    <string name="now">Jetzt</string>
+    <string name="interval">Intervall</string>
+    <string name="interval_alarm"> Intervall-Erinnerung</string>
+    <string name="help">Hilfe</string>
+    <string name="union">Merge</string>
+    <string name="filterdateset">Filter setzen</string>
+
+    <string-array name="StartFilters">
+        <item>C heute</item>
+        <item>Co gestern</item>
+        <item>Von Anfang der Woche</item>
+        <item>Von Anfang des Monats</item>
+        <item>Von Anfang des Jahres</item>
+        <item>Von der Installation</item>
+        <item>C</item>
+    </string-array>
+    <string-array name="EndFilters">
+        <item>morgen</item>
+        <item>Vor der heute</item>
+        <item>Bis zum Ende der Woche</item>
+        <item>Bis zum Ende des Monats</item>
+        <item>Bis zum Ende des Jahres</item>
+        <item>ist nicht gesetzt</item>
+        <item>oben</item>
+    </string-array>
+
+    <string name="start">Start</string>
+    <string name="note">Hinweis:</string>
+    <string name="search">Suchen</string>
+    <string name="h">h</string>
+    <string name="m">m</string>
+    <string name="end">Ende</string>
+    <string name="future">links</string>
+    <string name="not_found_diary">haben keine Tagebucheinträge</string>
+    <string name="not_found_records">fand keine Aufzeichnung der Zeit</string>
+    <string name="periods">Perioden</string>
+
+    <string-array name="periods">
+        <item>Stunde</item>
+        <item>24 Stunden</item>
+        <item>Woche</item>
+        <item>12 Stunden</item>
+    </string-array>
+
+    <string name="upload_to_gdrive">Laden in Google Drive</string>
+    <string name="uploadtogdriveok">Datenbank TimeStatistic in Google Drive erfolgreich gespeichert</string>
+    <string name="erroruploadtogdriveok">Fehler beim Laden Datenbank TimeStatistic in Google Drive</string>
+    <string name="export_to_gcalendar">Export nach Google Kalender</string>
+    <string name="select_counters">Leistungsindikatoren auswählen</string>
+    <string name="select_gcalendar">Wählen Sie Google Kalender</string>
+    <string name="choise_gcalendar">Die ausgewählte Google Kalender</string>
+    <string name="export_notes">Exportieren aus dem Tagebuch</string>
+    <string name="local_exim">Backup</string>
+    <string name="one_record_export">nur ein Datensatz ist mit Google Calendar in der kostenlosen Version TimeStatistic exportiert. Bitte installieren TimeStatisticPro Um diese Funktion!</string>
+    <string name="export_only_diary">Exportiert nur das Tagebuch</string>
+    <string name="export_to_csv">Export nach CSV-Datei</string>
+    <string name="select_path">Wählen Sie den Ordner</string>
+    <string name="error_cr_file">Fehler beim Erstellen der Datei</string>
+    <string name="error_open_file">Fehler beim Öffnen der Datei</string>
+    <string name="error_write_file">Fehler beim Schreiben der Datei</string>
+    <string name="error_close_file">Fehler beim Schließen der Datei</string>
+    <string name="split_char">Das Feldtrennzeichen in CSV</string>
+    <string name="header">Fügen Header</string>
+    <string name="datetime_format"><a href="http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html">Datumsformat in der Datei</a></string>
+    <string name="datetime_format_hint">Blank - Millisekunden ab dem 1. Januar 1970 UTC</string>
+    <string name="error_dateformat">Fehler im Datumsformat!</string>
+    <string name="csv_file_name">Dateiname</string>
+    <string name="csv_include_datetime">Der Dateiname enthält das Datum (JJJJMMTT)</string>
+    <string name="stop">Halt!</string>
+    <string name="export_to_csv_complete">Nur ein Eintrag wird in der kostenlosen Version exportiert! Bitte installieren TimeStatisticPro für diese Funktion!</string>
+    <string name="filename">Dateiname</string>
+    <string name="share_diagram">Senden Charts in TimeStatisticPRO. Bitte installieren TimeStatisticPro für diese Funktion!</string>
+    <string name="vibro_notif_mode">aktiviert (Schaltzähler, Erinnerungen). Deaktivieren in PRO-Version verfügbar</string>
+    <string name="vibro_notif">Vibrieren</string>
+
+    <string-array name="AboutPages">
+        <item>Über</item>
+        <item>Versionshistorie</item>
+    </string-array>
+
+    <string name="since">Die Zahl</string>
+    <string name="alerttime">Ansprechzeit</string>
+    <string name="sum_since">Stacks mit</string>
+    <string name="switchtime">Zuletzt Schalt</string>
+
+</resources>

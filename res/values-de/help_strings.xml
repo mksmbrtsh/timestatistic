@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="no_help_available">There is no help available at this time.</string>
+    <string name="about_help_topics">Help is available for each section of this app.</string>
+    <string name="help_page_intro_html">Der Antrag auf Eintragung der Zeit.</string>
+    <string name="help_text_section1">Allgemeine Informationen</string>
+    <string name="topic_section1">
+<![CDATA[
+	  <h1>insgesamt</h1>
+      <p>Der Hauptbildschirm der Anwendung verfügt über ein 4-D-Register: Zähler, Datensätze, Diagramme und ein Tagebuch.
+      <br><img src="hlp_main_act">
+      <br>Auf der Theke, die Sie erstellen, bearbeiten und löschen Zähler. <b>Zähler - diese Aktion</b>.
+      Beim Erstellen oder Bearbeiten, können Sie den Namen und die Farbe der Fliesen-Zähler angeben, geben Sie die Seriennummer und Intervall Mahnungen.
+       Das Entfernen der Messleitungen auf die Entfernung von allen Datensätzen in Bezug auf sie, seien Sie vorsichtig.
+       Standardmäßig läuft Zähler <b>Idle</b>, es geht um zu schalten, wenn Sie die Gegen Werke drücken.
+      Dh Es wird verwendet, um die Ausfallzeit "unnötig" Zeit und so weiter zu berücksichtigen.
+      </p>
+      <h1>Filtrationszeit</h1>
+      <p>Standardmäßig wird die Filterung deaktiviert (die ganze Zeit ab dem Tag der Installation gezählt). Verarbeitet die ganze Zeit ab dem Zeitpunkt der Installation der Anwendung.
+       Filtering können Sie zwei Parameter angeben: den Anfang und das Ende des Rechnungs Buchhaltung</p>
+      <h2>Starten Sie den Registrierungs</h2>
+      Sie können folgende Werte angeben:
+      <br>1. Ab heute - mit dem aktuellen Tag 00:00;
+      <br>2. Seit gestern - am Vortag mit 00:00;
+      <br>3. Seit Anfang der Woche - am ersten Tag der Woche 00:00;
+      <br>4. Seit Anfang des Monats - der erste Tag des Monats mit 00:00;
+      <br>5. Seit Beginn des Jahres - der erste Tag des Jahres 00:00;
+	  <br>6. Bei der Installation des Programms;
+	  <br>7. Setzen Sie den Wert.
+	  <br>Im letzteren Fall können Sie ein beliebiges Datum und Uhrzeit einstellen, aber früher als heute und jetzt.</p>
+	  <h2>Ende Rechnungs</h2>
+      <p>Sie können folgende Werte angeben:
+      <br>1. Bis morgen - bis 24:00;
+      <br>2. Vor dem Start von heute - zu 00:00;
+      <br>3. Bis zum Ende der Woche;
+      <br>4. Bis zum Ende des Monats;
+      <br>5. Bis zum Ende des Jahres;
+	  <br>6. nicht definiert;
+	  <br>7. Setzen Sie den Wert.
+	  <br>Im letzteren Fall können Sie ein beliebiges Datum und Uhrzeit einstellen. Die sechste Option bedeutet, dass das Diagramm wird auf die aktuelle Zeit gebaut werden,
+ein Countdown-Zähler wird nicht auf dem Bildschirm angezeigt werden.
+In anderen Fällen, wenn der Endzeitpunkt ist größer als er jetzt ist, wird auf das Diagramm in schwarz, wie viel übrig beachten.
+      ]]>
+    </string>
+    <string name="help_text_section2">Bearbeiten von Einträgen</string>
+    <string name="topic_section2">
+<![CDATA[
+		<h1>insgesamt</h1>
+      <p>Die App ist "Pass-Through-Statistik", dh Aufzeichnungen all Ihre Zeit.
+         Es kann nicht gestoppt werden, da es unmöglich ist, die Zeit zu stoppen, so ist es manchmal notwendig, den Eintrag zu ändern.
+		<br>Bis ich kam mit zwei Möglichkeiten, um Einträge zu bearbeiten, den ersten - bricht Rekorde, die zweite - die Gewerkschafts Datensätze.
+Seine Idee zu dem Bearbeiten-Einträge können zu mir geschickt werden, immer glücklich zu diskutieren!</p>
+		<h1>Rekorde</h1>
+		<p>Brechen tritt in den "Records", klicken Sie einfach auf den bearbeiteten Datensatz und offener Dialog
+		<br><img src="hlp_cutting_rec"></p>
+		<br>Der Dialog ist möglich, den Namen zu erfassen und die Startzeiten (tstart) und Ende der Aufnahme (tstop) bearbeiten ändern.
+Darüber hinaus ist die Anfang der Aufnahme können Sie nur nach vorne (t1 mehr tstart) zu bewegen, dann vor der bearbeitete Eintrag erscheint eine weitere,
+Startzeit wie die der Originalaufnahme (tstart) und Endzeit gleich der neue Startzeit (t1).
+Darüber hinaus ist die Ende der Aufnahme können Sie nur rückwärts zu bewegen (T2 weniger tstop), dann bearbeitet nach der Aufnahme hat eine andere,
+Startzeit, gleich auf diesen neuen Wert (T2) und die Endzeit gleich der ursprünglichen (tstop). Zum Beispiel wie folgt:
+		<br><img src="hlp_edit_rec"></p>
+      <h1>Zusammenführen von Datensätzen.</h1>
+      <p>Zum Kleben von Aufzeichnungen müssen wird durch langes Drücken der ersten Aufzeichnungsmodus aktiviert Bindung:
+      <br><img src="hlp_union_rec"></p>
+      <br>Danach zeichnet rechts Checkboxen erlauben zu wählen vpodryad Erreichen Datensätze zu verschmelzen.
+       Am Ende der Auswahl, und klicken Sie auf "Zusammenführen" Dialog öffnet sich, in dem Sie einen Namen für den neuen Eintrag geben,
+       mit defaul wird es den meisten der ausgewählten Datensätze passen:
+      <br><img src="hlp_union_dlg">
+      <h1>Entfernen Sie das Messgerät</h1>
+      <br>Neben Bearbeiten von Datensätzen, können Sie den Zähler, dass ein nicht oder nicht mehr benötigte löschen.
+       Aber beachten Sie, dass die Write-Back wird unmöglich sein, die Wiederherstellung</p>
+      <h1>Bearbeiten von Datenbank</h1>
+      <p>Auch verfügt dieses Programms können die Datensätze direkt in der Datenbank bearbeitet werden.
+       Sie hat SQLite-Format und einfache Struktur. Die Struktur in den entsprechenden Abschnitt beschrieben.</p>
+       ]]>
+    </string>
+    <string name="help_text_section3">Die Datenbankstruktur</string>
+    <string name="topic_section3">
+<![CDATA[
+	  <h1>insgesamt</h1>
+      <p> 
+      Die Anwendung arbeitet mit einer Datenbank <b>timestat.db</b> Normalerweise wird es in den Speicher des Telefons befindet:
+      <br>Pfad:/data/data/maximsblog.blogspot.com.timestatistic/databases
+      <br>Wenn Ihr Handy über ein Root-Zugang, können Sie die Datenbank für diese (oder ähnliche) Weise zu bearbeiten.
+       Ansonsten können Sie die Datenbank zu exportieren, dann bearbeiten und importieren Sie sie zurück.
+       Ich persönlich verwende für dieses Programm SQLite Editor.</p>
+      <h1>Tabellen und Felder</h1>
+      <p>Während der Anwendung wird mit zwei Tabellen:
+      <br>timers;
+      <br>times;
+      <br>notes;
+      <h2>timers</h2>
+      <p>Tisch timers Attribute Zähler. Spalte Beschreibung ist:
+      <br>_id - Kennung des Zählers; Name - der Name;
+      <br>color - Farbe;
+      <br>isrunning - 1, wenn Sie mit und 0 wenn die Kosten (<b>Achtung!</b>
+      kann nur ein Zähler sein, d.h. kann nur eine Einheit sein,
+       ansonsten wird das Programm fallen);
+      <br>interval - Zeit in Millisekunden zwischen Erinnerungen;
+      <br>sortid - Seriennummer des Gerätes.</p>
+      <h2>times</h2>
+      <p>Diese Tabelle speichert die Datensätze selbst. Beschreibung der Spalten:
+      <br>_idt - Satzkennung; 
+      <br>timerid - Zähler-Kennung (dessen Wert den Wert übereinstimmt _id Tisch timers);
+      <br>start - die Startzeit in Millisekunden an, die Klasse java DateTime; 
+      <br>lenght - Aufzeichnungsdauer in Millisekunden;
+      <br>endtime - Ende Zeit in Millisekunden, die Klasse java DateTime.</p>
+      <h2>notes</h2>
+      <p>Diese Tabelle speichert die Notizen. Beschreibung der Spalten:
+      <br>_idn - Satzkennung auf der die Note;
+      <br>note - Erklärung schreibe ein Tagebuch.</p>
+      
+       ]]>
+    </string>
+    <string name="help_text_section4">Import, Export und Backup</string>
+    <string name="topic_section4">
+<![CDATA[
+	  <h1>Sicherungskopie</h1>
+	  <h2>örtlich</h2>
+      <p>In den Einstellungen können Sie eine Sicherung und Wiederherstellung erstellen. Backup in einem Ordner auf der Speicherkarte gespeichert.
+      <br>Pfad:Speicherkarte/Android/data/maximsblog.blogspot.com.timestatistic/files
+      <br>Wenn Sie eine Datei mit dem Namen erstellt importieren timestat, Weiter kommt in der Form der Zahl DD/MM/YYYY und Erweiterung .db. Dies ist eine normale Datei sqlite,
+      so für einige Redakteure brauchen, um es zu ändern .sqlite
+      <br>Wenn Sie eine Datei importieren Dialogauswahl öffnet Datenbank</p>
+      <h2>Google</h2>
+      <p>Die Datenbank kann heruntergeladen werden Ihre Google Drive.
+      </p>      
+      <h1>Export</h1>
+      <p>Lite-Version unterstützt den Export im Testmodus! Bitte kaufen <a href="http://play.google.com/store/apps/details?id=maximsblog.blogspot.com.timestatistic.pro">PRO-version</a> Beschränkungen zu entfernen und mich unterstützen.</p>
+      <h2>Google</h2>
+      <p>Sie können die Einträge in der Google-Kalender exportieren. Es gibt eine Auswahl von Zählern, die Zeitspanne des Kalenders. Es ist auch möglich, mehr und Tagebuch exportieren. Darüber hinaus können Sie nur eksportrovat Tagebuch. Sie können die Zähler auszuwählen, in dem Google-Kalender Export tritt das Zeitintervall</p>
+      <h2>CSV</h2>
+      <p>Sie können in die Datei eksportrovat schreiben <a href="https://ru.wikipedia.org/wiki/CSV">Format CSV</a>. Unterstützt den Export des Tagebuchs, Export nur Tagebucheinträge. Sie können die Zähler, das Zeitintervall wählen, um den Dateinamen ein Kopfsatz Standard gehören, wählen Sie die Trennzeichen Felder, geben Sie die Datums- und Zeitformat in der Datei.</p>
+       ]]>
+    </string>
+</resources>
