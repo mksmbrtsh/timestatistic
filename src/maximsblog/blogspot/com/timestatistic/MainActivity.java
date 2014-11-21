@@ -373,11 +373,19 @@ public class MainActivity extends SherlockFragmentActivity implements
 			reloadFragments();
 		} else if (status == Status.DEL) {
 			if (isRunning) {
+				long now = new Date().getTime();
 				ContentValues cv = new ContentValues();
+				cv.put(RecordsDbHelper.TIMERSID, 1);
+				cv.put(RecordsDbHelper.STARTTIME, now);
+				getContentResolver().insert(
+						RecordsDbHelper.CONTENT_URI_TIMES, cv);
+				cv.clear();
+				
 				cv.put(RecordsDbHelper.ISRUNNING, 1);
 				getContentResolver().update(RecordsDbHelper.CONTENT_URI_TIMERS,
 						cv, RecordsDbHelper.ID + " = ?",
 						new String[] { String.valueOf(1) });
+				
 				app.loadRunningCounterAlarm(getApplicationContext());
 				app.setStatusBar(getApplicationContext());
 			}
