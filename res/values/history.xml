@@ -3,6 +3,8 @@
 
     <string name="history_text">
 News:\n\n
+1.0.30\n
++ add total time to pie chart diagram(https://github.com/mksmbrtsh/timestatistic/issues/20).\n
 1.0.29\n
 * fix critical bug with union intervals.\n
 PRO-version:\n

@@ -2,6 +2,8 @@
 <resources>
     <string name="history_text">
 Was ist neu:\n\n
+1.0.30\n
++ hinzufügen Gesamtzeit Tortendiagramm(https://github.com/mksmbrtsh/timestatistic/issues/20).\n
 1.0.29\n
 * Es wurde ein Fehler mit der Vereinigung von Intervallen;\n
 PRO-Version\n

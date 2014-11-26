@@ -2,6 +2,8 @@
 <resources>
     <string name="history_text">
 Что нового:\n\n
+1.0.30\n
++ добавлено общее время на круговую диаграмму(https://github.com/mksmbrtsh/timestatistic/issues/20).\n
 1.0.29\n
 * исправлена критическая ошибка с объединением интервалов;\n
 PRO-версия\n
