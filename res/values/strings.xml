@@ -146,5 +146,5 @@
     <string name="alerttime">Alert time</string>
     <string name="sum_since">Summary since</string>
     <string name="switchtime">Last switch</string>
-
+	<string name="total">Total</string>
 </resources>

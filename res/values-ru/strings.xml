@@ -135,5 +135,5 @@
     <string name="alerttime">Время срабатывания</string>
     <string name="sum_since">Суммируется с</string>
     <string name="switchtime">Последнее переключение</string>
-
+	<string name="total">Всего</string>
 </resources>

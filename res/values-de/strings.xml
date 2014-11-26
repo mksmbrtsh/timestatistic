@@ -135,5 +135,5 @@
     <string name="alerttime">Ansprechzeit</string>
     <string name="sum_since">Stacks mit</string>
     <string name="switchtime">Zuletzt Schalt</string>
-
+	<string name="total">Summe</string>
 </resources>
