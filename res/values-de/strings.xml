@@ -1,139 +1,139 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
 
-    <string name="app_name">Zeitstudie Lite</string>
-    <string name="action_settings">Einstellungen</string>
-    <string name="last_value">Der letzte Wert</string>
-    <string name="add_counter_dialog">Hinzufügen eines neuen Zählers</string>
-    <string name="edit_counter_dialog">Ändern der Zähler</string>
+    <string name="app_name">Zeit Statistic Lite</string>
+    <string name="action_settings">Aktion_Einstellungen</string>
+    <string name="last_value">letzter_Wert</string>
+    <string name="add_counter_dialog">Zähler_hinzufügen</string>
+    <string name="edit_counter_dialog">Zähler_bearbeiten</string>
     <string name="add">Hinzufügen</string>
-    <string name="about">Über</string>
-    <string name="reset_all">Alle Zähler zurücksetzen</string>
+    <string name="about">Darüber</string>
+    <string name="reset_all">ZurücksetzenalleZähler</string>
     <string name="are_you_sure">Sind Sie sicher?</string>
 
     <string-array name="TitlePages">
-        <item>Messgeräte</item>
+        <item>Zähler</item>
         <item>Rekorde</item>
-        <item>Plan</item>
+        <item>Diagram</item>
         <item>Tagebuch</item>
     </string-array>
 
-    <string name="del">Löschen</string>
+    <string name="del">löschen</string>
     <string name="day1">Tag</string>
     <string name="day234">Tag</string>
-    <string name="days">Tag</string>
-    <string name="change_color">Wählt die Hintergrundfarbe</string>
+    <string name="days">Tage</string>
+    <string name="change_color">Auswahl der Hintergrundfarbe</string>
     <string name="version">Version</string>
     <string name="about_text">Idee: <a href="mailto:ruslan.popov@gmail.com">Ruslan Popov</a>\n\nSymbolen Launch: Sergei Barkov (superbarok)\n\nDizayn Menüsymbole: Anna Bartosh \n\nRazrabotchik: <a href="mailto:mksmbtrsh@gmail.com">Maksim Bartosh</a>\n\nnFür weitere Anwendungen auf der <a href="https://play.google.com/store/search?q=maksim+bartosh&amp;c=apps">GooglePlay</a>\n\n<a href="mailto:mksmbtrsh@gmail.com">Kommunikation für Anregungen und Kommentare</a></string>
     <string name="start_time">Start</string>
-    <string name="end_time">Ende</string>
+    <string name="end_time">Stop</string>
     <string name="name">Name</string>
-    <string name="lenght">Total</string>
-    <string name="visible_notif">Symbol Frieren in der Taskleiste</string>
-    <string name="alarm_notif">Alarm</string>
-    <string name="alarm_notif_mode">Gerät warnt Sie</string>
-    <string name="alarm_notif_umode">schauen Sie sich die Zeit und schalten Zähler</string>
+    <string name="lenght">Gesamt</string>
+    <string name="visible_notif">Icon in Ablage</string>
+    <string name="alarm_notif">Alarm Meldung</string>
+    <string name="alarm_notif_mode">Gerät gibt Alarm</string>
+    <string name="alarm_notif_umode">Sie sind Ihrer Zeiten sicher und bedienen die Zähler</string>
     <string name="Import">Import</string>
-    <string name="Export">Exportieren</string>
+    <string name="Export">Export</string>
     <string name="exim">Export, Import und Backup</string>
-    <string name="no_data">Keine Daten</string>
-    <string name="cant_read_folder">kann nicht geöffnet Verzeichnis!</string>
+    <string name="no_data">KeineDaten</string>
+    <string name="cant_read_folder">Ordner kann nicht geöffnet werden!</string>
     <string name="location">Pfad</string>
-    <string name="importok">erfolgreich importiert Daten</string>
-    <string name="exportok">hier gespeicherte Daten</string>
-    <string name="exportfail">Fehler Exportieren von Daten</string>
+    <string name="importok">Import erfolgreichabgeschlossen</string>
+    <string name="exportok">Export erfolgreichabgeschlossen</string>
+    <string name="exportfail">Fehlermeldung Export</string>
     <string name="notif">Benachrichtigungsaktivität!</string>
-    <string name="edit">Bearbeiten</string>
+    <string name="edit">bearbeiten</string>
     <string name="time">Zeit</string>
     <string name="date">Datum</string>
-    <string name="current">Leistungsbilanz</string>
-    <string name="before">Предведущая запись</string>
-    <string name="after">Der nächste Eintrag</string>
-    <string name="less_min">Weniger Aufzeichnungsstartdatum</string>
-    <string name="more_max">Mehr Aufzeichnungs Enddatum</string>
+    <string name="current">AktuelleAufnahme</string>
+    <string name="before">Vor der Aufnahme</string>
+    <string name="after">NächsteAufnahme</string>
+    <string name="less_min">Zu wenig Starts der Datenaufnahme</string>
+    <string name="more_max">Zu vielStops der Datenaufnahme</string>
     <string name="now">Jetzt</string>
     <string name="interval">Intervall</string>
-    <string name="interval_alarm"> Intervall-Erinnerung</string>
+    <string name="interval_alarm">Intervall Alarm</string>
     <string name="help">Hilfe</string>
-    <string name="union">Merge</string>
-    <string name="filterdateset">Filter setzen</string>
+    <string name="union">Zusammen</string>
+    <string name="filterdateset">Filter</string>
 
     <string-array name="StartFilters">
-        <item>C heute</item>
-        <item>Co gestern</item>
-        <item>Von Anfang der Woche</item>
-        <item>Von Anfang des Monats</item>
-        <item>Von Anfang des Jahres</item>
-        <item>Von der Installation</item>
-        <item>C</item>
+        <item>seitheute</item>
+        <item>seitgestern</item>
+        <item>seitdieserWoche</item>
+        <item>seitdiesemMonat</item>
+        <item>seitdiesemJahr</item>
+        <item>seitsetup der App</item>
+        <item>seit</item>
     </string-array>
     <string-array name="EndFilters">
-        <item>morgen</item>
-        <item>Vor der heute</item>
-        <item>Bis zum Ende der Woche</item>
-        <item>Bis zum Ende des Monats</item>
-        <item>Bis zum Ende des Jahres</item>
-        <item>ist nicht gesetzt</item>
-        <item>oben</item>
+        <item>zumnächsten Tag</item>
+        <item>zumTagesbeginn</item>
+        <item>zumEndedieserWoche</item>
+        <item>zumEndediesenMonats</item>
+        <item>zumEndediesenJahres</item>
+        <item>nichtfestgelegt</item>
+        <item>zu</item>
     </string-array>
 
     <string name="start">Start</string>
-    <string name="note">Hinweis:</string>
-    <string name="search">Suchen</string>
+    <string name="note">Notitz:</string>
+    <string name="search">Suche</string>
     <string name="h">h</string>
     <string name="m">m</string>
     <string name="end">Ende</string>
-    <string name="future">links</string>
-    <string name="not_found_diary">haben keine Tagebucheinträge</string>
-    <string name="not_found_records">fand keine Aufzeichnung der Zeit</string>
+    <string name="future">Zukunft</string>
+    <string name="not_found_diary">Kein Tagebuch gefunden</string>
+    <string name="not_found_records">Keine Aufzeichnungen gefunden</string>
     <string name="periods">Perioden</string>
 
     <string-array name="periods">
         <item>Stunde</item>
-        <item>24 Stunden</item>
+        <item>Tag</item>
         <item>Woche</item>
         <item>12 Stunden</item>
     </string-array>
 
-    <string name="upload_to_gdrive">Laden in Google Drive</string>
-    <string name="uploadtogdriveok">Datenbank TimeStatistic in Google Drive erfolgreich gespeichert</string>
-    <string name="erroruploadtogdriveok">Fehler beim Laden Datenbank TimeStatistic in Google Drive</string>
-    <string name="export_to_gcalendar">Export nach Google Kalender</string>
-    <string name="select_counters">Leistungsindikatoren auswählen</string>
-    <string name="select_gcalendar">Wählen Sie Google Kalender</string>
-    <string name="choise_gcalendar">Die ausgewählte Google Kalender</string>
-    <string name="export_notes">Exportieren aus dem Tagebuch</string>
-    <string name="local_exim">Backup</string>
-    <string name="one_record_export">nur ein Datensatz ist mit Google Calendar in der kostenlosen Version TimeStatistic exportiert. Bitte installieren TimeStatisticPro Um diese Funktion!</string>
-    <string name="export_only_diary">Exportiert nur das Tagebuch</string>
-    <string name="export_to_csv">Export nach CSV-Datei</string>
-    <string name="select_path">Wählen Sie den Ordner</string>
-    <string name="error_cr_file">Fehler beim Erstellen der Datei</string>
-    <string name="error_open_file">Fehler beim Öffnen der Datei</string>
-    <string name="error_write_file">Fehler beim Schreiben der Datei</string>
-    <string name="error_close_file">Fehler beim Schließen der Datei</string>
-    <string name="split_char">Das Feldtrennzeichen in CSV</string>
-    <string name="header">Fügen Header</string>
+    <string name="upload_to_gdrive">Upload to google drive</string>
+    <string name="uploadtogdriveok">Datenbank Zeitstatistik successfully saved to Google Drive</string>
+    <string name="erroruploadtogdriveok">Error upload Zeitstatistik database to Google </string>
+    <string name="export_to_gcalendar">Export to Google Calendar</string>
+    <string name="select_counters">Zählerausgewählt</string>
+    <string name="select_gcalendar">Googel Kalender ausgewählt</string>
+    <string name="choise_gcalendar">Googel Kalender auswählen</string>
+    <string name="export_notes">Export mitNotizen</string>
+    <string name="local_exim">Lokal</string>
+    <string name="one_record_export">nur ein Datensatz ist mit Google Calendar in der kostenlosen Version Zeitstatistik exportiert. Bitte installieren TimeStatisticPro Um diese Funktion!</string>
+    <string name="export_only_diary">Nur Tagebuch exportieren</string>
+    <string name="export_to_csv">Export to CSV-file</string>
+    <string name="select_path">Pfadauswählen</string>
+    <string name="error_cr_file">Fehlermeldung erzeugen</string>
+    <string name="error_open_file">Fehlermeldung öffnen</string>
+    <string name="error_write_file">Fehlermeldung schreiben</string>
+    <string name="error_close_file">Fehlermeldung schliessen</string>
+    <string name="split_char">CSV teilt Zellen sauber</string>
+    <string name="header">Kopfzeileninhalt</string>
     <string name="datetime_format"><a href="http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html">Datumsformat in der Datei</a></string>
-    <string name="datetime_format_hint">Blank - Millisekunden ab dem 1. Januar 1970 UTC</string>
-    <string name="error_dateformat">Fehler im Datumsformat!</string>
+    <string name="datetime_format_hint">Die leere ist Millisekunden vom 1 Januar, 1970 UTC</string>
+    <string name="error_dateformat">Datenformatierungsfehler!</string>
     <string name="csv_file_name">Dateiname</string>
-    <string name="csv_include_datetime">Der Dateiname enthält das Datum (JJJJMMTT)</string>
-    <string name="stop">Halt!</string>
-    <string name="export_to_csv_complete">Nur ein Eintrag wird in der kostenlosen Version exportiert! Bitte installieren TimeStatisticPro für diese Funktion!</string>
+    <string name="csv_include_datetime">Dateiname beinhaltet das Datum (yyyyMMdd)</string>
+    <string name="stop">Stop!</string>
+    <string name="export_to_csv_complete">Nur ein Eintrag wird in der kostenlosen Version exportiert! Bitte installieren ZeitstatistikPro für diese Funktion!</string>
     <string name="filename">Dateiname</string>
-    <string name="share_diagram">Senden Charts in TimeStatisticPRO. Bitte installieren TimeStatisticPro für diese Funktion!</string>
+    <string name="share_diagram">Senden Charts in ZeitstatistikPro. Bitte installieren TimeStatisticPro für diese Funktion!</string>
     <string name="vibro_notif_mode">aktiviert (Schaltzähler, Erinnerungen). Deaktivieren in PRO-Version verfügbar</string>
     <string name="vibro_notif">Vibrieren</string>
 
     <string-array name="AboutPages">
-        <item>Über</item>
-        <item>Versionshistorie</item>
+        <item>Über das Programm</item>
+        <item>Version history</item>
     </string-array>
 
-    <string name="since">Die Zahl</string>
-    <string name="alerttime">Ansprechzeit</string>
-    <string name="sum_since">Stacks mit</string>
-    <string name="switchtime">Zuletzt Schalt</string>
+    <string name="since">Seit</string>
+    <string name="alerttime">Alarmzeit</string>
+    <string name="sum_since">Summeseit</string>
+    <string name="switchtime">LetzteSchalterbetätigung</string>
 	<string name="total">Summe</string>
 </resources>

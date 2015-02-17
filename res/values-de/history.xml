@@ -1,68 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="history_text">
-Was ist neu:\n\n
-1.0.30\n
-+ hinzufügen Gesamtzeit Tortendiagramm(https://github.com/mksmbrtsh/timestatistic/issues/20).\n
+Nachrichten:\n\n
 1.0.29\n
-* Es wurde ein Fehler mit der Vereinigung von Intervallen;\n
-PRO-Version\n
-+ Slide-Menü auf der linken;\n
-+ Wahl eines Gegen enthält ein Kreisdiagramm;\n
-* Zwei Haupt Taba Zähler und Aufzeichnungen;\n
-* Lag Umschalten zwischen Registerkarten;\n
-* Auto-Update des Filters auf dem Hauptformular.\n\n
++ linkes gleiten-Menü
++ Zähler Auswahl in Diagramm;\n
+* zwei tabellierungen: Zähler und Aufnahmen;\n
+* schnell langsam schalter von Tabelle zu Tabelle;\n
+* Automatische Zeiterneuerung
+* Filter auf Hauptart;;\n
+* positionieren entscheidender Fehler mit vereinigten Abständen.\n\n
 1.0.28\n
-+ New Bildschirm mit der Geschichte der Programmversionen;\n
-+ Text-Auswahltabelle Legenden;\n
-+ Neue Informationen, wenn die Benachrichtigung;\n
-* Fixed nicht Erhaltung Journaleinträge;\n
-+ Einstellung zu aktivieren oder deaktivieren Vibration.\n\n
-1.0.27\n
-+ Export nach CSV;\n
-+ Rassharivaniya Diagramm als Bild.\n\n
++Nachrichten über Aktivität mit vergangenen Versionen;\n
++ Textauswahl zur Diagrammlegende;\n
++ neu notification information;\n
+* fix not save note info;\n
++ vibration settings.\n\n
+1.0.27\n + export to CSV format;\n
++ share diagram image.\n\n
 1.0.26\n
-+ Perioden, Gesamtzeit, das arithmetische Mittel, das Diagramm;\n
-+ Sicherung in Google Drive;\n
-+ Export nach Google Kalender;\n
-+ PRO-Version.\n\n
-1.0.25\n
-+ Neue Legende für das Diagramm;\n
-+ Icons Registerkarte;\n
-* Korrektur von Fehlern.\n\n
++ period diagram, summary and arithmetic mean 
+Mitteilung Information;\n
+fest nicht sichern Notiz Info;\n
++ VibrationEinstellung\n
++ teilen Diagramm Bild\n
++ Perioden Diagramm, Gesamtsumme und arithmetischer Haupt-values;\n
++ backup to Google Drive;\n
++ testing export to Google calendar one record;\n
++ PRO-version.\n\n 
+1.0.25\n 
++ new legend for diagrams;\n
++ icons on tab;\n
+* fix somebugs.\n\n
 1.0.24.3\n
-* Korrektur von Fehlern.\n\n
+* fix some bugs.\n\n
 1.0.24.2\n
-* Korrektur von Fehlern.\n\n
+* fix wert\n
++ Testen eine  Aufnahme\n
++ Neue Vergangenheit für Diagramme\n
+some bugs.\n\n
 1.0.24\n
-+ Sortierung Zähler;\n
-+ Filterzeit;\n
-+ Grau für Zähler;\n\n
++ counter sort enable;\n
++ filters;\n
++ grey color enable.\n\n
 1.0.23\n
-+ Autostart, Mahnungen, wenn Sie das Gerät neu zu starten;\n
-* Fix Design auf kleinen Bildschirmen;\n
-* Korrektur von Fehlern.\n\n
++ add autostart alarm when device reboot;\n
+* fix design on small screens;\n
+* fix some bugs.\n\n 
 1.0.22\n
-+ Tagebuch Registerkarte.\n\n
++ add diary.\n\n
 1.0.21\n
-+ Fähigkeit, das Datum und die Uhrzeit des Berichts festlegen (heute, vom Anfang der Woche, Monat, Jahr);\n
-* Korrektur von Fehlern.\n
++ einige Fehler;
++ Zähler Sorte aktivieren;
++ Filter;
++ graue Farbe;
++ hinzu Autostart Alarm wenn Gerät reboot;
++ fest Design auf kleinen Displays fest einige Fehler;
++ hinzu Tagebuch;
+hinzu Start Zeit(Heute, Woche, Monat, Jahr, alle Zeit)\n
+* fix some bugs.\n\n 
 1.0.11\n
-+ Reminder.\n\n
++ fest einige Fehler\n\n 
 1.0.10\n
-+ Union Datensätze.\n\n
-1.0.9\n
-+ Schallmauer durchbrochen.\n\n
++ hinzu vereinigte Aufnahmen.\n\n
+1.0.9\n 
++ hinzu geteilte Aufnahmen\n\n
 1.0.8\n
-+ Wählen Sie Farben für Zähler.\n\n
++ hinzu löschen Zähler und reset.\n\n 
 1.0.7\n
-+ Löschen und Zurücksetzen aller Zähler auf Null.\n\n
++ add delete counters and\n\n
 1.0.6\n
-+ Es wurde ein Diagramm.\n\n
++ add diagram.\n\n
 1.0.5\n
-+ Registerkarte Aufnahme.\n\n
++ add records.\n\n
 alpha3\n
-+ Zähler.\n
-    </string>
++ add counters.\n</string>
     
 </resources>
