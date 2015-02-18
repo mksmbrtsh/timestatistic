@@ -2,6 +2,11 @@
 <resources>
     <string name="history_text">
 Nachrichten:\n\n
+1.0.31\n
+* fix german lang;\n
+PRO\n
+- slide bar, fix slow;\n
++ move filter setup;\n
 1.0.29\n
 + linkes gleiten-Menü
 + Zähler Auswahl in Diagramm;\n
