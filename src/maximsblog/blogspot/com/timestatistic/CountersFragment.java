@@ -168,6 +168,7 @@ public final class CountersFragment extends Fragment implements
 		timeRecordsFragment.setNormalMode();
 		((Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE))
 		.vibrate(100);
+		app.updateDayCountAppWidget(getActivity());
 	}
 
 	public final void timerAlert() {

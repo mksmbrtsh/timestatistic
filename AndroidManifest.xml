@@ -12,11 +12,11 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-	<uses-permission android:name="android.permission.INTERNET"/>
-  	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-  	    <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
-    <uses-permission android:name="android.permission.READ_CALENDAR"/>
-  	
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+
     <application
         android:name="app"
         android:allowBackup="true"
@@ -30,9 +30,10 @@
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
-                
             </intent-filter>
+
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
@@ -48,21 +49,33 @@
 
         <activity android:name="SettingsActivity" >
         </activity>
-        <activity android:name="FileDialog"></activity>
-        <activity android:name="HelpActivity"></activity>
-        <activity android:name="TopicActivity"></activity>
-        <receiver android:enabled="true" android:name="BootUpReceiver"
-        android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
-        <intent-filter>
-            <action android:name="android.intent.action.BOOT_COMPLETED" />
-            <category android:name="android.intent.category.DEFAULT" />
-        </intent-filter>
-    </receiver>
-        <activity android:name="GdriveUpload"></activity>
+        <activity android:name="FileDialog" >
+        </activity>
+        <activity android:name="HelpActivity" >
+        </activity>
+        <activity android:name="TopicActivity" >
+        </activity>
+
+        <receiver
+            android:name="BootUpReceiver"
+            android:enabled="true"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+
+        <activity android:name="GdriveUpload" >
+        </activity>
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-        <activity android:name="PeriodAnalyseActivity"></activity>
+
+        <activity android:name="PeriodAnalyseActivity" >
+        </activity>
         <activity
             android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
@@ -70,12 +83,43 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-                <activity android:name="ExportToGoogleCalendarActivity"></activity>
-        <service android:name="ExportToGoogleCalendarService"></service>
-        <service android:name="ExportToCSVService"></service>
-        <activity android:name="ExportImportBackupActivity"></activity>
-        <activity android:name="ExportToCSVActivity"></activity>
+
+        <activity android:name="ExportToGoogleCalendarActivity" >
+        </activity>
+
+        <service android:name="ExportToGoogleCalendarService" >
+        </service>
+        <service android:name="ExportToCSVService" >
+        </service>
+
+        <activity android:name="ExportImportBackupActivity" >
+        </activity>
+        <activity android:name="ExportToCSVActivity" >
+        </activity>
         <activity android:name="AboutActivity" >
+        </activity>
+
+        <receiver
+            android:name="CountWidgetProvider"
+            android:icon="@drawable/ic_counter_title"
+            android:label="@string/c_widget" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/count_widget_info" />
+        </receiver>
+
+        <activity
+            android:name="maximsblog.blogspot.com.timestatistic.CountSettingsActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="stateHidden|adjustResize" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
         </activity>
     </application>
 

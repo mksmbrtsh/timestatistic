@@ -8,11 +8,12 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-
 import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -342,5 +343,16 @@ public class app extends Application {
 			}
 			c.close();
 		}
+	}
+	
+	public static void updateDayCountAppWidget(Context context) {
+		AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
+		ComponentName widgetComponent = new ComponentName(context, CountWidgetProvider.class);
+		int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
+		
+		Intent update = new Intent(context, CountWidgetProvider.class);
+		update.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds);
+		update.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+		context.getApplicationContext().sendBroadcast(update);
 	}
 }

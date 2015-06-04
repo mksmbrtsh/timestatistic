@@ -147,4 +147,8 @@
     <string name="sum_since">Summary since</string>
     <string name="switchtime">Last switch</string>
 	<string name="total">Total</string>
+	<string name="c_widget">Counters widget</string>
+	<string name="background">Background</string>
+	<string name="transparent">Transparent background</string>
+	<string name="example">Example</string>
 </resources>
