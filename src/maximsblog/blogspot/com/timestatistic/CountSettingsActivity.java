@@ -10,12 +10,15 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -37,6 +40,7 @@ public class CountSettingsActivity extends FragmentActivity implements OnClickLi
 	private TextView mValueText;
 	private SeekBar mTransparentSeekBar;
 	private View mBackgroundCounterExample;
+	private EditText mFontSize;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -48,6 +52,7 @@ public class CountSettingsActivity extends FragmentActivity implements OnClickLi
 		mExampleView = findViewById(R.id.background);
 		mBackgroundCounterExample = findViewById(R.id.background_counter);
 		mValueText = (TextView) findViewById(R.id.value_text);
+		mFontSize = (EditText)findViewById(R.id.fontSize_txt);
 		mTransparentSeekBar = (SeekBar)findViewById(R.id.transparent_background);
 		mTransparentSeekBar.setOnSeekBarChangeListener(this);
 		Intent intent = getIntent();
@@ -98,6 +103,8 @@ public class CountSettingsActivity extends FragmentActivity implements OnClickLi
 			mCalendarTextColor = 0xFFFFFFFF;
 			mExampleView.setBackgroundResource(mBackgroundResource);
 			mValueText.setTextColor(mCalendarTextColor);
+			mFontSize.setText("20");
+			mValueText.setTextSize(20);
 			mTransparentSeekBar.setProgress(255);
 			mBackgroundCounter = 0xFFFF0000;
 			mBackgroundCounterExample.setBackgroundColor(mBackgroundCounter);
@@ -106,6 +113,8 @@ public class CountSettingsActivity extends FragmentActivity implements OnClickLi
 					.getInt("mBackgroundResource");
 			mExampleView.setBackgroundResource(mBackgroundResource);
 			mValueText.setText(savedInstanceState.getString("mValueText"));
+			mValueText.setTextSize(savedInstanceState.getInt("mValueSize"));
+			mFontSize.setText(String.valueOf(mValueText.getTextSize()));
 			mCalendarTextColor = savedInstanceState
 					.getInt("mCalendarTextColor");
 			mValueText.setTextColor(mCalendarTextColor);
@@ -114,6 +123,33 @@ public class CountSettingsActivity extends FragmentActivity implements OnClickLi
 			mBackgroundCounter = savedInstanceState.getInt("mBackgroundCounter");
 			mBackgroundCounterExample.setBackgroundColor(mBackgroundCounter);
 		}
+		mFontSize.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				try {
+					int size = Integer.valueOf(s.toString());
+					mValueText.setTextSize(size);
+				}
+				catch(NumberFormatException e){
+					
+				}
+				
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 	}
 	
 
@@ -124,6 +160,7 @@ public class CountSettingsActivity extends FragmentActivity implements OnClickLi
 		outState.putInt("mCalendarTextColor", mCalendarTextColor);
 		outState.putInt("mProgress", mTransparentSeekBar.getProgress());
 		outState.putInt("mBackgroundCounter", mBackgroundCounter);
+		outState.putInt("mValueSize", (int)mValueText.getTextSize());
 		super.onSaveInstanceState(outState);
 	};
 
@@ -137,6 +174,8 @@ public class CountSettingsActivity extends FragmentActivity implements OnClickLi
 					.edit();
 			editor.putInt("dc_background_" + mAppWidgetId, mBackgroundResource);
 			editor.putInt("dc_transparent_" + mAppWidgetId, mTransparentSeekBar.getProgress());
+			editor.putInt("dc_fontsize_" + mAppWidgetId, (int)(mValueText.getTextSize()/ getResources().getDisplayMetrics().scaledDensity));
+			
 			editor.commit();
 			setResult(RESULT_OK, resultValue);
 			CountWidgetProvider.updateWidget(this, mAppWidgetId);

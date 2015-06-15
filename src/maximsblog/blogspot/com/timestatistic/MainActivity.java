@@ -335,6 +335,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			cv.put(RecordsDbHelper.TIMERSID, iDcounters);
 			getContentResolver().insert(RecordsDbHelper.CONTENT_URI_TIMES, cv);
 			reloadFragments();
+			app.updateDayCountAppWidget(this);
 		} else if (status == Status.EDIT) {
 			Cursor c = getContentResolver()
 					.query(RecordsDbHelper.CONTENT_URI_TIMERS,
@@ -371,6 +372,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			app.loadRunningCounterAlarm(getApplicationContext());
 			app.setStatusBar(getApplicationContext());
 			reloadFragments();
+			app.updateDayCountAppWidget(this);
 		} else if (status == Status.DEL) {
 			if (isRunning) {
 				long now = new Date().getTime();
@@ -392,6 +394,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			getContentResolver().delete(RecordsDbHelper.CONTENT_URI_TIMERS,
 					null, new String[] { String.valueOf(id) });
 			reloadFragments();
+			app.updateDayCountAppWidget(this);
 		}
 	}
 

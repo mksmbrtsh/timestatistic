@@ -1,5 +1,6 @@
 package maximsblog.blogspot.com.timestatistic;
 
+import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -10,11 +11,15 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.CalendarContract.Colors;
+import android.util.TypedValue;
 import android.view.View;
+import android.webkit.WebSettings.TextSize;
 import android.widget.RemoteViews;
+import android.widget.TextView;
 
 public class CountWidgetProvider extends AppWidgetProvider {
 
@@ -57,6 +62,7 @@ public class CountWidgetProvider extends AppWidgetProvider {
 		t.start();
 	}
 
+	@SuppressLint("NewApi")
 	private static RemoteViews getRemoteViews(int appWidgetId, Context context,
 			String name, int color) {
 		
@@ -85,7 +91,13 @@ public class CountWidgetProvider extends AppWidgetProvider {
 				color);
 		views.setInt(R.id.background, "setBackgroundResource",
 				backgroundResource);
-		
+		int fontSize = prefs.getInt("dc_fontsize_"
+				+ appWidgetId, 20);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+			views.setTextViewTextSize(R.id.value_text,TypedValue.COMPLEX_UNIT_SP , fontSize);
+		} else {
+			views.setFloat(R.id.value_text,"setTextSize",fontSize);
+		}
 		views.setTextViewText(R.id.value_text, name);
 		views.setTextColor(R.id.value_text, intColor);
 		return views;

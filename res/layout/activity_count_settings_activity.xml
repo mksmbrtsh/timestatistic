@@ -40,7 +40,8 @@
                     android:text="@string/example"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:textColor="@android:color/white"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:gravity="center" />
 
             </LinearLayout>
         </RelativeLayout>
@@ -87,6 +88,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:max="255" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/font_size" />
+
+            <EditText
+                android:id="@+id/fontSize_txt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number" >
+
+                <requestFocus />
+            </EditText>
+
         </LinearLayout>
     </ScrollView>
 

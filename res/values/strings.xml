@@ -151,4 +151,5 @@
 	<string name="background">Background</string>
 	<string name="transparent">Transparent background</string>
 	<string name="example">Example</string>
+	<string name="font_size">Font size</string>
 </resources>
