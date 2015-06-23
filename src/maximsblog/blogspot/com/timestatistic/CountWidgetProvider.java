@@ -36,27 +36,47 @@ public class CountWidgetProvider extends AppWidgetProvider {
 		Thread t = new Thread(new Runnable() {
 			@Override
 			public void run() {
+				SharedPreferences prefs = PreferenceManager
+						.getDefaultSharedPreferences(context);
+				int counterID = prefs.getInt(
+						"dc_selected_count_" + appWidgetId, -1);
+
 				AppWidgetManager appWidgetManager = AppWidgetManager
 						.getInstance(context);
-					Cursor c = context.getContentResolver().query(
+				Cursor c;
+				if (counterID == -1) {
+					c = context.getContentResolver().query(
 							RecordsDbHelper.CONTENT_URI_TIMES,
-							new String[] { RecordsDbHelper.ID, RecordsDbHelper.NAME,
-									RecordsDbHelper.ISRUNNING, RecordsDbHelper.STARTTIME,
+							new String[] { RecordsDbHelper.ID,
+									RecordsDbHelper.NAME,
+									RecordsDbHelper.ISRUNNING,
+									RecordsDbHelper.STARTTIME,
 									RecordsDbHelper.TIMERSID },
 							RecordsDbHelper.ISRUNNING + "=?",
 							new String[] { String.valueOf(1) }, null);
-					if (c.moveToFirst()) {
-						int timeId = c.getInt(0);
-						String name = c.getString(5);
-						boolean isRunning = c.getInt(6) == 1;
-						int color = c.getInt(7);
-						long start = c.getLong(3);
 
-						RemoteViews views = getRemoteViews(appWidgetId,
-								context, name, color);
-						appWidgetManager.updateAppWidget(appWidgetId, views);
-					}
-					c.close();
+				} else {
+					c = context.getContentResolver().query(
+							RecordsDbHelper.CONTENT_URI_TIMES,
+							new String[] { RecordsDbHelper.ID,
+									RecordsDbHelper.NAME,
+									RecordsDbHelper.ISRUNNING,
+									RecordsDbHelper.STARTTIME,
+									RecordsDbHelper.TIMERSID },
+							RecordsDbHelper.ID + "=?",
+							new String[] { String.valueOf(counterID) }, null);
+
+				}
+				if (c.moveToFirst()) {
+					boolean isRunning = c.getInt(6) == 1;
+					String name = c.getString(5);
+					
+					int color = c.getInt(7);
+					RemoteViews views = getRemoteViews(appWidgetId, context,
+							name, color, counterID, prefs, isRunning);
+					appWidgetManager.updateAppWidget(appWidgetId, views);
+				}
+				c.close();
 			}
 		});
 		t.start();
@@ -64,45 +84,63 @@ public class CountWidgetProvider extends AppWidgetProvider {
 
 	@SuppressLint("NewApi")
 	private static RemoteViews getRemoteViews(int appWidgetId, Context context,
-			String name, int color) {
-		
-		Intent intent;
-		intent = new Intent(context, MainActivity.class);
-		Bundle extras = new Bundle();
-		extras.putInt(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-		intent.putExtras(extras);
+			String name, int color, int counterID, SharedPreferences prefs, boolean isRunning) {
 
-		PendingIntent pendingIntent = PendingIntent.getActivity(context,
-				appWidgetId, intent, 0);
+		Intent intent;
+
+		PendingIntent pendingIntent;
+		if (counterID != -1) {
+			intent = new Intent(context, SwitchCounterReceiver.class);
+			Bundle extras = new Bundle();
+			extras.putInt(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+			extras.putInt("selected_count", counterID);
+			intent.putExtras(extras);
+			pendingIntent = PendingIntent.getBroadcast(context, appWidgetId,
+					intent, 0);
+		} else {
+			intent = new Intent(context, MainActivity.class);
+			Bundle extras = new Bundle();
+			extras.putInt(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+			intent.putExtras(extras);
+			pendingIntent = PendingIntent.getActivity(context, appWidgetId,
+					intent, 0);
+		}
 		RemoteViews views = new RemoteViews(context.getPackageName(),
 				R.layout.c_appwidget_layout);
 		views.setOnClickPendingIntent(R.id.background, pendingIntent);
 
-		
-		SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(context);
-		int backgroundResource = prefs.getInt("dc_background_"
-				+ appWidgetId, android.R.color.transparent);
+		int backgroundResource = prefs.getInt("dc_background_" + appWidgetId,
+				android.R.color.transparent);
 		int backgroundCounterAlpha = prefs.getInt("dc_transparent_"
 				+ appWidgetId, android.R.color.transparent);
 		int intColor = ~0xFFFFFF | (0xFFFFFF & ~color);
-		color = ( backgroundCounterAlpha << 24 ) | ( color & 0x00ffffff );
-		views.setInt(R.id.background_counter, "setBackgroundColor",
-				color);
+		color = (backgroundCounterAlpha << 24) | (color & 0x00ffffff);
+		views.setInt(R.id.background_counter, "setBackgroundColor", color);
 		views.setInt(R.id.background, "setBackgroundResource",
 				backgroundResource);
-		int fontSize = prefs.getInt("dc_fontsize_"
-				+ appWidgetId, 20);
+		int fontSize = prefs.getInt("dc_fontsize_" + appWidgetId, 20);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-			views.setTextViewTextSize(R.id.value_text,TypedValue.COMPLEX_UNIT_SP , fontSize);
+			views.setTextViewTextSize(R.id.status_text,
+					TypedValue.COMPLEX_UNIT_SP, fontSize);
 		} else {
-			views.setFloat(R.id.value_text,"setTextSize",fontSize);
+			views.setFloat(R.id.value_text, "setTextSize", fontSize);
 		}
 		views.setTextViewText(R.id.value_text, name);
+		String [] ss = name.split("\n");
+		if (counterID != -1) {
+			views.setViewVisibility(R.id.status_text, View.VISIBLE);
+			if (!isRunning) {
+				views.setTextViewText(R.id.status_text,context.getString(R.string.off));
+			} else
+				views.setTextViewText(R.id.status_text,context.getString(R.string.on));
+		} else {
+			views.setViewVisibility(R.id.status_text, View.GONE);
+		}
 		views.setTextColor(R.id.value_text, intColor);
+		views.setTextColor(R.id.status_text, intColor);
+		
 		return views;
 	}
-
 
 	@Override
 	public void onDeleted(final Context context, int[] appWidgetIds) {

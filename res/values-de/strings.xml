@@ -136,4 +136,13 @@
     <string name="sum_since">Summeseit</string>
     <string name="switchtime">LetzteSchalterbetätigung</string>
 	<string name="total">Summe</string>
+	<string name="c_widget">Zähler Widget</string>
+	<string name="background">Hintergrund</string>
+	<string name="transparent">Transparenter Hintergrund</string>
+	<string name="example">Beispiel</string>
+	<string name="font_size">Schriftgröße</string>
+	<string name="switch_counter">Ein- / Ausschalten</string>
+	<string name="on">auf</string>
+	<string name="off">weg</string>
+	<string name="counter_widget_err">Ошибка! Счетчик наверное был удалён!</string>
 </resources>

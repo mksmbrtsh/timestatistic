@@ -136,4 +136,13 @@
     <string name="sum_since">Суммируется с</string>
     <string name="switchtime">Последнее переключение</string>
 	<string name="total">Всего</string>
+	<string name="c_widget">Виджет счетчиков</string>
+	<string name="background">Основной фон</string>
+	<string name="transparent">Прозрачность фона</string>
+	<string name="example">Пример</string>
+	<string name="font_size">Размер шрифта</string>
+	<string name="switch_counter">Режим включения/выключения</string>
+	<string name="on">вкл</string>
+	<string name="off">выкл</string>
+	<string name="counter_widget_err">Ошибка! Счетчик наверное был удалён!</string>
 </resources>

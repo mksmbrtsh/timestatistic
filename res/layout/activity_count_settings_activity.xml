@@ -34,7 +34,7 @@
                 android:orientation="vertical" >
 
                 <TextView
-                    android:id="@+id/value_text"
+                    android:id="@+id/status_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/example"
@@ -104,6 +104,26 @@
 
                 <requestFocus />
             </EditText>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <CheckBox
+                    android:id="@+id/switch_onoff"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/switch_counter" />
+
+                <Spinner
+                    android:id="@+id/counters_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

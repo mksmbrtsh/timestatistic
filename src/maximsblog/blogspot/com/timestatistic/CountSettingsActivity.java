@@ -2,6 +2,7 @@ package maximsblog.blogspot.com.timestatistic;
 
 import maximsblog.blogspot.com.timestatistic.ColorPickerDialogFragment.ColorCounterDialog;
 import android.R.anim;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -23,13 +25,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
-public class CountSettingsActivity extends FragmentActivity implements OnClickListener, OnSeekBarChangeListener {
+public class CountSettingsActivity extends FragmentActivity implements OnClickListener, OnSeekBarChangeListener, OnCheckedChangeListener {
 
 	private int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 	private View mExampleView;
@@ -41,8 +42,11 @@ public class CountSettingsActivity extends FragmentActivity implements OnClickLi
 	private SeekBar mTransparentSeekBar;
 	private View mBackgroundCounterExample;
 	private EditText mFontSize;
+	private CheckBox mSwitchOnOff;
+	private Spinner mCountersSpinner;
 
 	/** Called when the activity is first created. */
+	@SuppressLint("NewApi")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -51,8 +55,12 @@ public class CountSettingsActivity extends FragmentActivity implements OnClickLi
 		ok.setOnClickListener(this);
 		mExampleView = findViewById(R.id.background);
 		mBackgroundCounterExample = findViewById(R.id.background_counter);
-		mValueText = (TextView) findViewById(R.id.value_text);
+		mValueText = (TextView) findViewById(R.id.status_text);
 		mFontSize = (EditText)findViewById(R.id.fontSize_txt);
+		mSwitchOnOff = (CheckBox)findViewById(R.id.switch_onoff);
+		mSwitchOnOff.setOnCheckedChangeListener(this);
+		mCountersSpinner = (Spinner)findViewById(R.id.counters_spinner);
+		mCountersSpinner.setEnabled(false);
 		mTransparentSeekBar = (SeekBar)findViewById(R.id.transparent_background);
 		mTransparentSeekBar.setOnSeekBarChangeListener(this);
 		Intent intent = getIntent();
@@ -122,6 +130,7 @@ public class CountSettingsActivity extends FragmentActivity implements OnClickLi
 					.getInt("mProgress"));
 			mBackgroundCounter = savedInstanceState.getInt("mBackgroundCounter");
 			mBackgroundCounterExample.setBackgroundColor(mBackgroundCounter);
+			mSwitchOnOff.setChecked(savedInstanceState.getBoolean("mSwitchOnOff"));
 		}
 		mFontSize.addTextChangedListener(new TextWatcher() {
 			
@@ -150,6 +159,15 @@ public class CountSettingsActivity extends FragmentActivity implements OnClickLi
 				
 			}
 		});
+		Cursor timers = getContentResolver().query(
+				RecordsDbHelper.CONTENT_URI_TIMES, null, null, null, RecordsDbHelper.SORTID);
+		String[] from = { RecordsDbHelper.NAME };
+		int[] to = { android.R.id.text1 };
+		SimpleCursorAdapter currentCounterAdapter = new SimpleCursorAdapter(this,
+				android.R.layout.simple_spinner_item, timers, from, to,0);
+		currentCounterAdapter
+				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		mCountersSpinner.setAdapter(currentCounterAdapter);
 	}
 	
 
@@ -161,6 +179,7 @@ public class CountSettingsActivity extends FragmentActivity implements OnClickLi
 		outState.putInt("mProgress", mTransparentSeekBar.getProgress());
 		outState.putInt("mBackgroundCounter", mBackgroundCounter);
 		outState.putInt("mValueSize", (int)mValueText.getTextSize());
+		outState.putBoolean("mSwitchOnOff", mSwitchOnOff.isChecked());
 		super.onSaveInstanceState(outState);
 	};
 
@@ -175,7 +194,11 @@ public class CountSettingsActivity extends FragmentActivity implements OnClickLi
 			editor.putInt("dc_background_" + mAppWidgetId, mBackgroundResource);
 			editor.putInt("dc_transparent_" + mAppWidgetId, mTransparentSeekBar.getProgress());
 			editor.putInt("dc_fontsize_" + mAppWidgetId, (int)(mValueText.getTextSize()/ getResources().getDisplayMetrics().scaledDensity));
-			
+			Cursor c = ((SimpleCursorAdapter) mCountersSpinner.getAdapter())
+					.getCursor();
+			c.moveToPosition(mCountersSpinner.getSelectedItemPosition());
+			if(mSwitchOnOff.isChecked())
+				editor.putInt("dc_selected_count_" + mAppWidgetId, c.getInt(4));
 			editor.commit();
 			setResult(RESULT_OK, resultValue);
 			CountWidgetProvider.updateWidget(this, mAppWidgetId);
@@ -206,5 +229,11 @@ public class CountSettingsActivity extends FragmentActivity implements OnClickLi
 	public void onStopTrackingTouch(SeekBar seekBar) {
 		// TODO Auto-generated method stub
 		
+	}
+
+
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+			mCountersSpinner.setEnabled(isChecked);
 	}
 }

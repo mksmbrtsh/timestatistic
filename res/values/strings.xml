@@ -152,4 +152,8 @@
 	<string name="transparent">Transparent background</string>
 	<string name="example">Example</string>
 	<string name="font_size">Font size</string>
+	<string name="switch_counter">Switch on/off</string>
+	<string name="on">on</string>
+	<string name="off">off</string>
+	<string name="counter_widget_err">Error! Zähler wurde gelöscht!</string>
 </resources>

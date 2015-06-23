@@ -23,11 +23,21 @@
             android:id="@+id/value_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/app_name"
             android:singleLine="true"
             android:ellipsize="end"
+            android:gravity="center"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textStyle="bold" />
+        <TextView
+            android:id="@+id/status_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold" />
+
     </LinearLayout>
 
 </RelativeLayout>

@@ -8,5 +8,5 @@
     android:configure="maximsblog.blogspot.com.timestatistic.CountSettingsActivity" 
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen|keyguard"
-    android:previewImage="@drawable/ic_counter_title">
+    android:previewImage="@drawable/ic_launcher">
 </appwidget-provider>

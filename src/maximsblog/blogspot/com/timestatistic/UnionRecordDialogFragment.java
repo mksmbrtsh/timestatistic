@@ -101,7 +101,7 @@ public class UnionRecordDialogFragment extends DialogFragment implements
 		int[] to = { android.R.id.text1 };
 
 		mCurrentCounterAdapter = new SimpleCursorAdapter(getActivity(),
-				android.R.layout.simple_spinner_item, null, from, to);
+				android.R.layout.simple_spinner_item, null, from, to, 0);
 		mCurrentCounterAdapter
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		mCurrentCounter.setAdapter(mCurrentCounterAdapter);

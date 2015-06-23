@@ -101,7 +101,7 @@
 
         <receiver
             android:name="CountWidgetProvider"
-            android:icon="@drawable/ic_counter_title"
+            android:icon="@drawable/ic_launcher"
             android:label="@string/c_widget" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -121,6 +121,7 @@
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
+        <receiver android:name="SwitchCounterReceiver"></receiver>
     </application>
 
 </manifest>
