@@ -2,6 +2,8 @@
 <resources>
     <string name="history_text">
 Nachrichten:\n\n
+1.0.32\n
++ add counter appwidget;\n
 1.0.31\n
 * fix german lang;\n
 PRO\n
