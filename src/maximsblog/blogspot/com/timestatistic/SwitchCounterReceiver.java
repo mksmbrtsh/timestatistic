@@ -6,8 +6,10 @@ import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 public class SwitchCounterReceiver extends BroadcastReceiver {
@@ -56,7 +58,7 @@ public class SwitchCounterReceiver extends BroadcastReceiver {
 			} else {
 				counterId = cursor.getInt(4);
 			}
-			
+
 			cv.put(RecordsDbHelper.TIMERSID, counterId);
 			cv.put(RecordsDbHelper.STARTTIME, now);
 			context.getContentResolver().insert(
@@ -73,8 +75,14 @@ public class SwitchCounterReceiver extends BroadcastReceiver {
 					.vibrate(100);
 			app.updateDayCountAppWidget(context);
 		} else
-			Toast.makeText(context, context.getText(R.string.counter_widget_err), Toast.LENGTH_LONG).show();
+			Toast.makeText(context,
+					context.getText(R.string.counter_widget_err),
+					Toast.LENGTH_LONG).show();
 		cursor.close();
+		Editor edit = PreferenceManager.getDefaultSharedPreferences(context)
+				.edit();
+		edit.putBoolean("reload", true);
+		edit.commit();
 	}
 
 }

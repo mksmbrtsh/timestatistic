@@ -120,10 +120,14 @@ public class CountWidgetProvider extends AppWidgetProvider {
 				backgroundResource);
 		int fontSize = prefs.getInt("dc_fontsize_" + appWidgetId, 20);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+			views.setTextViewTextSize(R.id.value_text,
+					TypedValue.COMPLEX_UNIT_SP, fontSize);
 			views.setTextViewTextSize(R.id.status_text,
 					TypedValue.COMPLEX_UNIT_SP, fontSize);
 		} else {
 			views.setFloat(R.id.value_text, "setTextSize", fontSize);
+			views.setFloat(R.id.status_text, "setTextSize", fontSize);
+			
 		}
 		views.setTextViewText(R.id.value_text, name);
 		String [] ss = name.split("\n");
@@ -153,6 +157,7 @@ public class CountWidgetProvider extends AppWidgetProvider {
 			editor.remove("dc_background_" + appWidgetId);
 			editor.remove("dc_textcolor_" + appWidgetId);
 			editor.remove("dc_titlevisible_" + appWidgetId);
+			editor.remove("dc_selected_count_" + appWidgetId);
 			editor.commit();
 		}
 	}

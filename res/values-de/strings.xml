@@ -144,5 +144,5 @@
 	<string name="switch_counter">Ein- / Ausschalten</string>
 	<string name="on">auf</string>
 	<string name="off">weg</string>
-	<string name="counter_widget_err">Ошибка! Счетчик наверное был удалён!</string>
+	<string name="counter_widget_err">Error! Gegen wahrscheinlich gelöscht!</string>
 </resources>
