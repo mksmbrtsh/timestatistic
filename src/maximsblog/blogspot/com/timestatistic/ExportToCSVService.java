@@ -9,9 +9,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.google.android.gms.internal.cn;
-import com.google.android.gms.internal.md;
-
 import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -63,6 +60,8 @@ public class ExportToCSVService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Thread t = new Thread(new Runnable() {
+			int i = 0;
+
 			@Override
 			public void run() {
 				String[] selectionArgs;
@@ -183,6 +182,7 @@ public class ExportToCSVService extends Service {
 					}
 				}
 				if (cursor.moveToFirst()) {
+					do {
 						if (ids.contains(cursor.getInt(0))) {
 							sb = new StringBuilder();
 							sb.append(replaceSpecSymbols(cursor.getString(3)));// count
@@ -233,14 +233,17 @@ public class ExportToCSVService extends Service {
 								msg.what = 0;
 								msg.obj = getString(R.string.error_write_file);
 								handler.sendMessage(msg);
+								break;
 							}
 						}
 
 						Intent intent = new Intent();
 						intent.setAction(EXPORT);
 						intent.putExtra("count", cursor.getCount());
-						intent.putExtra("progress", 1);
+						intent.putExtra("progress", i1);
 						getApplicationContext().sendBroadcast(intent);
+						i1++;
+					} while (cursor.moveToNext() && isRunning);
 				}
 				try {
 					out.flush();

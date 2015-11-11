@@ -104,7 +104,7 @@
     <string name="choise_gcalendar">Выбранный Google Calendar</string>
     <string name="export_notes">Экспортировать с дневником</string>
     <string name="local_exim">Бекап</string>
-    <string name="one_record_export">Только одна запись экспортируется в Google календарь в бесплатной версии TimeStatistic. Пожалуйста, установите TimeStatisticPro для полноценной этой функции!</string>
+    <string name="one_record_export">Экспорт в Google календарь завершён!</string>
     <string name="export_only_diary">Экспорт только дневника</string>
     <string name="export_to_csv">Экспорт в CSV-файл</string>
     <string name="select_path">Выбрать папку</string>
@@ -120,7 +120,7 @@
     <string name="csv_file_name">Имя файла</string>
     <string name="csv_include_datetime">Имя файла включает дату (yyyyMMdd)</string>
     <string name="stop">Остановить!</string>
-    <string name="export_to_csv_complete">Только одна запись экспортируется в бесплатной версии! Пожалуйста, установите TimeStatisticPro для этой функции!</string>
+    <string name="export_to_csv_complete">Экспорт в csv-файл завершен!</string>
     <string name="filename">Имя файла</string>
     <string name="share_diagram">Отправка диаграмм доступна в TimeStatisticPRO. Пожалуйста, установите TimeStatisticPro для этой функции!</string>
     <string name="vibro_notif_mode">включена (переключение счетчиков, напоминания). Отключение доступно в ПРО-версии</string>
@@ -145,4 +145,5 @@
 	<string name="on">вкл</string>
 	<string name="off">выкл</string>
 	<string name="counter_widget_err">Ошибка! Счетчик наверное был удалён!</string>
+	    <string name="export_to_gcalendar_complite">Экспорт в Google calendar завершён!</string>
 </resources>

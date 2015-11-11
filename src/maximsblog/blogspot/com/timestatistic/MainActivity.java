@@ -41,7 +41,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.internal.view.SupportMenuItem;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.CursorAdapter;
@@ -65,7 +64,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private ViewPager pager;
 	private SearchView mSearchView;
 	private int[] mIcons;
-	private AdView adView;
 
 	public interface MainFragments {
 		void onReload();
@@ -118,11 +116,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			if (diaryEditorDialogFragment != null)
 				diaryEditorDialogFragment.setCounterDialogListener(this);
 		}
-		adView = (AdView) findViewById(R.id.adView);
-		AdRequest adRequest = new AdRequest.Builder()
-				.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-				.addTestDevice("CF95DC53F383F9A836FD749F3EF439CD").build();
-		adView.loadAd(adRequest);
+		
 	}
 
 	public Fragment findFragmentByPosition(int position) {
@@ -496,7 +490,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		adView.resume();
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		boolean reload = prefs.getBoolean("reload", false);
@@ -510,13 +503,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	protected void onPause() {
-		adView.pause();
 		super.onPause();
 	}
 
 	@Override
 	protected void onDestroy() {
-		adView.destroy();
 		super.onDestroy();
 	};
 }

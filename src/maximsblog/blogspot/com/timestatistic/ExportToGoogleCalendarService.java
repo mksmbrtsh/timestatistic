@@ -3,8 +3,6 @@ package maximsblog.blogspot.com.timestatistic;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.android.gms.internal.cn;
-
 import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.ContentResolver;
@@ -14,7 +12,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.CancellationSignal;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.provider.CalendarContract;
 import android.support.v4.content.CursorLoader;
 import android.text.format.Time;
@@ -77,6 +77,7 @@ public class ExportToGoogleCalendarService extends Service {
 				}
 
 				if (cursor.moveToFirst()) {
+					do {
 						if (ids.contains(cursor.getInt(0))) {
 							ContentValues event = new ContentValues();
 							event.put("calendar_id", mCalendarID); // ID
@@ -119,13 +120,17 @@ public class ExportToGoogleCalendarService extends Service {
 						intent.putExtra("progress", i1);
 						getApplicationContext().sendBroadcast(intent);
 						i1++;
+					} while (cursor.moveToNext() && isRunning);
 				}
 				cursor.close();
 				ExportToGoogleCalendarService.this.stopSelf();
 				Intent intent3 = new Intent();
 				intent3.setAction(EXPORT);
 				getApplicationContext().sendBroadcast(intent3);
-
+				Message msg = new Message();
+				msg.what =0;
+				msg.obj = getString(R.string.export_to_gcalendar_complite);
+				handler.sendMessage(msg);
 			}
 		});
 
@@ -138,7 +143,6 @@ public class ExportToGoogleCalendarService extends Service {
 		mExportNotes = intent.getBooleanExtra("export_notes", false);
 		mExportOnlyNotes = intent.getBooleanExtra("export_only_notes", false);
 		t.start();
-		Toast.makeText(ExportToGoogleCalendarService.this, R.string.one_record_export, Toast.LENGTH_LONG).show();
 		return super.onStartCommand(intent, flags, startId);
 	};
 
@@ -163,5 +167,16 @@ public class ExportToGoogleCalendarService extends Service {
 		super.onDestroy();
 	}
 	
+	private Handler handler = new Handler() {
+		public void handleMessage(Message msg) {
+			if (msg.what == 0) {
+				String m = (String) msg.obj;
+				if (m != null) {
+					Toast.makeText(getApplicationContext(), m,
+							Toast.LENGTH_LONG).show();
+				}
+			}
 
+		}
+	};
 }

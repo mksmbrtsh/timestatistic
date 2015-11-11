@@ -104,7 +104,7 @@
     <string name="choise_gcalendar">Googel Kalender auswählen</string>
     <string name="export_notes">Export mitNotizen</string>
     <string name="local_exim">Lokal</string>
-    <string name="one_record_export">nur ein Datensatz ist mit Google Calendar in der kostenlosen Version Zeitstatistik exportiert. Bitte installieren TimeStatisticPro Um diese Funktion!</string>
+    <string name="one_record_export">Exportiert!</string>
     <string name="export_only_diary">Nur Tagebuch exportieren</string>
     <string name="export_to_csv">Export to CSV-file</string>
     <string name="select_path">Pfadauswählen</string>
@@ -120,7 +120,7 @@
     <string name="csv_file_name">Dateiname</string>
     <string name="csv_include_datetime">Dateiname beinhaltet das Datum (yyyyMMdd)</string>
     <string name="stop">Stop!</string>
-    <string name="export_to_csv_complete">Nur ein Eintrag wird in der kostenlosen Version exportiert! Bitte installieren ZeitstatistikPro für diese Funktion!</string>
+    <string name="export_to_csv_complete">Exportiert!</string>
     <string name="filename">Dateiname</string>
     <string name="share_diagram">Senden Charts in ZeitstatistikPro. Bitte installieren TimeStatisticPro für diese Funktion!</string>
     <string name="vibro_notif_mode">aktiviert (Schaltzähler, Erinnerungen). Deaktivieren in PRO-Version verfügbar</string>
@@ -145,4 +145,5 @@
 	<string name="on">auf</string>
 	<string name="off">weg</string>
 	<string name="counter_widget_err">Error! Gegen wahrscheinlich gelöscht!</string>
+	    <string name="export_to_gcalendar_complite">Export to Google calendar complete!</string>
 </resources>

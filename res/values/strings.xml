@@ -131,7 +131,7 @@
     <string name="csv_file_name">Filename</string>
     <string name="csv_include_datetime">Filename include datetime (yyyyMMdd)</string>
     <string name="stop">Stop it!</string>
-    <string name="export_to_csv_complete">Only one record export in lite-version! Please setup TimeStatisticPro for this fealture!</string>
+    <string name="export_to_csv_complete">Export to CSV-file complete!</string>
     <string name="filename">Filename</string>
     <string name="share_diagram">Share diagram is enable in TimeStatisticPRO version. Please setup TimeStatisticPro for this fealture!</string>
     <string name="vibro_notif_mode">On. off-mode is enable in PRO-verion.</string>
@@ -156,4 +156,5 @@
 	<string name="on">on</string>
 	<string name="off">off</string>
 	<string name="counter_widget_err">Error! Zähler wurde gelöscht!</string>
+	<string name="export_to_gcalendar_complite">Export to Google calendar complete!</string>
 </resources>
