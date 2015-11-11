@@ -3,6 +3,9 @@
 
     <string name="history_text">
 News:\n\n
+1.0.33\n
+- del ads;\n
++ export to calendar and csv-file.\n
 1.0.32\n
 + add counter appwidget;\n
 1.0.31\n

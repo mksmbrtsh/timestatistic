@@ -96,7 +96,6 @@ public class PeriodAnalyseFragment extends Fragment implements
 	private XYMultipleSeriesRenderer mRenderer;
 	private int[] mIds;
 	private boolean[] mChecked;
-	private AdView adView;
 	private ImageButton mDiagramShare;
 	
 	@Override
@@ -127,11 +126,6 @@ public class PeriodAnalyseFragment extends Fragment implements
 		mLayout.findViewById(R.id.pad_minus).setOnClickListener(this);
 		mLayout.findViewById(R.id.pad_reset).setOnClickListener(this);
 		mLegendText.setMovementMethod(ScrollingMovementMethod.getInstance());
-		adView = (AdView) mLayout.findViewById(R.id.adView);
-		AdRequest adRequest = new AdRequest.Builder()
-				.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-				.addTestDevice("CF95DC53F383F9A836FD749F3EF439CD").build();
-		adView.loadAd(adRequest);
 		mDiagramShare = (ImageButton) mLayout.findViewById(R.id.pad_share);
 		mDiagramShare.setOnClickListener(this);
 		return mLayout;
@@ -146,13 +140,11 @@ public class PeriodAnalyseFragment extends Fragment implements
 	@Override
 	public void onResume() {
 		super.onResume();
-		adView.resume();
 		loadermanager.initLoader(LOADER_ID, null, this);
 	}
 
 	@Override
 	public void onPause() {
-		adView.pause();
 		super.onPause();
 		ViewGroup chartLayout = (ViewGroup) mLayout.findViewById(R.id.chart);
 		chartLayout.removeView(mChartView);
@@ -161,7 +153,6 @@ public class PeriodAnalyseFragment extends Fragment implements
 
 	@Override
 	public void onDestroy() {
-		adView.destroy();
 		super.onDestroy();
 	};
 
