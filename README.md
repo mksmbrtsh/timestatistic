@@ -1,6 +1,6 @@
 [![](https://owncloud.org/wp-content/themes/owncloudorgnew/assets/img/clients/buttons/googleplay.png)](https://play.google.com/store/apps/details?id=maximsblog.blogspot.com.timestatistic)  
 Свободный проект для учета времени на мобильных устройствах под управлением ОС Android.
-[![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Get%20over%20170%20free%20design%20blocks%20based%20on%20Bootstrap%204&url=https://github.com/mksmbrtsh/timestatistic&via=mksmbrtsh&hashtags=timestatistic,android,androidapp)
+[![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Get%20timestatistic%20170%20free%204&url=https://github.com/mksmbrtsh/timestatistic&via=mksmbrtsh&hashtags=timestatistic,android,androidapp)
   
 [![](https://upload.wikimedia.org/wikipedia/ru/d/d6/Sberbank.svg)](https://www.sberbank.ru/ru/person)  
 Поддержать проект, номер карты сбербанка: 4817 7601 3803 3687
