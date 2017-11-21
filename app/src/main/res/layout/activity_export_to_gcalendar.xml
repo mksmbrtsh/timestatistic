@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/set_filter_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_filter_dark"
+        android:text="@string/filterdateset" />
+
+    <Button
+        android:id="@+id/select_conters_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_counter_title"
+        android:text="@string/select_counters" />
+
+    <Button
+        android:id="@+id/select_calendar_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@android:drawable/ic_menu_my_calendar"
+        android:text="@string/select_gcalendar" />
+
+    <CheckBox
+        android:id="@+id/export_notes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/export_notes" />
+
+    <CheckBox
+        android:id="@+id/export_only_diary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/export_only_diary" />
+
+    <Button
+        android:id="@+id/export_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/Export" />
+
+</LinearLayout>

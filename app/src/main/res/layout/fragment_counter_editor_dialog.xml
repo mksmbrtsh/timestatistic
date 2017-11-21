@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/fragment_border"
+    android:paddingRight="@dimen/fragment_border"
+    android:orientation="vertical" >
+
+    <EditText
+        android:id="@+id/name_editor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/note_text"
+        android:layout_toLeftOf="@+id/color_imageButton"
+        android:layout_toRightOf="@+id/sortid"
+        android:ems="10"
+        android:selectAllOnFocus="true" >
+
+        <requestFocus />
+    </EditText>
+
+<TextView
+    android:id="@+id/version"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    android:layout_below="@+id/name_editor"
+    android:text="@string/interval_alarm" />
+
+<EditText
+    android:id="@+id/interval_hours_editor"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    android:layout_below="@+id/version"
+    android:gravity="center"
+    android:maxLength="5"
+    android:selectAllOnFocus="true"
+    android:inputType="numberDecimal"
+    android:singleLine="true" >
+
+    </EditText>
+
+<TextView
+    android:id="@+id/textView3"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_above="@+id/panel"
+    android:layout_below="@+id/version"
+    android:layout_toRightOf="@+id/interval_hours_editor"
+    android:gravity="center"
+    android:text="@string/h"
+    android:textSize="16sp" />
+
+ <EditText
+     android:id="@+id/interval_minutes_editor"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_below="@+id/version"
+     android:layout_toRightOf="@+id/textView3"
+     android:gravity="center"
+     android:selectAllOnFocus="true"
+     android:inputType="numberDecimal"
+     android:singleLine="true" >
+
+    </EditText>
+    
+    <LinearLayout
+        android:id="@+id/panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/interval_minutes_editor" >
+
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@android:string/cancel" />
+
+        <Button
+            android:id="@+id/del"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/del" />
+
+        <Button
+            android:id="@+id/ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@android:string/ok" />
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/color_imageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/panel"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/note_text"
+        android:src="@drawable/color_line" />
+
+    <EditText
+        android:id="@+id/sortid"
+        android:layout_width="55dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/note_text"
+        android:selectAllOnFocus="true"
+        android:maxLength="5"
+        
+        android:inputType="numberDecimal"
+    	android:singleLine="true" />
+
+    <TextView
+        android:id="@+id/note_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/name_editor"
+        android:layout_alignParentTop="true"
+        android:text="@string/name" />
+
+    <TextView
+        android:id="@+id/empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="№" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+            android:layout_above="@+id/panel"
+    android:layout_below="@+id/version"
+    android:gravity="center"
+    android:textSize="16sp"
+        android:layout_toRightOf="@+id/interval_minutes_editor"
+        android:text="@string/m" />
+
+</RelativeLayout>

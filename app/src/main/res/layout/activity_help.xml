@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/fragment_border"
+    android:paddingRight="@dimen/fragment_border" >
+
+    <ScrollView
+        android:id="@+id/ScrollView1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="6dip" >
+
+            <TextView
+                android:id="@+id/help_page_intro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="2dip"
+                android:text="@string/help_page_intro_html" />
+
+            <Button
+                android:id="@+id/help_button1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:drawableLeft="@drawable/ic_action_about_dark"
+                android:gravity="left|center_vertical"
+                android:onClick="onClickHelp"
+                android:padding="8dip"
+                android:text="@string/help_text_section1" />
+
+            <Button
+                android:id="@+id/help_button2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:drawableLeft="@drawable/ic_action_about_dark"
+                android:gravity="left|center_vertical"
+                android:onClick="onClickHelp"
+                android:padding="8dip"
+                android:text="@string/help_text_section2" />
+
+            <Button
+                android:id="@+id/help_button3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:drawableLeft="@drawable/ic_action_about_dark"
+                android:gravity="left|center_vertical"
+                android:onClick="onClickHelp"
+                android:padding="8dip"
+                android:text="@string/help_text_section3">
+            </Button>
+             <Button
+                    android:id="@+id/help_button4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:drawableLeft="@drawable/ic_action_about_dark"
+                    android:gravity="left|center_vertical"
+                    android:onClick="onClickHelp"
+                    android:padding="8dip"
+                    android:text="@string/help_text_section4" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

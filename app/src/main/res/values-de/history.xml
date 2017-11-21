@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="history_text">
+Nachrichten:\n\n
+1.0.33\n
+- del ads;\n
++ export to calendar and csv-file.\n
+1.0.32\n
++ add counter appwidget;\n
+1.0.31\n
+* fix german lang;\n
+PRO\n
+- slide bar, fix slow;\n
++ move filter setup;\n
+1.0.29\n
++ linkes gleiten-Menü
++ Zähler Auswahl in Diagramm;\n
+* zwei tabellierungen: Zähler und Aufnahmen;\n
+* schnell langsam schalter von Tabelle zu Tabelle;\n
+* Automatische Zeiterneuerung
+* Filter auf Hauptart;;\n
+* positionieren entscheidender Fehler mit vereinigten Abständen.\n\n
+1.0.28\n
++Nachrichten über Aktivität mit vergangenen Versionen;\n
++ Textauswahl zur Diagrammlegende;\n
++ neu notification information;\n
+* fix not save note info;\n
++ vibration settings.\n\n
+1.0.27\n + export to CSV format;\n
++ share diagram image.\n\n
+1.0.26\n
++ period diagram, summary and arithmetic mean 
+Mitteilung Information;\n
+fest nicht sichern Notiz Info;\n
++ VibrationEinstellung\n
++ teilen Diagramm Bild\n
++ Perioden Diagramm, Gesamtsumme und arithmetischer Haupt-values;\n
++ backup to Google Drive;\n
++ testing export to Google calendar one record;\n
++ PRO-version.\n\n 
+1.0.25\n 
++ new legend for diagrams;\n
++ icons on tab;\n
+* fix somebugs.\n\n
+1.0.24.3\n
+* fix some bugs.\n\n
+1.0.24.2\n
+* fix wert\n
++ Testen eine  Aufnahme\n
++ Neue Vergangenheit für Diagramme\n
+some bugs.\n\n
+1.0.24\n
++ counter sort enable;\n
++ filters;\n
++ grey color enable.\n\n
+1.0.23\n
++ add autostart alarm when device reboot;\n
+* fix design on small screens;\n
+* fix some bugs.\n\n 
+1.0.22\n
++ add diary.\n\n
+1.0.21\n
++ einige Fehler;
++ Zähler Sorte aktivieren;
++ Filter;
++ graue Farbe;
++ hinzu Autostart Alarm wenn Gerät reboot;
++ fest Design auf kleinen Displays fest einige Fehler;
++ hinzu Tagebuch;
+hinzu Start Zeit(Heute, Woche, Monat, Jahr, alle Zeit)\n
+* fix some bugs.\n\n 
+1.0.11\n
++ fest einige Fehler\n\n 
+1.0.10\n
++ hinzu vereinigte Aufnahmen.\n\n
+1.0.9\n 
++ hinzu geteilte Aufnahmen\n\n
+1.0.8\n
++ hinzu löschen Zähler und reset.\n\n 
+1.0.7\n
++ add delete counters and\n\n
+1.0.6\n
++ add diagram.\n\n
+1.0.5\n
++ add records.\n\n
+alpha3\n
++ add counters.\n</string>
+    
+</resources>
