@@ -265,11 +265,16 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 		mBeforeText.setText(sb.toString());
 	}
 
-	private void showPickerFragment(int id, long time, boolean istime) {
+	private void showPickerFragment(int id, long currentTime, boolean istime) {
 		CustomDateTimePickerFragment newFragment = new CustomDateTimePickerFragment();
 		Bundle b = new Bundle();
-		b.putLong("time", time);
+		b.putLong("time", currentTime);
 		b.putInt("id", id);
+		b.putLong("start", mCurrentStart);
+		if (mOriginalLenght == 0)
+			b.putLong("end", new Date().getTime());
+		else
+			b.putLong("end", mCurrentStart + mCurrentLenght);
 		newFragment.setArguments(b);
 		newFragment.setDateChange(this);
 		newFragment.show(getActivity().getFragmentManager(),
@@ -410,11 +415,16 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 		private IdateChange mIdateChange;
 		private int id;
 
+		private long start;
+		private long end;
+
 		@Override
 		public void onSaveInstanceState(Bundle outState) {
 			outState.putInt("id", id);
 			outState.putLong("time",
 					((CustomDateTimePicker) this.getDialog()).getTime());
+			outState.putLong("start", start);
+			outState.putLong("end", end);
 			super.onSaveInstanceState(outState);
 		}
 
@@ -424,12 +434,16 @@ public class SplitRecordDialogFragment extends DialogFragment implements
 			if (savedInstanceState == null) {
 				id = getArguments().getInt("id");
 				t = getArguments().getLong("time");
+				start = getArguments().getLong("start");
+				end = getArguments().getLong("end");
 			} else {
 				id = savedInstanceState.getInt("id");
 				t = savedInstanceState.getLong("time");
+				start = savedInstanceState.getLong("start");
+				end = savedInstanceState.getLong("end");
 			}
 			CustomDateTimePicker customDateTimePicker = new CustomDateTimePicker(
-					getActivity(), this, t);
+					getActivity(), this, t, start, end);
 			customDateTimePicker.requestWindowFeature(Window.FEATURE_NO_TITLE);
 			return customDateTimePicker;
 		}

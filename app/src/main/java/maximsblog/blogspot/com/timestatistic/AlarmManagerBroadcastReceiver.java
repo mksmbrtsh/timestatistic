@@ -20,6 +20,7 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
 
@@ -35,13 +36,17 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
 			public void run() {
 				PowerManager pm = (PowerManager) context
 						.getSystemService(Context.POWER_SERVICE);
-				PowerManager.WakeLock wl = pm.newWakeLock(
-						PowerManager.PARTIAL_WAKE_LOCK, "timestatistic");
-				// Acquire the lock
-				wl.acquire();
-				visible_notification(context);
-				// Release the lock
-				wl.release();
+				if(pm!= null) {
+					PowerManager.WakeLock wl = pm.newWakeLock(
+							PowerManager.PARTIAL_WAKE_LOCK, "timestatistic");
+					// Acquire the lock
+					if (wl != null)
+						wl.acquire(10000);
+					visible_notification(context);
+					// Release the lock
+					if (wl != null)
+						wl.release();
+				}
 			}
 
 		});
@@ -51,11 +56,17 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
 	private void visible_notification(Context context) {
 		NotificationManager mNotificationManager = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
-		mNotificationManager.cancel(101);
-		final Intent intent1 = new Intent(context, MainActivity.class);
+		try {
+			mNotificationManager.cancel(101);
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		}
+		final Intent notificationIntent = new Intent(context, MainActivity.class);
+		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		notificationIntent.setAction(Long.toString(System.currentTimeMillis()));
 		final PendingIntent contentIntent = PendingIntent.getActivity(
-				context.getApplicationContext(), 0, intent1,
-				PendingIntent.FLAG_ONE_SHOT);
+				context.getApplicationContext(), 0, notificationIntent,
+				PendingIntent.FLAG_UPDATE_CURRENT);
 		Notification.Builder mBuilder;
 		mBuilder = new Notification.Builder(context).setSmallIcon(
 				R.drawable.ic_notification).setLights(Color.RED, 500, 500);
@@ -70,7 +81,7 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
 			}
 		}
 		mBuilder.setSound(alarmSound);
-		Format formatter = new SimpleDateFormat("HH:mm");
+		Format formatter = new SimpleDateFormat("HH:mm", context.getResources().getConfiguration().locale);
 		FilterDateOption startDateOption = app.getStartDate(context);
 		long mStartdate = startDateOption.date;
 		long mEnddate = -1;
@@ -85,20 +96,21 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
 		long start = 0;
 		long rememberInterval = 0;
 		long now = new Date().getTime();
-		if (cursor.moveToFirst()) {
-			name = cursor.getString(5);
-			rememberInterval = cursor.getLong(8);
-			start = cursor.getLong(3);
-			if (start < mStartdate)
-				start = mStartdate;
-			if (now > mEnddate && mEnddate != -1) {
-				lenght = cursor.getLong(2);
-			} else {
-				lenght = now - start + cursor.getLong(2);
+		if(cursor != null) {
+			if (cursor.moveToFirst()) {
+				name = cursor.getString(5);
+				rememberInterval = cursor.getLong(8);
+				start = cursor.getLong(3);
+				if (start < mStartdate)
+					start = mStartdate;
+				if (now > mEnddate && mEnddate != -1) {
+					lenght = cursor.getLong(2);
+				} else {
+					lenght = now - start + cursor.getLong(2);
+				}
 			}
+			cursor.close();
 		}
-		cursor.close();
-
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(start);
 		Calendar calendarNow = Calendar.getInstance();
@@ -141,8 +153,13 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
 		n.contentIntent = contentIntent;
 		n.flags = Notification.FLAG_AUTO_CANCEL;
 		mNotificationManager.notify(101, n);
-		((Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE))
-				.vibrate(100);
+		if (app.vibration)
+			try {
+				((Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE))
+						.vibrate(100);
+			} catch (NullPointerException e){
+				e.printStackTrace();
+			}
 	}
 
 	public String getTime(Context context, double time) {
@@ -153,14 +170,12 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
 		day = (int) (time / (24 * 60 * 60 * 1000));
 		hours = (int) (time / (60 * 60 * 1000)) - day * 24;
 		minutes = (int) (time / (60 * 1000)) - day * 24 * 60 - 60 * hours;
-		seconds = (int) (time / 1000) - day * 24 * 60 * 60 - 60 * 60 * hours
-				- 60 * minutes;
-		String s = new String();
+		String s;
 		if (day > 0) {
-			s = String.format("%s\n%02d:%02d",
+			s = String.format(context.getResources().getConfiguration().locale,"%s\n%02d:%02d",
 					getTimeString(context, "day", day), hours, minutes);
 		} else
-			s = String.format("%02d:%02d", hours, minutes);
+			s = String.format(context.getResources().getConfiguration().locale,"%02d:%02d", hours, minutes);
 		return s;
 	}
 
@@ -183,27 +198,34 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
 
 	public void SetAlarm(Context context, String name, long l, boolean vibro) {
 		CancelAlarm(context);
-		AlarmManager am = (AlarmManager) context
-				.getSystemService(Context.ALARM_SERVICE);
+
 		Intent intent = new Intent(context, AlarmManagerBroadcastReceiver.class);
 		intent.putExtra(ONE_TIME, Boolean.FALSE);
 		intent.putExtra(NAME, name);
 		intent.putExtra(NAME, vibro);
 		PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent,
-				PendingIntent.FLAG_UPDATE_CURRENT);
-		am.setRepeating(AlarmManager.RTC_WAKEUP,
+				PendingIntent.FLAG_CANCEL_CURRENT);
+		AlarmManager alarmManager = (AlarmManager) context
+				.getSystemService(Context.ALARM_SERVICE);
+		if(alarmManager!=null)
+			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
 				System.currentTimeMillis() + l, l, pi);
 	}
 
 	public void CancelAlarm(Context context) {
 		NotificationManager mNotificationManager = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
-		mNotificationManager.cancel(101);
+		try {
+			mNotificationManager.cancel(101);
+		} catch (NullPointerException e){
+			e.printStackTrace();
+		}
 		Intent intent = new Intent(context, AlarmManagerBroadcastReceiver.class);
 		PendingIntent sender = PendingIntent
 				.getBroadcast(context, 0, intent, 0);
 		AlarmManager alarmManager = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
-		alarmManager.cancel(sender);
+		if(alarmManager != null)
+			alarmManager.cancel(sender);
 	}
 }

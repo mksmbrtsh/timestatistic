@@ -14,8 +14,6 @@
     <string-array name="TitlePages">
         <item>Zähler</item>
         <item>Rekorde</item>
-        <item>Diagram</item>
-        <item>Tagebuch</item>
     </string-array>
 
     <string name="del">löschen</string>
@@ -91,6 +89,8 @@
     <string-array name="periods">
         <item>Stunde</item>
         <item>Tag</item>
+        <item>Woche</item>
+        <item>12 Stunden</item>
     </string-array>
     <string name="diagrama">Woche</string>
     <string name="diary">12 Stunden</string>
@@ -147,4 +147,5 @@
 	    <string name="export_to_gcalendar_complite">Export to Google calendar complete!</string>
     <string name="add_values">Werte zum Diagramm hinzufügen</string>
     <string name="new_series">Neue Serien</string>
+    <string name="union_help">Verwenden Sie lange Antippen für andere Datensätze zu Union</string>
 </resources>

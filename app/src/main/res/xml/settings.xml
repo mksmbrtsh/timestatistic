@@ -17,8 +17,7 @@
         android:key="vibration"
         android:summaryOn="@string/vibro_notif_mode"
         android:defaultValue="true"
-        android:title="@string/vibro_notif"
-        android:enabled="false" />
+        android:title="@string/vibro_notif" />
     
 
 </PreferenceScreen>

@@ -21,10 +21,9 @@ import android.graphics.Paint.Align;
 import org.achartengine.chart.PointStyle;
 import org.achartengine.renderer.XYSeriesRenderer.FillOutsideLine.Type;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.io.Serializable;
 /**
  * A renderer for the XY type series.
  */
@@ -59,10 +58,10 @@ public class XYSeriesRenderer extends SimpleSeriesRenderer {
   /**
    * A descriptor for the line fill behavior.
    */
-  public static class FillOutsideLine implements Serializable {
+  public static class FillOutsideLine {
     public enum Type {
       NONE, BOUNDS_ALL, BOUNDS_BELOW, BOUNDS_ABOVE, BELOW, ABOVE
-    };
+    }
 
     /** The fill type. */
     private final Type mType;
@@ -76,7 +75,7 @@ public class XYSeriesRenderer extends SimpleSeriesRenderer {
      * 
      * @param type the fill type
      */
-    public FillOutsideLine(Type type) {
+    private FillOutsideLine(Type type) {
       this.mType = type;
     }
 
@@ -174,7 +173,7 @@ public class XYSeriesRenderer extends SimpleSeriesRenderer {
    * 
    * @param fill the type of the filling
    */
-  public void addFillOutsideLine(FillOutsideLine fill) {
+  private void addFillOutsideLine(FillOutsideLine fill) {
     mFillBelowLine.add(fill);
   }
 

@@ -28,6 +28,8 @@ import java.util.Date;
 
 public class app extends Application {
 	private static AlarmManagerBroadcastReceiver alarm = new AlarmManagerBroadcastReceiver();
+	public static boolean vibration;
+
 
 	public static void loadRunningCounterAlarm(Context context) {
 		if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
@@ -37,14 +39,18 @@ public class app extends Application {
 	}
 
 	public static void setRunningCounterAlarmSettings(Context context) {
-		Cursor c = context.getContentResolver().query(
+		Cursor cursor = context.getContentResolver().query(
 				RecordsDbHelper.CONTENT_URI_TIMES,
-				new String[] { RecordsDbHelper.ID, RecordsDbHelper.NAME,
-						RecordsDbHelper.ISRUNNING },
+				new String[]{RecordsDbHelper.ID, RecordsDbHelper.NAME,
+						RecordsDbHelper.ISRUNNING},
 				RecordsDbHelper.ISRUNNING + "='1'", null, null);
-		c.moveToFirst();
-		alarm.SetAlarm(context, c.getString(5), c.getLong(8), true);
-		c.close();
+		if (cursor != null) {
+			cursor.moveToFirst();
+			vibration = PreferenceManager.getDefaultSharedPreferences(context)
+					.getBoolean("vibration", false);
+			alarm.SetAlarm(context, cursor.getString(5), cursor.getLong(8), vibration);
+			cursor.close();
+		}
 	}
 
 	public static void delAlarm(Context context) {
@@ -73,57 +79,57 @@ public class app extends Application {
 			resultName = startDateNames[(int) checkedItem];
 			switch ((int) checkedItem) {
 
-			case SettingsActivity.STARTTIMEFILTERS.TODAY:
-				calendar.set(Calendar.MILLISECOND, 0);
-				calendar.set(Calendar.SECOND, 0);
-				calendar.set(Calendar.MINUTE, 0);
-				calendar.set(Calendar.HOUR_OF_DAY, 0);
-				result = calendar.getTimeInMillis();
-				break;
-			case SettingsActivity.STARTTIMEFILTERS.YESTERDAY:
-				calendar.set(Calendar.MILLISECOND, 0);
-				calendar.set(Calendar.SECOND, 0);
-				calendar.set(Calendar.MINUTE, 0);
-				calendar.set(Calendar.HOUR_OF_DAY, 0);
-				calendar.add(Calendar.DATE, -1);
-				result = calendar.getTimeInMillis();
-				break;
-			case SettingsActivity.STARTTIMEFILTERS.WEEK:
-				calendar.set(Calendar.MILLISECOND, 0);
-				calendar.set(Calendar.SECOND, 0);
-				calendar.set(Calendar.MINUTE, 0);
-				calendar.set(Calendar.HOUR_OF_DAY, 0);
-				calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
-				result = calendar.getTimeInMillis();
-				break;
-			case SettingsActivity.STARTTIMEFILTERS.MOUNTH:
-				calendar.set(Calendar.MILLISECOND, 0);
-				calendar.set(Calendar.SECOND, 0);
-				calendar.set(Calendar.MINUTE, 0);
-				calendar.set(Calendar.HOUR_OF_DAY, 0);
-				calendar.set(Calendar.DAY_OF_MONTH, 1);
-				result = calendar.getTimeInMillis();
-				break;
-			case SettingsActivity.STARTTIMEFILTERS.YEAR:
-				calendar.set(Calendar.MILLISECOND, 0);
-				calendar.set(Calendar.SECOND, 0);
-				calendar.set(Calendar.MINUTE, 0);
-				calendar.set(Calendar.HOUR_OF_DAY, 0);
-				calendar.set(Calendar.DAY_OF_MONTH, 1);
-				calendar.set(Calendar.MONTH, 0);
-				result = calendar.getTimeInMillis();
-				break;
-			case SettingsActivity.STARTTIMEFILTERS.ALLTIME:
-				try {
-					result = context.getPackageManager().getPackageInfo(
-							context.getPackageName(), 0).firstInstallTime;
-				} catch (NameNotFoundException e) {
-					e.printStackTrace();
+				case SettingsActivity.STARTTIMEFILTERS.TODAY:
+					calendar.set(Calendar.MILLISECOND, 0);
+					calendar.set(Calendar.SECOND, 0);
+					calendar.set(Calendar.MINUTE, 0);
+					calendar.set(Calendar.HOUR_OF_DAY, 0);
+					result = calendar.getTimeInMillis();
+					break;
+				case SettingsActivity.STARTTIMEFILTERS.YESTERDAY:
+					calendar.set(Calendar.MILLISECOND, 0);
+					calendar.set(Calendar.SECOND, 0);
+					calendar.set(Calendar.MINUTE, 0);
+					calendar.set(Calendar.HOUR_OF_DAY, 0);
+					calendar.add(Calendar.DATE, -1);
+					result = calendar.getTimeInMillis();
+					break;
+				case SettingsActivity.STARTTIMEFILTERS.WEEK:
+					calendar.set(Calendar.MILLISECOND, 0);
+					calendar.set(Calendar.SECOND, 0);
+					calendar.set(Calendar.MINUTE, 0);
+					calendar.set(Calendar.HOUR_OF_DAY, 0);
+					calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
+					result = calendar.getTimeInMillis();
+					break;
+				case SettingsActivity.STARTTIMEFILTERS.MOUNTH:
+					calendar.set(Calendar.MILLISECOND, 0);
+					calendar.set(Calendar.SECOND, 0);
+					calendar.set(Calendar.MINUTE, 0);
+					calendar.set(Calendar.HOUR_OF_DAY, 0);
+					calendar.set(Calendar.DAY_OF_MONTH, 1);
+					result = calendar.getTimeInMillis();
+					break;
+				case SettingsActivity.STARTTIMEFILTERS.YEAR:
+					calendar.set(Calendar.MILLISECOND, 0);
+					calendar.set(Calendar.SECOND, 0);
+					calendar.set(Calendar.MINUTE, 0);
+					calendar.set(Calendar.HOUR_OF_DAY, 0);
+					calendar.set(Calendar.DAY_OF_MONTH, 1);
+					calendar.set(Calendar.MONTH, 0);
+					result = calendar.getTimeInMillis();
+					break;
+				case SettingsActivity.STARTTIMEFILTERS.ALLTIME:
+					try {
+						result = context.getPackageManager().getPackageInfo(
+								context.getPackageName(), 0).firstInstallTime;
+					} catch (NameNotFoundException e) {
+						e.printStackTrace();
+						result = 1;
+					}
+					break;
+				default:
 					result = 1;
-				}
-				break;
-			default:
-				result = 1;
 			}
 		} else {
 			result = checkedItem;
@@ -151,54 +157,54 @@ public class app extends Application {
 			resultName = startDateNames[(int) checkedItem];
 			switch ((int) checkedItem) {
 
-			case SettingsActivity.STARTTIMEFILTERS.TODAY:
-				calendar.set(Calendar.MILLISECOND, 0);
-				calendar.set(Calendar.SECOND, 0);
-				calendar.set(Calendar.MINUTE, 0);
-				calendar.set(Calendar.HOUR_OF_DAY, 0);
-				calendar.add(Calendar.DATE, 1);
-				result = calendar.getTimeInMillis();
-				break;
-			case SettingsActivity.STARTTIMEFILTERS.YESTERDAY:
-				calendar.set(Calendar.MILLISECOND, 0);
-				calendar.set(Calendar.SECOND, 0);
-				calendar.set(Calendar.MINUTE, 0);
-				calendar.set(Calendar.HOUR_OF_DAY, 0);
-				result = calendar.getTimeInMillis();
-				break;
-			case SettingsActivity.STARTTIMEFILTERS.WEEK:
-				calendar.set(Calendar.MILLISECOND, 0);
-				calendar.set(Calendar.SECOND, 0);
-				calendar.set(Calendar.MINUTE, 0);
-				calendar.set(Calendar.HOUR_OF_DAY, 0);
-				calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
-				calendar.add(Calendar.DATE, 7);
-				result = calendar.getTimeInMillis();
-				break;
-			case SettingsActivity.STARTTIMEFILTERS.MOUNTH:
-				calendar.set(Calendar.MILLISECOND, 0);
-				calendar.set(Calendar.SECOND, 0);
-				calendar.set(Calendar.MINUTE, 0);
-				calendar.set(Calendar.HOUR_OF_DAY, 0);
-				calendar.set(Calendar.DAY_OF_MONTH, 1);
-				calendar.add(Calendar.MONTH, 1);
-				result = calendar.getTimeInMillis();
-				break;
-			case SettingsActivity.STARTTIMEFILTERS.YEAR:
-				calendar.set(Calendar.MILLISECOND, 0);
-				calendar.set(Calendar.SECOND, 0);
-				calendar.set(Calendar.MINUTE, 0);
-				calendar.set(Calendar.HOUR_OF_DAY, 0);
-				calendar.set(Calendar.DAY_OF_MONTH, 1);
-				calendar.set(Calendar.MONTH, 0);
-				calendar.add(Calendar.YEAR, 1);
-				result = calendar.getTimeInMillis();
-				break;
-			case SettingsActivity.STARTTIMEFILTERS.ALLTIME:
-				result = -1;
-				break;
-			default:
-				result = -1;
+				case SettingsActivity.STARTTIMEFILTERS.TODAY:
+					calendar.set(Calendar.MILLISECOND, 0);
+					calendar.set(Calendar.SECOND, 0);
+					calendar.set(Calendar.MINUTE, 0);
+					calendar.set(Calendar.HOUR_OF_DAY, 0);
+					calendar.add(Calendar.DATE, 1);
+					result = calendar.getTimeInMillis();
+					break;
+				case SettingsActivity.STARTTIMEFILTERS.YESTERDAY:
+					calendar.set(Calendar.MILLISECOND, 0);
+					calendar.set(Calendar.SECOND, 0);
+					calendar.set(Calendar.MINUTE, 0);
+					calendar.set(Calendar.HOUR_OF_DAY, 0);
+					result = calendar.getTimeInMillis();
+					break;
+				case SettingsActivity.STARTTIMEFILTERS.WEEK:
+					calendar.set(Calendar.MILLISECOND, 0);
+					calendar.set(Calendar.SECOND, 0);
+					calendar.set(Calendar.MINUTE, 0);
+					calendar.set(Calendar.HOUR_OF_DAY, 0);
+					calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
+					calendar.add(Calendar.DATE, 7);
+					result = calendar.getTimeInMillis();
+					break;
+				case SettingsActivity.STARTTIMEFILTERS.MOUNTH:
+					calendar.set(Calendar.MILLISECOND, 0);
+					calendar.set(Calendar.SECOND, 0);
+					calendar.set(Calendar.MINUTE, 0);
+					calendar.set(Calendar.HOUR_OF_DAY, 0);
+					calendar.set(Calendar.DAY_OF_MONTH, 1);
+					calendar.add(Calendar.MONTH, 1);
+					result = calendar.getTimeInMillis();
+					break;
+				case SettingsActivity.STARTTIMEFILTERS.YEAR:
+					calendar.set(Calendar.MILLISECOND, 0);
+					calendar.set(Calendar.SECOND, 0);
+					calendar.set(Calendar.MINUTE, 0);
+					calendar.set(Calendar.HOUR_OF_DAY, 0);
+					calendar.set(Calendar.DAY_OF_MONTH, 1);
+					calendar.set(Calendar.MONTH, 0);
+					calendar.add(Calendar.YEAR, 1);
+					result = calendar.getTimeInMillis();
+					break;
+				case SettingsActivity.STARTTIMEFILTERS.ALLTIME:
+					result = -1;
+					break;
+				default:
+					result = -1;
 			}
 		} else {
 			result = checkedItem;
@@ -232,12 +238,12 @@ public class app extends Application {
 
 
 	public static void BitmapShare(Context context, Bitmap b) {
-		File outputFile = null;
+		File outputFile;
 
 		File dir = Environment
 				.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
 		File tsDir = new File(dir, "TimeStatistic");
-		boolean dirIscreate = false;
+		boolean dirIscreate;
 		if (!(dirIscreate = tsDir.exists())) {
 			dirIscreate = tsDir.mkdir();
 		}
@@ -264,101 +270,111 @@ public class app extends Application {
 			Toast.makeText(context, context.getString(R.string.error_cr_file),
 					Toast.LENGTH_LONG).show();
 	}
-	
+
 	public static void setStatusBar(Context context) {
 		boolean visible = PreferenceManager.getDefaultSharedPreferences(
 				context.getApplicationContext()).getBoolean("visible_notif",
 				false);
 		NotificationManager mNotificationManager = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
-		mNotificationManager.cancel(100);
+		try {
+			mNotificationManager.cancel(100);
+		} catch (NullPointerException e) {
+		}
 		if (visible) {
 			FilterDateOption startDateOption = app.getStartDate(context);
 			long mStartdate = startDateOption.date;
 			long mEnddate = -1;
-			String[] selectionArgs = new String[] { String.valueOf(mStartdate),
-					String.valueOf(mEnddate), String.valueOf(1) };
+			String[] selectionArgs = new String[]{String.valueOf(mStartdate),
+					String.valueOf(mEnddate), String.valueOf(1)};
 
 			Cursor c = context.getContentResolver().query(
 					RecordsDbHelper.CONTENT_URI_TIMES,
-					new String[] { RecordsDbHelper.ID, RecordsDbHelper.NAME,
-							RecordsDbHelper.ISRUNNING },
+					new String[]{RecordsDbHelper.ID, RecordsDbHelper.NAME,
+							RecordsDbHelper.ISRUNNING},
 					RecordsDbHelper.ISRUNNING + "=?", selectionArgs, null);
-			if (c.moveToFirst()) {
+			if (c != null) {
+				if (c.moveToFirst()) {
 
-				long start = c.getLong(3);
-				long lenght = c.getLong(2);
-				String name = c.getString(5);
+					long start = c.getLong(3);
+					long lenght = c.getLong(2);
+					String name = c.getString(5);
 
-				final Intent intent1 = new Intent(context, MainActivity.class);
-				final PendingIntent contentIntent = PendingIntent.getActivity(
-						context.getApplicationContext(), 0, intent1,
-						PendingIntent.FLAG_ONE_SHOT);
-				Builder mBuilder;
-				if (start < mStartdate)
-					start = mStartdate;
-				long now = new Date().getTime();
+					final Intent notificationIntent = new Intent(context, MainActivity.class);
+					notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+					notificationIntent.setAction(Long.toString(System.currentTimeMillis()));
+					final PendingIntent contentIntent = PendingIntent.getActivity(
+							context.getApplicationContext(), 0, notificationIntent,
+							PendingIntent.FLAG_UPDATE_CURRENT);
+					Builder mBuilder;
+					if (start < mStartdate)
+						start = mStartdate;
+					long now = new Date().getTime();
 
-				if (now > mEnddate && mEnddate != -1) {
+					if (!(now > mEnddate && mEnddate != -1)) {
+						lenght = now - start + lenght;
+					}
 
-				} else {
-					lenght = now - start + lenght;
+					Calendar calendar = Calendar.getInstance();
+					calendar.setTimeInMillis(start);
+					Calendar calendarNow = Calendar.getInstance();
+					calendar.set(Calendar.MILLISECOND, 0);
+					calendar.set(Calendar.SECOND, 0);
+					calendar.set(Calendar.MINUTE, 0);
+					calendar.set(Calendar.HOUR_OF_DAY, 0);
+					calendarNow.set(Calendar.MILLISECOND, 0);
+					calendarNow.set(Calendar.SECOND, 0);
+					calendarNow.set(Calendar.MINUTE, 0);
+					calendarNow.set(Calendar.HOUR_OF_DAY, 0);
+					String contentText;
+					String subText;
+
+					if (calendar.getTimeInMillis() == calendarNow.getTimeInMillis()) {
+						DateFormat simpleDateFormat = SimpleDateFormat
+								.getTimeInstance();
+						contentText = context.getString(R.string.sum_since) + ": "
+								+ simpleDateFormat.format(mStartdate);
+						subText = context.getString(R.string.switchtime) + ": "
+								+ simpleDateFormat.format(start);
+					} else {
+						DateFormat simpleDateFormat = SimpleDateFormat
+								.getDateTimeInstance();
+						contentText = context.getString(R.string.sum_since) + ": "
+								+ simpleDateFormat.format(mStartdate);
+						subText = context.getString(R.string.switchtime) + ": "
+								+ simpleDateFormat.format(start);
+					}
+					boolean alarm = PreferenceManager.getDefaultSharedPreferences(
+							context).getBoolean("alarm", false);
+
+					mBuilder = new Notification.Builder(context)
+
+							.setSmallIcon(R.drawable.ic_status_bar_not)
+							.setContentTitle(
+									context.getString(R.string.now) + ": " + name)
+							.setOngoing(false).setSubText(contentText)
+							.setContentText(subText)
+							.setWhen(new Date().getTime() - lenght)
+							.setAutoCancel(false).setUsesChronometer(true);
+					if (alarm)
+						mBuilder.setLargeIcon(BitmapFactory.decodeResource(
+								context.getResources(), R.drawable.ic_status_bar_not));
+					Notification n = mBuilder.build();
+					n.contentIntent = contentIntent;
+					n.when = new Date().getTime() - lenght;
+
+					n.flags = Notification.FLAG_ONGOING_EVENT;
+					try {
+						mNotificationManager.notify(100, n);
+					} catch (NullPointerException e){
+						e.printStackTrace();
+					}
 				}
-
-				Calendar calendar = Calendar.getInstance();
-				calendar.setTimeInMillis(start);
-				Calendar calendarNow = Calendar.getInstance();
-				calendar.set(Calendar.MILLISECOND, 0);
-				calendar.set(Calendar.SECOND, 0);
-				calendar.set(Calendar.MINUTE, 0);
-				calendar.set(Calendar.HOUR_OF_DAY, 0);
-				calendarNow.set(Calendar.MILLISECOND, 0);
-				calendarNow.set(Calendar.SECOND, 0);
-				calendarNow.set(Calendar.MINUTE, 0);
-				calendarNow.set(Calendar.HOUR_OF_DAY, 0);
-				String contentText;
-				String subText;
-
-				if (calendar.getTimeInMillis() == calendarNow.getTimeInMillis()) {
-					DateFormat simpleDateFormat = SimpleDateFormat
-							.getTimeInstance();
-					contentText = context.getString(R.string.sum_since) + ": "
-							+ simpleDateFormat.format(mStartdate);
-					subText = context.getString(R.string.switchtime) + ": "
-							+ simpleDateFormat.format(start);
-				} else {
-					DateFormat simpleDateFormat = SimpleDateFormat
-							.getDateTimeInstance();
-					contentText = context.getString(R.string.sum_since) + ": "
-							+ simpleDateFormat.format(mStartdate);
-					subText = context.getString(R.string.switchtime) + ": "
-							+ simpleDateFormat.format(start);
-				}
-				boolean alarm = PreferenceManager.getDefaultSharedPreferences(
-						context).getBoolean("alarm", false);
-
-				mBuilder = new Notification.Builder(context)
-
-						.setSmallIcon(R.drawable.ic_status_bar_not)
-						.setContentTitle(
-								context.getString(R.string.now) + ": " + name)
-						.setOngoing(false).setSubText(contentText)
-						.setContentText(subText)
-						.setWhen(new Date().getTime() - lenght)
-						.setAutoCancel(false).setUsesChronometer(true);
-				if (alarm)
-					mBuilder.setLargeIcon(BitmapFactory.decodeResource(
-							context.getResources(), R.drawable.ic_status_bar_not));
-				Notification n = mBuilder.build();
-				n.contentIntent = contentIntent;
-				n.when = new Date().getTime() - lenght;
-
-				n.flags = Notification.FLAG_ONGOING_EVENT;
-				mNotificationManager.notify(100, n);
+				c.close();
 			}
-			c.close();
 		}
 	}
+
 	
 	public static void updateDayCountAppWidget(Context context) {
 		AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);

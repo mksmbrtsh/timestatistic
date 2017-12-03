@@ -75,7 +75,7 @@
         <item>since</item>
     </string-array>
     <string-array name="EndFilters">
-        <item>to tommorow</item>
+        <item>to tomorrow</item>
         <item>to begin this day</item>
         <item>to end this week</item>
         <item>to end this month</item>
@@ -166,5 +166,5 @@
     <string name="title_notifications">Notifications</string>
     <string name="title_activity_diagrama">DiagramaActivity</string>
     <string name="title_activity_diary">DiaryActivity</string>
-
+    <string name="union_help">Use long tap for other records to union</string>
 </resources>

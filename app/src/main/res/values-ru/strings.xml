@@ -148,4 +148,5 @@
 	    <string name="export_to_gcalendar_complite">Экспорт в Google calendar завершён!</string>
     <string name="add_values">Добавить данные в график</string>
     <string name="new_series">Новая серия</string>
+    <string name="union_help">Чтобы объединять другую запись, а не последнюю, нажмите и удерживайте её</string>
 </resources>

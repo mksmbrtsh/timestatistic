@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TimePicker;
 import android.widget.TimePicker.OnTimeChangedListener;
+import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import java.text.SimpleDateFormat;
@@ -38,13 +39,17 @@ public class CustomDateTimePicker extends Dialog implements OnClickListener {
 
 	private int selectedHour, selectedMinute;
 
+	private long mStart, mEnd;
+
 	public CustomDateTimePicker(Context c,
-			ICustomDateTimeListener customDateTimeListener, long date) {
+			ICustomDateTimeListener customDateTimeListener, long date, long start, long end) {
 		super(c);
 		mContext = c;
 		iCustomDateTimeListener = customDateTimeListener;
 		calendar_date = Calendar.getInstance();
 		calendar_date.setTimeInMillis(date);
+		mStart = start;
+		mEnd = end;
 	}
 	
 	
@@ -72,7 +77,7 @@ public class CustomDateTimePicker extends Dialog implements OnClickListener {
 		timePicker.setIs24HourView(is24HourView);
 		timePicker.setCurrentHour(selectedHour);
 		timePicker.setCurrentMinute(selectedMinute);
-
+        timePicker.se
 		datePicker.updateDate(calendar_date.get(Calendar.YEAR),
 				calendar_date.get(Calendar.MONTH),
 				calendar_date.get(Calendar.DATE));
@@ -80,6 +85,30 @@ public class CustomDateTimePicker extends Dialog implements OnClickListener {
 		timePicker.setOnTimeChangedListener(new OnTimeChangedListener() {
 			@Override
 			public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+                int month = datePicker.getMonth();
+                int year = datePicker.getYear();
+                int day = datePicker.getDayOfMonth();
+                Calendar cal = Calendar.getInstance();
+                cal.set(year, month, day, hourOfDay,
+                        minute);
+                if(cal.getTimeInMillis() < mStart){
+                    timePicker.setOnTimeChangedListener(null);
+                    timePicker.setCurrentHour(selectedHour);
+                    timePicker.setCurrentMinute(selectedMinute);
+                    timePicker.setOnTimeChangedListener(this);
+                    Toast.makeText(mContext, mContext.getString(R.string.less_min),
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(cal.getTimeInMillis() > mEnd){
+                    timePicker.setOnTimeChangedListener(null);
+                    timePicker.setCurrentHour(selectedHour);
+                    timePicker.setCurrentMinute(selectedMinute);
+                    timePicker.setOnTimeChangedListener(this);
+                    Toast.makeText(mContext, mContext.getString(R.string.more_max),
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
 				selectedHour = hourOfDay;
 				selectedMinute = minute;
 			}

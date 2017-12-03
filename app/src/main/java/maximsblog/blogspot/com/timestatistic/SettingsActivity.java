@@ -57,6 +57,8 @@ public class SettingsActivity extends PreferenceActivity implements
 			 e.putBoolean("alarm", (Boolean)newValue);
 			 e.commit();
 			 app.setStatusBar(this);
+		} else if(preference.getKey().equals("vibration")) {
+			app.vibration = (Boolean) newValue;
 		} else {
 			Editor e = preference.getEditor();
 			e.putBoolean("visible_notif", (Boolean)newValue);

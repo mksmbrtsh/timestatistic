@@ -7,6 +7,7 @@ import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,6 +19,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -204,7 +206,6 @@ public class TimeRecordsFragment extends Fragment implements
 			int position, long arg3) {
 		mAdapter.getSelected().clear();
 		mAdapter.setChoiceUnionMode(position);
-		
 		mUnionPanel.setVisibility(View.VISIBLE);
 		onTimeRecordChange();
 		return true;
@@ -240,13 +241,14 @@ public class TimeRecordsFragment extends Fragment implements
 					iDtimer = times.getInt(0);
 					Cursor cursor = getActivity().getContentResolver().query(RecordsDbHelper.CONTENT_URI_NOTES,
 							new String[] {RecordsDbHelper.ID3, RecordsDbHelper.NOTE}, RecordsDbHelper.ID3 + "=?",new String[] { String.valueOf(times.getInt(5)) }, null);
-					
-					if(cursor.getCount() ==1){
-						cursor.moveToFirst();
-						note = cursor.getString(1);
-					} else
-						note = null;
-					cursor.close();
+					if(cursor != null) {
+						if (cursor.getCount() == 1) {
+							cursor.moveToFirst();
+							note = cursor.getString(1);
+						} else
+							note = null;
+						cursor.close();
+					}
 				}
 				if(stop <  times.getLong(7))
 					stop = times.getLong(7);
@@ -257,12 +259,14 @@ public class TimeRecordsFragment extends Fragment implements
 					iDtimer = times.getInt(0);
 					Cursor cursor = getActivity().getContentResolver().query(RecordsDbHelper.CONTENT_URI_NOTES,
 							new String[] {RecordsDbHelper.ID3, RecordsDbHelper.NOTE}, RecordsDbHelper.ID3 + "=?",new String[] { String.valueOf(times.getInt(5)) }, null);
-					if(cursor.getCount() ==1){
-						cursor.moveToFirst();
-						note = cursor.getString(1);
-					} else
-						note = null;
-					cursor.close();
+					if(cursor != null) {
+						if (cursor.getCount() == 1) {
+							cursor.moveToFirst();
+							note = cursor.getString(1);
+						} else
+							note = null;
+						cursor.close();
+					}
 				}
 
 			}
@@ -283,6 +287,16 @@ public class TimeRecordsFragment extends Fragment implements
 		mAdapter.setSelectedPosition(TimesCursorAdapter.NORMAL_MODE);
 		mAdapter.getSelected().clear();
 		mUnionPanel.setVisibility(View.GONE);
+	}
+
+	public void setUnionMode() {
+		mAdapter.getSelected().clear();
+		mAdapter.setChoiceUnionMode(mAdapter.getCount() -1);
+		mUnionPanel.setVisibility(View.VISIBLE);
+		onTimeRecordChange();
+		Toast toast =Toast.makeText(getActivity(),getString(R.string.union_help), Toast.LENGTH_LONG);
+		toast.setGravity(Gravity.TOP,0,0);
+		toast.show();
 	}
 
 }

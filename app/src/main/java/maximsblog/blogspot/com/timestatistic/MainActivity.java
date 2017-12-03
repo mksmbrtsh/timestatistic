@@ -152,7 +152,7 @@ public class MainActivity extends Activity implements
 		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 		MenuItem searchMenuItem = ((MenuItem) menu.findItem(R.id.item_search));
 		mSearchView = (SearchView) searchMenuItem.getActionView();
-		if (pager.getCurrentItem() == 3) {
+		if (pager.getCurrentItem() == 3) {//TODO
 			getActionBar().setTitle("");
 			getActionBar().setSubtitle("");
 			searchMenuItem.setVisible(true);
@@ -194,6 +194,7 @@ public class MainActivity extends Activity implements
 		mSearchView.setOnQueryTextListener(this);
 		mSearchView.setOnSuggestionListener(this);
 		menu.findItem(R.id.item_add).setVisible(pager.getCurrentItem() == 0);
+		menu.findItem(R.id.item_union).setVisible(pager.getCurrentItem() == 1);
 		menu.findItem(R.id.item_reset_all).setVisible(
 				pager.getCurrentItem() == 0);
 		menu.findItem(R.id.item_starts).setVisible(pager.getCurrentItem() != 3);
@@ -233,6 +234,11 @@ public class MainActivity extends Activity implements
 			counterEditorDialogFragment.show(this.getFragmentManager(),
 					"mCounterEditorDialogFragment");
 			break;
+			case R.id.item_union:
+				TimeRecordsFragment timeRecordsFragment = (TimeRecordsFragment) ((MainFragments) findFragmentByPosition(1));
+				timeRecordsFragment.setUnionMode();
+				timeRecordsFragment.onReload();
+				break;
 		case R.id.item_reset_all:
 			ft = getFragmentManager().beginTransaction();
 			AreYouSureResetAllDialogFragment areYouSureResetAllDialog = new AreYouSureResetAllDialogFragment();
