@@ -149,7 +149,7 @@ public class ExportToGoogleCalendarActivity extends Activity
 			FilterDateOption endDateOption) {
 		String s1, s2;
 		SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(
-				"dd/MM/yy HH:mm");
+				"dd.MM.yy HH:mm");
 		if (!startDateOption.dateName.equals(getResources().getStringArray(
 				R.array.StartFilters)[6]))
 			s1 = startDateOption.dateName;
@@ -167,7 +167,7 @@ public class ExportToGoogleCalendarActivity extends Activity
 	private void setFilterText(long startDateOption, long endDateOption) {
 		String s1, s2;
 		SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(
-				"dd/MM/yy HH:mm");
+				"dd.MM.yy HH:mm");
 
 		s1 = mSimpleDateFormat.format(new Date(startDateOption));
 
@@ -283,6 +283,7 @@ public class ExportToGoogleCalendarActivity extends Activity
 			args.putLong("stop", end);
 			startDateSetDialogFragment.setArguments(args);
 			startDateSetDialogFragment.setDialogListener(this);
+			startDateSetDialogFragment.setCancelable(false);
 			startDateSetDialogFragment.show(this.getFragmentManager(),
 					"mStartDateSetDialogFragment");
 			break;

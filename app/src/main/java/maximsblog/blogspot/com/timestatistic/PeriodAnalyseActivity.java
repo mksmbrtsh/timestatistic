@@ -13,7 +13,6 @@ import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.google.android.gms.ads.AdView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -32,8 +31,7 @@ public class PeriodAnalyseActivity extends Activity
 	private long mPeriod;
 	private int[] mIDs;
 	private boolean[] mChecked;
-	private AdView adView;
-	
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -202,6 +200,7 @@ public class PeriodAnalyseActivity extends Activity
 			args.putLong("stop", selectEndItem);
 			startDateSetDialogFragment.setArguments(args);
 			startDateSetDialogFragment.setDialogListener(this);
+			startDateSetDialogFragment.setCancelable(false);
 			startDateSetDialogFragment.show(this.getFragmentManager(),
 					"mStartDateSetDialogFragment");
 		}
@@ -288,7 +287,7 @@ public class PeriodAnalyseActivity extends Activity
 		editor.commit();
 
 		SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(
-				"dd/MM/yy HH:mm");
+				"dd.MM.yy HH:mm");
 		FilterDateOption startDateOption = app.getStartDatePeriod(this);
 		startdate = startDateOption.date;
 		if (!startDateOption.dateName.equals(getResources().getStringArray(

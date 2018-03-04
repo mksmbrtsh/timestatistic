@@ -9,9 +9,8 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
-
-import maximsblog.blogspot.com.timestatistic.SplitRecordDialogFragment.CustomDateTimePickerFragment;
 
 public class FilterDialogFragment  extends DialogFragment implements IdateChange  {
 	private IdateChange mListener;
@@ -56,7 +55,7 @@ public class FilterDialogFragment  extends DialogFragment implements IdateChange
 			selectItem = 6;
 		}
 		SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(
-				"dd/MM/yy HH:mm");
+				"dd.MM.yy HH:mm");
 		items[6] = items[6] + " " + mSimpleDateFormat.format(startdate);
 		final int checkedItem = (int) mSelectItem;
 		return new AlertDialog.Builder(getActivity())
@@ -69,7 +68,7 @@ public class FilterDialogFragment  extends DialogFragment implements IdateChange
 									int which) {
 								if (which < 6) {
 									FilterDialogFragment.this.dismiss();
-									mListener.timeChange(mStart ? 1: 2, which);
+									mListener.timeChange(which);
 								} else {
 									CustomDateTimePickerFragment newFragment = new CustomDateTimePickerFragment();
 									Bundle b = new Bundle();
@@ -87,13 +86,73 @@ public class FilterDialogFragment  extends DialogFragment implements IdateChange
 	}
 
 	@Override
-	public void timeChange(int id, long newvalue) {
+	public void timeChange(long newvalue) {
 		if (mStart && newvalue > new Date().getTime()) {
 			Toast.makeText(getActivity(), R.string.more_max, Toast.LENGTH_LONG).show();
 			FilterDialogFragment.this.dismiss();
 		} else {
 			FilterDialogFragment.this.dismiss();
-			mListener.timeChange(mStart ? 1: 2, newvalue);
+			mListener.timeChange(newvalue);
+		}
+	}
+
+
+	public static class CustomDateTimePickerFragment extends DialogFragment
+			implements ICustomDateTimeListener {
+		private IdateChange mIdateChange;
+		private int id;
+
+		private long start;
+		private long end;
+
+		@Override
+		public void onSaveInstanceState(Bundle outState) {
+			outState.putInt("id", id);
+			outState.putLong("time",
+					((CustomDateTimePicker) this.getDialog()).getTime());
+			outState.putLong("start", start);
+			outState.putLong("end", end);
+			super.onSaveInstanceState(outState);
+		}
+
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			long t;
+			if (savedInstanceState == null) {
+				id = getArguments().getInt("id");
+				t = getArguments().getLong("time");
+				start = getArguments().getLong("start");
+				end = getArguments().getLong("end");
+			} else {
+				id = savedInstanceState.getInt("id");
+				t = savedInstanceState.getLong("time");
+				start = savedInstanceState.getLong("start");
+				end = savedInstanceState.getLong("end");
+			}
+			CustomDateTimePicker customDateTimePicker = new CustomDateTimePicker(
+					getActivity(), this, t, start, end);
+			//customDateTimePicker.requestWindowFeature(Window.FEATURE_NO_TITLE);
+			return customDateTimePicker;
+		}
+
+		public void setDateChange(IdateChange idc) {
+			mIdateChange = idc;
+		}
+
+		@Override
+		public void onSet(Dialog dialog, Calendar calendarSelected,
+						  Date dateSelected, int year, String monthFullName,
+						  String monthShortName, int monthNumber, int date,
+						  String weekDayFullName, String weekDayShortName, int hour24,
+						  int hour12, int min, int sec, String AM_PM) {
+			super.dismiss();
+			mIdateChange.timeChange(dateSelected.getTime());
+		}
+
+		@Override
+		public void onCancel() {
+			mIdateChange.cancel();
+			super.dismiss();
 		}
 	}
 

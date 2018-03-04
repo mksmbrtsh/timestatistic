@@ -19,6 +19,7 @@ public class FilterDateSetDialogFragment extends DialogFragment implements andro
 	private SimpleDateFormat mSimpleDateFormat;
 	private long mSelectStartItem;
 	private long mSelectEndItem;
+	private boolean mIsStart;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -26,6 +27,7 @@ public class FilterDateSetDialogFragment extends DialogFragment implements andro
 		if (savedInstanceState != null) {
 			mSelectStartItem = savedInstanceState.getLong("mSelectStartItem");
 			mSelectEndItem = savedInstanceState.getLong("mSelectEndItem");
+			mIsStart = savedInstanceState.getBoolean("mIsStart");
 			FilterDialogFragment filterDialogFragment = (FilterDialogFragment) getActivity()
 					.getFragmentManager()
 					.findFragmentByTag("filterPicker");
@@ -44,6 +46,7 @@ public class FilterDateSetDialogFragment extends DialogFragment implements andro
 		super.onSaveInstanceState(arg0);
 		arg0.putLong("mSelectStartItem", mSelectStartItem);
 		arg0.putLong("mSelectEndItem", mSelectEndItem);
+		arg0.putBoolean("mIsStart", mIsStart);
 	};
 
 	@Override
@@ -80,7 +83,7 @@ public class FilterDateSetDialogFragment extends DialogFragment implements andro
 			index = 6;
 		}
 		String[] items = getResources().getStringArray(R.array.StartFilters);
-		mSimpleDateFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
+		mSimpleDateFormat = new SimpleDateFormat("dd.MM.yy HH:mm");
 		items[6] = items[6] + " " + mSimpleDateFormat.format(startdate);
 		mStart.setText(items[index]);
 		
@@ -102,15 +105,6 @@ public class FilterDateSetDialogFragment extends DialogFragment implements andro
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == R.id.filter_ok) {
-			/*String setting = SettingsActivity.STARTTIMEFILTER;
-			Editor editor = PreferenceManager.getDefaultSharedPreferences(
-					FilterDateSetDialogFragment.this.getActivity()).edit();
-			editor.putLong(setting, mSelectStartItem);
-			setting = SettingsActivity.ENDTIMEFILTER;
-			editor.putLong(setting, mSelectEndItem);
-			editor.commit();
-			FilterDateSetDialogFragment.this.dismiss();
-			mListener.onRefreshFragmentsValue();*/
 			FilterDateSetDialogFragment.this.dismiss();
 			mListener.onFilterDateSet(mSelectStartItem, mSelectEndItem);
 		} else if(v.getId() == R.id.filter_cancel) {
@@ -118,7 +112,7 @@ public class FilterDateSetDialogFragment extends DialogFragment implements andro
 		} else if(v.getId() == R.id.start_Button) {
 			FilterDialogFragment filterDialogFragment = new FilterDialogFragment();
 			Bundle args = new Bundle();
-			args.putBoolean("start", true);
+			args.putBoolean("start", mIsStart = true);
 			args.putLong("f", mSelectStartItem);
 			filterDialogFragment.setArguments(args);
 			filterDialogFragment.setDialogListener(this);
@@ -128,7 +122,7 @@ public class FilterDateSetDialogFragment extends DialogFragment implements andro
 		} else if(v.getId() == R.id.end_Button) {
 			FilterDialogFragment filterDialogFragment = new FilterDialogFragment();
 			Bundle args = new Bundle();
-			args.putBoolean("start", false);
+			args.putBoolean("start", mIsStart = false);
 			args.putLong("f", mSelectEndItem);
 			filterDialogFragment.setArguments(args);
 			filterDialogFragment.setDialogListener(this);
@@ -139,8 +133,8 @@ public class FilterDateSetDialogFragment extends DialogFragment implements andro
 	}
 
 	@Override
-	public void timeChange(int id, long newvalue) {
-		if(id==1) {
+	public void timeChange(long newvalue) {
+		if(mIsStart) {
 			mSelectStartItem = newvalue;
 		} else {
 			mSelectEndItem = newvalue;

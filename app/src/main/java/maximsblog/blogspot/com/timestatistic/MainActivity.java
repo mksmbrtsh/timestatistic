@@ -217,6 +217,7 @@ public class MainActivity extends Activity implements
 			args.putLong("stop", selectEndItem);
 			startDateSetDialogFragment.setArguments(args);
 			startDateSetDialogFragment.setDialogListener(this);
+			startDateSetDialogFragment.setCancelable(false);
 			startDateSetDialogFragment.show(this.getFragmentManager(),
 					"mStartDateSetDialogFragment");
 			break;

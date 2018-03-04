@@ -354,6 +354,7 @@ public class ExportToCSVActivity extends Activity implements
 			args.putLong("stop", end);
 			startDateSetDialogFragment.setArguments(args);
 			startDateSetDialogFragment.setDialogListener(this);
+			startDateSetDialogFragment.setCancelable(false);
 			startDateSetDialogFragment.show(this.getFragmentManager(),
 					"mStartDateSetDialogFragment");
 			break;

@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            storeFile file('J:/androidStudioWorkspace/maksimkey')
+            keyAlias 'maksim'
+            keyPassword 'zX80?speCy'
+            storePassword 'zX80?speCy'
+        }
+    }
     compileSdkVersion 26
     buildToolsVersion "27.0.1"
     aaptOptions {
@@ -8,22 +16,24 @@ android {
     }
     defaultConfig {
         applicationId "maximsblog.blogspot.com.timestatistic"
-        minSdkVersion 16
-        targetSdkVersion 17
+        minSdkVersion 19
+        targetSdkVersion 19
         vectorDrawables.useSupportLibrary = true
     }
-
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
+        debug {
+            signingConfig signingConfigs.config
+        }
     }
 }
 
 dependencies {
-    implementation 'com.google.android.gms:play-services-ads:11.+'
-    implementation 'com.google.android.gms:play-services-drive:11.+'
+    compile 'com.google.android.gms:play-services-auth:11.8.0'
+    implementation 'com.google.android.gms:play-services-drive:11.8.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:support-v13:+'
 }

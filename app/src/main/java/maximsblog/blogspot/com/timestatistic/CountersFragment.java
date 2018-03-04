@@ -213,7 +213,7 @@ public final class CountersFragment extends Fragment implements
 
 	private void setActivityTitle() {
 		SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat(
-				"dd/MM/yy HH:mm");
+				"dd.MM.yy HH:mm");
 		FilterDateOption startDateOption = app.getStartDate(getActivity());
 		mStartdate = startDateOption.date;
 		if(!startDateOption.dateName.equals(getResources().getStringArray(R.array.StartFilters)[6]))

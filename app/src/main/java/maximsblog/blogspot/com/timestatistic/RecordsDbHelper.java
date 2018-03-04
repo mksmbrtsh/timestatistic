@@ -111,7 +111,7 @@ public class RecordsDbHelper extends ContentProvider {
 			+ AUTHORITY + "/notes");
 
 	SQLiteDatabase mDB;
-	private OpenHelper openHelper;
+	public OpenHelper openHelper;
 
 	@Override
 	public boolean onCreate() {
@@ -462,6 +462,7 @@ public class RecordsDbHelper extends ContentProvider {
 					cv.put(STARTTIME, (new Date()).getTime());
 				mDB.insert(TABLE_TIMES, null, cv);
 			}
+			c.close();
 			cv.clear();
 			cv.put(RecordsDbHelper.ISRUNNING, 0);
 			mDB.update(TABLE_TIMERS, cv, RecordsDbHelper.ISRUNNING + "=?",
@@ -481,5 +482,19 @@ public class RecordsDbHelper extends ContentProvider {
 		count = mDB.delete(table, where, whereArgs);
 		getContext().getContentResolver().notifyChange(uri, null);
 		return count;
+	}
+
+	public void resetDatabase() {
+		mDB.close();
+		openHelper = new OpenHelper(getContext());
+		mDB = openHelper.getWritableDatabase();
+		getContext().getContentResolver().notifyChange(CONTENT_URI_TIMERS, null);
+		getContext().getContentResolver().notifyChange(CONTENT_URI_ALLNOTES, null);
+		getContext().getContentResolver().notifyChange(CONTENT_URI_ALLTIMES, null);
+		getContext().getContentResolver().notifyChange(CONTENT_URI_RESETCOUNTERS, null);
+		getContext().getContentResolver().notifyChange(CONTENT_URI_SUMTIMES, null);
+		getContext().getContentResolver().notifyChange(CONTENT_URI_TIMES, null);
+		getContext().getContentResolver().notifyChange(CONTENT_URI_RENAMECOUNTER, null);
+		getContext().getContentResolver().notifyChange(CONTENT_URI_NOTES, null);
 	}
 }

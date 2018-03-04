@@ -9,13 +9,10 @@ import android.text.Html.ImageGetter;
 import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 
 public class TopicActivity extends Activity {
 
 	int mTextResourceId = 0;
-	private AdView adView;
 
 	/**
 	 * onCreate
@@ -39,11 +36,6 @@ public class TopicActivity extends Activity {
 		textView.setMovementMethod(LinkMovementMethod.getInstance());
 		textView.setText(Html.fromHtml(getString(mTextResourceId),
 				this.imgGetter, null));
-		adView = (AdView) findViewById(R.id.adView);
-		AdRequest adRequest = new AdRequest.Builder()
-				.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-				.addTestDevice("CF95DC53F383F9A836FD749F3EF439CD").build();
-		adView.loadAd(adRequest);
 	}
 
 	private ImageGetter imgGetter = new ImageGetter() {
@@ -76,18 +68,15 @@ public class TopicActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		adView.resume();
 	}
 
 	@Override
 	protected void onPause() {
-		adView.pause();
 		super.onPause();
 	}
 
 	@Override
 	protected void onDestroy() {
-		adView.destroy();
 		super.onDestroy();
 	};
 } // end class

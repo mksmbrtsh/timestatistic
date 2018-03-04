@@ -56,6 +56,7 @@
     <string name="interval_alarm">Интервал напоминания</string>
     <string name="help">Помощь</string>
     <string name="union">Объединить</string>
+    <string name="split">Разделить</string>
     <string name="filterdateset">Установить фильтр</string>
 
     <string-array name="StartFilters">

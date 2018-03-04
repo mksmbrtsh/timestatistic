@@ -54,6 +54,7 @@
     <string name="interval_alarm">Intervall Alarm</string>
     <string name="help">Hilfe</string>
     <string name="union">Zusammen</string>
+    <string name="split">Teilt</string>
     <string name="filterdateset">Filter</string>
 
     <string-array name="StartFilters">

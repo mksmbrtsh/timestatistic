@@ -77,7 +77,6 @@ public class CustomDateTimePicker extends Dialog implements OnClickListener {
 		timePicker.setIs24HourView(is24HourView);
 		timePicker.setCurrentHour(selectedHour);
 		timePicker.setCurrentMinute(selectedMinute);
-        timePicker.se
 		datePicker.updateDate(calendar_date.get(Calendar.YEAR),
 				calendar_date.get(Calendar.MONTH),
 				calendar_date.get(Calendar.DATE));
@@ -91,24 +90,6 @@ public class CustomDateTimePicker extends Dialog implements OnClickListener {
                 Calendar cal = Calendar.getInstance();
                 cal.set(year, month, day, hourOfDay,
                         minute);
-                if(cal.getTimeInMillis() < mStart){
-                    timePicker.setOnTimeChangedListener(null);
-                    timePicker.setCurrentHour(selectedHour);
-                    timePicker.setCurrentMinute(selectedMinute);
-                    timePicker.setOnTimeChangedListener(this);
-                    Toast.makeText(mContext, mContext.getString(R.string.less_min),
-                            Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if(cal.getTimeInMillis() > mEnd){
-                    timePicker.setOnTimeChangedListener(null);
-                    timePicker.setCurrentHour(selectedHour);
-                    timePicker.setCurrentMinute(selectedMinute);
-                    timePicker.setOnTimeChangedListener(this);
-                    Toast.makeText(mContext, mContext.getString(R.string.more_max),
-                            Toast.LENGTH_SHORT).show();
-                    return;
-                }
 				selectedHour = hourOfDay;
 				selectedMinute = minute;
 			}

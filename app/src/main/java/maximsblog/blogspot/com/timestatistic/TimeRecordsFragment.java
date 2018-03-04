@@ -151,7 +151,7 @@ public class TimeRecordsFragment extends Fragment implements
 			SplitRecordDialogFragment mSplitRecordDialog = new SplitRecordDialogFragment();
 			mSplitRecordDialog
 					.setCounterDialogListener((MainActivity) getActivity());
-			mSplitRecordDialog.setValues(idtimer, idRecord, start, lenght, note == null ? "": note);
+			mSplitRecordDialog.setValues(position, idtimer, idRecord, start, lenght, note == null ? "": note);
 			mSplitRecordDialog.show(this.getActivity()
 					.getFragmentManager(), "mSplitRecordDialog");
 		} else {
@@ -298,5 +298,13 @@ public class TimeRecordsFragment extends Fragment implements
 		toast.setGravity(Gravity.TOP,0,0);
 		toast.show();
 	}
-
+	public void setUnionMode(int position) {
+		mAdapter.getSelected().clear();
+		mAdapter.setChoiceUnionMode(position);
+		mUnionPanel.setVisibility(View.VISIBLE);
+		onTimeRecordChange();
+		Toast toast =Toast.makeText(getActivity(),getString(R.string.union_help), Toast.LENGTH_LONG);
+		toast.setGravity(Gravity.TOP,0,0);
+		toast.show();
+	}
 }

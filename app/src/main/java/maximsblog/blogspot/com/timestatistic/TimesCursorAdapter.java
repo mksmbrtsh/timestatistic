@@ -22,7 +22,6 @@ ListView.OnScrollListener {
 
 	private SimpleDateFormat mSimpleTimeFormat;
 	private SimpleDateFormat mSimpleDateFormat;
-	// private ITimes mListener;
 	private Drawable mIndicator;
 	private HashMap<Integer, Boolean> mSelected;
 	private int mSelectedPosition;

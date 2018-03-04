@@ -2,7 +2,7 @@ package maximsblog.blogspot.com.timestatistic;
 
 public interface IdateChange
 {
-	void timeChange(int id, long newvalue);
+	void timeChange(long newvalue);
 	void cancel();
 }
 

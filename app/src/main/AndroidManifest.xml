@@ -19,6 +19,11 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTask"
@@ -63,21 +68,13 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".GdriveUpload" />
-
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
 
         <activity android:name=".PeriodAnalyseActivity" />
-        <activity
-            android:name="com.google.android.gms.ads.AdActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
         <activity android:name=".ExportToGoogleCalendarActivity" />
 
         <service android:name=".ExportToGoogleCalendarService" />
         <service android:name=".ExportToCSVService" />
-
+        <activity android:name=".GoogleDriveBackupActivity" />
         <activity android:name=".ExportImportBackupActivity" />
         <activity android:name=".ExportToCSVActivity" />
         <activity android:name=".AboutActivity" />

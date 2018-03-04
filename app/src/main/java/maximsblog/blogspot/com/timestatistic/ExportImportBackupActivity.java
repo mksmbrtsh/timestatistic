@@ -59,7 +59,7 @@ public class ExportImportBackupActivity extends PreferenceActivity
 					.show();
 
 		} else if (preference.getKey().equals("google_drive")) {
-			startActivity(new Intent(this, GdriveUpload.class));
+			startActivity(new Intent(this, GoogleDriveBackupActivity.class));
 		} else if (preference.getKey().equals("export_to_gcalendar")) {
 			startActivity(new Intent(this, ExportToGoogleCalendarActivity.class));
 		} else if(preference.getKey().equals("export_to_csv")){

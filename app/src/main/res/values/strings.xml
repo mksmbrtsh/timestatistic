@@ -63,6 +63,7 @@
     <string name="interval_alarm">Interval alarm</string>
     <string name="help">Help</string>
     <string name="union">Union</string>
+    <string name="split">Split</string>
     <string name="filterdateset">Filter</string>
 
     <string-array name="StartFilters">
